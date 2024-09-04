@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.sql.Timestamp;
 
 @Entity
@@ -49,4 +50,9 @@ public class UserEntity {
     @Column(name = "alarm_time")
     private int alarmTime;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<WeightEntity> weights;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<GoalEntity> goals;
 }
