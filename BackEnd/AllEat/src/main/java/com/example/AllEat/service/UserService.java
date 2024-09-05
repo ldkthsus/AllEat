@@ -55,5 +55,12 @@ public class UserService {
         // 사용자 정보 저장
         return userRepository.save(userEntity);
     }
-
+    public void deleteUserInfo(HttpServletRequest request) {
+        UserEntity userEntity = findByRequest(request);
+        if (userEntity != null) {
+            userRepository.delete(userEntity); // 유저 정보를 삭제
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
 }
