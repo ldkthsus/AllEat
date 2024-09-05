@@ -1,27 +1,57 @@
 package com.example.AllEat.jwt;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+
 
 @Component
-@Slf4j
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private SecretKey secretKey;
+
+    public JwtUtil(@Value("${spring.jwt.secret}")String secret) {
 
 
-//    public Boolean validateToken(String token, String username) {
-//        final String tokenUsername = extractEmail(token);
-//        return (tokenUsername.equals(username) && !isTokenExpired(token));
-//    }
+        secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+    }
+
+    public String getEmail(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
+    }
+
+    public String getRole(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+    }
+
+    public Boolean isExpired(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
+    }
+
+    public String createJwt(String email, String role, Long expiredMs) {
+
+        return Jwts.builder()
+                .claim("email", email)
+                .claim("role", role)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiredMs))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String createAccessToken(String email, String role) {
+        return createJwt(email, role, 60*60*1000*60L);
+    }
+
+    public String createRefreshToken(String email, String role) {
+        return createJwt(email, role, 60*60*1000*60*24*30L);
+    }
 }

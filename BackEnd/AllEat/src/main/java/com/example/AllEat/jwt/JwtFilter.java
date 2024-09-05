@@ -1,0 +1,68 @@
+package com.example.AllEat.jwt;
+
+import com.example.AllEat.dto.user.CustomUserDetails;
+import com.example.AllEat.dto.user.UserDTO;
+import com.example.AllEat.entity.UserEntity;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.catalina.User;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+public class JwtFilter extends OncePerRequestFilter {
+
+    public  final JwtUtil jwtUtil;
+
+    public JwtFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String authorization= request.getHeader("Authorization");
+
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+
+            System.out.println("token null");
+            filterChain.doFilter(request, response);
+
+            //조건이 해당되면 메소드 종료 (필수)
+            return;
+        }
+
+        String token = authorization.split(" ")[1];
+
+        // 토큰 검증
+        if (jwtUtil.isExpired(token)) {
+            System.out.println("token expired");
+            filterChain.doFilter(request, response);
+            //조건이 해당되면 메소드 종료 (필수)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token has expired.");
+            return;
+        }
+        String email = jwtUtil.getEmail(token);
+        String role = jwtUtil.getRole(token);
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setEmail(email);
+        userEntity.setPassword("temppass");
+        userEntity.setRole(role);
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
+
+        //스프링 시큐리티 인증 토큰 생성
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+
+        //세션에 사용자 등록
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        filterChain.doFilter(request, response);
+
+
+    }
+}

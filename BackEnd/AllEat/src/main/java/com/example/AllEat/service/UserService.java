@@ -2,6 +2,7 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.dto.user.UserJoinDTO;
 import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,13 +19,19 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final JwtUtil jwtUtil;
+
+    public UserService(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
+
+
     public UserEntity findByRequest(HttpServletRequest request) {
 
         System.out.println(request.toString());
         System.out.println(request);
         String token = request.getHeader("Authorization").substring(7);
-        UserEntity user = userRepository.findByEmail("test@example.com");
-//        UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
+        UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
         return user;
 
     }
