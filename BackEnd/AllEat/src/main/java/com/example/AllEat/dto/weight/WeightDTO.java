@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class WeightDTO {
-//    private Integer userID;
     private double weight;
 
 }
