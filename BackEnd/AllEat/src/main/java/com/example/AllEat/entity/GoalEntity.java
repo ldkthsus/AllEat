@@ -16,8 +16,8 @@ public class GoalEntity {
     @Column(name = "id")
     private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)  // unique 추가
     private UserEntity user;
 
     @Column(name = "goal_weight")
@@ -26,11 +26,6 @@ public class GoalEntity {
     @Column(name = "goal_cost")
     private Integer goalCost;
 
-    @Column(name = "goal_kcal")
-    private Integer goalKcal;
-
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
-
-
 }
