@@ -1,5 +1,5 @@
 package com.example.AllEat.entity;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,8 @@ public class RestaurantsEntity {
     private RestaurantsType restaurantsType;
 
     // MenuEntity와 1대N 관계 설정
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurants", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MenuEntity> menu;
 
 //    // PayTransactionsEntity와 1대N 관계 설정

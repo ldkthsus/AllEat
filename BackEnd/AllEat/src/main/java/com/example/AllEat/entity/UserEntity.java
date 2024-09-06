@@ -55,4 +55,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<GoalEntity> goals;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<FavoriteEntity> favorites;
 }

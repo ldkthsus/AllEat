@@ -1,5 +1,5 @@
 package com.example.AllEat.entity;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +17,7 @@ public class MenuEntity {
 
     @ManyToOne
     @JoinColumn(name = "restaurants_id", nullable = false)
+    @JsonIgnore  // 순환 참조 방지
     private RestaurantsEntity restaurants;
 
     @Column(name = "menu_name", nullable = false)
@@ -37,26 +38,15 @@ public class MenuEntity {
     @Column(name = "menu_fat", nullable = true)
     private Double menuFat;  // 지방 (g)
 
+    // menu_type을 int로 변경
     @Column(name = "menu_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MenuType menuType;
+    private Integer menuType;  // 0 = COUNT, 1 = GRAM, 2 = ML
 
     @Column(name = "menu_value", nullable = false)
     private double menuValue;
 
-    public enum MenuType {
-        COUNT("COUNT"),
-        GRAM("GRAM"),
-        ML("ML");
-
-        private final String unit;
-
-        MenuType(String unit) {
-            this.unit = unit;
-        }
-
-        public String getUnit() {
-            return unit;
-        }
-    }
+    // 즐겨찾기와 1:1 관계 추가할 예정
+    @OneToOne(mappedBy = "menu", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private FavoriteEntity favorite;
 }
