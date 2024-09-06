@@ -47,4 +47,16 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    // 회원 탈퇴
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser(HttpServletRequest request) {
+        try {
+            // UserService에서 JWT 토큰을 사용하여 사용자를 삭제
+            userService.deleteUserInfo(request);
+            return ResponseEntity.ok("User deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
 }

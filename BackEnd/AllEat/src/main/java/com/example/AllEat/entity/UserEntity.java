@@ -71,4 +71,7 @@ public class UserEntity {
         this.expiration = expiration;
     }
 
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<FavoriteEntity> favorites;
 }
