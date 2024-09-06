@@ -1,14 +1,11 @@
 package com.example.AllEat.jwt;
 
 import com.example.AllEat.dto.user.CustomUserDetails;
-import com.example.AllEat.dto.user.UserDTO;
 import com.example.AllEat.entity.UserEntity;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.catalina.User;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -48,10 +45,10 @@ public class JwtFilter extends OncePerRequestFilter {
         String email = jwtUtil.getEmail(token);
         String role = jwtUtil.getRole(token);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setEmail(email);
-        userEntity.setPassword("temppass");
-        userEntity.setRole(role);
+        UserEntity userEntity = UserEntity.builder()
+                .email(email)
+                .role(role)
+                .build();
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
 

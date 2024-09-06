@@ -9,14 +9,14 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
-@Table(name = "user")
+@Table(name = "weight")
 public class WeightEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "weight_id")
+    private int weightId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 

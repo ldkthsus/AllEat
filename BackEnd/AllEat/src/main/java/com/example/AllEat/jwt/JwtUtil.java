@@ -36,9 +36,15 @@ public class JwtUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String email, String role, Long expiredMs) {
+    public String getCategory(String token) {
+
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
+    }
+
+    public String createJwt(String category, String email, String role, Long expiredMs) {
 
         return Jwts.builder()
+                .claim("category", category)
                 .claim("email", email)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
@@ -48,10 +54,10 @@ public class JwtUtil {
     }
 
     public String createAccessToken(String email, String role) {
-        return createJwt(email, role, 60*60*1000*60L);
+        return createJwt("access", email, role, 60*60*1000*60L);
     }
 
     public String createRefreshToken(String email, String role) {
-        return createJwt(email, role, 60*60*1000*60*24*30L);
+        return createJwt("refresh", email, role, 60*60*1000*60*24*30L);
     }
 }
