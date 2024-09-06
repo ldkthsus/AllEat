@@ -25,22 +25,18 @@ public class WeightRecordService {
     @Autowired
     private WeightRepository weightRepository;
 
+    @Autowired
+    private UserService userService;
+
     private final JwtUtil jwtUtil;
 
     public WeightRecordService(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
 
-    public UserEntity findByRequest(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        UserEntity user = userRepository.findByEmail(jwtUtil.getEmail(token));
-        return user;
-
-    }
 
     public WeightEntity recordWeight(WeightDTO weightDTO, HttpServletRequest request) {
-        UserEntity user = findByRequest(request);
-        System.out.println("bbbb");
+        UserEntity user = userService.findByRequest(request);
 
         WeightEntity weightEntity = new WeightEntity();
         weightEntity.setWeight(weightDTO.getWeight());
@@ -50,7 +46,7 @@ public class WeightRecordService {
     }
 
     public void modifyWeight(WeightDTO weightDTO, HttpServletRequest request) {
-        UserEntity user = findByRequest(request);
+        UserEntity user = userService.findByRequest(request);
 
         WeightEntity weightEntity = weightRepository.findTodayWeightsByUser(user);
         weightEntity.setWeight(weightDTO.getWeight());
