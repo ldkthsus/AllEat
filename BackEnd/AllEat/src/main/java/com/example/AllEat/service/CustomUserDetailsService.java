@@ -64,12 +64,8 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService implement
             userRepository.save(user);
             return new CustomOAuth2User(user);
         } else {
-            System.out.println("response : " + oAuth2Response.getProfilePicture());
             existData.updateProfile(oAuth2Response.getEmail(), oAuth2Response.getName(), oAuth2Response.getProfilePicture());
             userRepository.save(existData);
-            System.out.println("exist : " + existData.getProfileUrl());
-            System.out.println("response2 : " + oAuth2Response.getProfilePicture());
-
             return new CustomOAuth2User(existData);
         }
     }
