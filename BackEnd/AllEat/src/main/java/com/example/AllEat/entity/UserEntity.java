@@ -1,18 +1,18 @@
 package com.example.AllEat.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Setter
-@Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "User")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +25,8 @@ public class UserEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "user_name")
+    private String userName;
 
     @Column(name = "role", nullable = false)
     private String role = "ROLE_USER";
@@ -49,19 +49,34 @@ public class UserEntity {
     @Column(name = "user_age")
     private int userAge;
 
-    @Column(name = "alarm_time")
-    private int alarmTime;
+    @Column(name = "refresh_Token")
+    private String refreshToken;
+
+    @Column(name = "expiration")
+    private Date expiration;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference
     private List<WeightEntity> weights;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference
     private List<GoalEntity> goals;
 
-    @OneToOne(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference
-    private PaymoneyEntity paymoney;
+    @OneToOne(mappedBy = "user", orphanRemoval = true)  // 외래키는 AlarmEntity에서 관리
+    private AlarmEntity alarm;
 
+
+
+    public void updateRefreshToken(String refreshToken, Date expiration){
+        this.refreshToken = refreshToken;
+        this.expiration = expiration;
+    }
+
+    public void updateProfile(String email, String userName, String profileUrl){
+        this.email = email;
+        this.userName = userName;
+        this.profileUrl = profileUrl;
+    }
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<FavoriteEntity> favorites;
 }

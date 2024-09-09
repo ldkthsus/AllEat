@@ -1,11 +1,17 @@
 package com.example.AllEat.dto.restaurants;
 
+import com.example.AllEat.dto.menu.MenuDTO;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+
 public class RestaurantsDTO {
 
     private Integer id;  // 레스토랑 ID
+    @JsonProperty("restaurants_name")
     private String restaurantsName;  // 레스토랑 이름
+    @JsonProperty("restaurants_type")
     private String restaurantsType;  // 레스토랑 타입
-    // private List<MenuDTO> menu;  // 메뉴 리스트 (주석 처리)
+    private List<MenuDTO> menu;  // 메뉴 리스트 (주석 처리)
 
     // 기본 생성자
     public RestaurantsDTO() {}
@@ -43,8 +49,7 @@ public class RestaurantsDTO {
         this.restaurantsType = restaurantsType;
     }
 
-    // 메뉴 리스트 관련 코드 주석 처리
-    /*
+
     public List<MenuDTO> getMenu() {
         return menu;
     }
@@ -52,5 +57,5 @@ public class RestaurantsDTO {
     public void setMenu(List<MenuDTO> menu) {
         this.menu = menu;
     }
-    */
+
 }

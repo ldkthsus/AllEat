@@ -1,8 +1,10 @@
 package com.example.AllEat.config;
 
+import com.example.AllEat.handler.CustomSuccessHandler;
 import com.example.AllEat.jwt.JwtFilter;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.jwt.LoginFilter;
+import com.example.AllEat.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -26,11 +29,14 @@ public class SecurityConfig{
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtUtil jwtUtil;
+    private final CustomSuccessHandler customSuccessHandler;
+    private final CustomUserDetailsService customUserDetailsService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil) {
-
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JwtUtil jwtUtil, CustomSuccessHandler customSuccessHandler, CustomUserDetailsService customUserDetailsService) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.customSuccessHandler = customSuccessHandler;
+        this.customUserDetailsService = customUserDetailsService;
     }
 
     @Bean
@@ -40,7 +46,6 @@ public class SecurityConfig{
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-
         return configuration.getAuthenticationManager();
     }
 
@@ -59,26 +64,38 @@ public class SecurityConfig{
                 configuration.setAllowCredentials(true);
                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setMaxAge(3600L);
-                configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+                configuration.setExposedHeaders(Arrays.asList("Authorization", "Refresh"));
+
 
                 return configuration;
             }
         }));
 
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration),jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        // 폼 로그인을 위한 LoginFilter 추가
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
+        //oauth2
+        http
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
+                                .userService(customUserDetailsService))
+                        .successHandler(customSuccessHandler)
+                );
 
+        // 요청에 대한 JWT 검증 필터
+        http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
+
+        // 허용 URL 및 인증 설정
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 .requestMatchers("/login", "/AllEat/users/join").permitAll()
-                .anyRequest().authenticated() // 모든 다른 요청은 허용
+                .requestMatchers( "/oauth2/**", "/login/**" ).permitAll()
+                .anyRequest().authenticated() // 그 외 요청은 인증 필요
         );
 
-        http.sessionManagement((session) -> session
+        // 세션 사용 안 함 (JWT 사용 시 필요)
+        http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http
-                .addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
         return http.build();
     }
-
 }

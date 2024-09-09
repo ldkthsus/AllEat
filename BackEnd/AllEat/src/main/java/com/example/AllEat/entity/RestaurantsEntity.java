@@ -1,5 +1,5 @@
 package com.example.AllEat.entity;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.List;
 public class RestaurantsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "restaurants_id")
     private Integer id;
 
     @Column(name = "restaurants_name", nullable = false)
@@ -23,9 +23,10 @@ public class RestaurantsEntity {
     @Column(name = "restaurants_type", nullable = false)
     private RestaurantsType restaurantsType;
 
-//    // MenuEntity와 1대N 관계 설정
-//    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<MenuEntity> menu;
+    // MenuEntity와 1대N 관계 설정
+    @OneToMany(mappedBy = "restaurants", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<MenuEntity> menu;
 
 //    // PayTransactionsEntity와 1대N 관계 설정
 //    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)

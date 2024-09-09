@@ -60,11 +60,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String role = auth.getAuthority();
 
-        String refreshToken = jwtUtil.createRefreshToken(email, role);
+        String refreshToken = jwtUtil.createRefreshToken( email, role);
         String AccessToken = jwtUtil.createAccessToken(email, role);
 
-        response.addHeader("Authorization", "Bearer " + AccessToken);
-        response.addHeader("Set-Cookie", "Bearer " + refreshToken);
+        response.setHeader("Authorization", "Bearer " + AccessToken);
+        response.setHeader("Refresh", "Bearer " + refreshToken);
 
         System.out.println("successful authentication");
     }

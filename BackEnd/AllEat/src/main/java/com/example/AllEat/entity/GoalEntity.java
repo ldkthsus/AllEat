@@ -1,23 +1,24 @@
 package com.example.AllEat.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "goal")
 public class GoalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "goal_id")
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true)  // unique 추가
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @Column(name = "goal_weight")
@@ -26,6 +27,14 @@ public class GoalEntity {
     @Column(name = "goal_cost")
     private Integer goalCost;
 
+    @Column(name = "goal_kcal")
+    private Integer goalKcal;
+
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
+
+    public void update(double goalWeight, int goalCost) {
+        this.goalWeight = goalWeight;
+        this.goalCost = goalCost;
+    }
 }

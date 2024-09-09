@@ -1,8 +1,12 @@
 package com.example.AllEat.dto.restaurants;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RestaurantsCreateDTO {
 
+    @JsonProperty("restaurants_name")
     private String restaurantsName;  // 레스토랑 이름
+    @JsonProperty("restaurants_type")
     private String restaurantsType;  // 레스토랑 타입
 
     // 기본 생성자
