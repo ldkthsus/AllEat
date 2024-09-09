@@ -60,9 +60,4 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
     }
-
-    public UserEntity findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
 }

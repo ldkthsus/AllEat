@@ -53,7 +53,7 @@ public class UserEntity {
     private String refreshToken;
 
     @Column(name = "expiration")
-    private Date expiration;
+    private Timestamp expiration;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<WeightEntity> weights;
@@ -65,7 +65,8 @@ public class UserEntity {
     private AlarmEntity alarm;
 
 
-    public void updateRefreshToken(String refreshToken, Date expiration){
+
+    public void updateRefreshToken(String refreshToken, Timestamp expiration){
         this.refreshToken = refreshToken;
         this.expiration = expiration;
     }
