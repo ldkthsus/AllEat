@@ -54,7 +54,7 @@ public class SecurityConfig{
         http.csrf(csrf -> csrf.disable());
         http.formLogin(formLogin -> {
             formLogin
-                    .loginPage("/AllEat/users/login")  // 로그인 페이지 URL 설정
+                    .loginPage("/login")  // 로그인 페이지 URL 설정
                     .permitAll();  // 로그인 페이지 접근을 모든 사용자가 가능하도록 설정
         });
         http.httpBasic(httpBasic -> httpBasic.disable());

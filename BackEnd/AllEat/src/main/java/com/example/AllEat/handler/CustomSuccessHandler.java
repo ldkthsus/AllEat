@@ -52,7 +52,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setHeader("Authorization", "Bearer " + AccessToken);
         response.setHeader("Refresh", "Bearer " + RefreshToken);
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:3000/");
+        response.sendRedirect("http://localhost:8080/");
     }
     @Transactional
     public void updateRefreshToken(String email, String refresh, Long expiredMs) {
