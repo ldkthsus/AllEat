@@ -31,11 +31,11 @@ public class WeightController {
         this.weightRepository = weightRepository;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> recordWeight(HttpServletRequest request, @RequestBody WeightDTO weightDTO) {
         try{
             weightRecordService.recordWeight(weightDTO,request);
-            return ResponseEntity.ok("Successfully Registered");
+            return ResponseEntity.ok("Successfully Recorded");
         }catch (Exception e){
             System.out.println(e);
             return ResponseEntity.ok(e.getMessage());
@@ -44,7 +44,7 @@ public class WeightController {
     }
 
     // 그날 체중 수정
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<?> modifyWeight(HttpServletRequest request, @RequestBody WeightDTO weightDTO) {
         try{
             weightRecordService.modifyWeight(weightDTO,request);
@@ -57,7 +57,7 @@ public class WeightController {
     }
 
     // 특정날부터 특정기간까지의 체중 반환, params가 없는 경우 오늘 체중 반환
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getAllWeight(HttpServletRequest request,
                                           @RequestParam(required = false) Integer year,
                                           @RequestParam(required = false) Integer month,
@@ -80,6 +80,21 @@ public class WeightController {
             return ResponseEntity.ok(weightEntities);
         } catch (Exception e) {
             return ResponseEntity.ok(e.getMessage());
+        }
+
+
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<?> getRecentWeight(HttpServletRequest request) {
+        try{
+            UserEntity user = userService.findByRequest(request);
+            WeightEntity weight = weightRepository.findRecent(user);
+            return ResponseEntity.ok(weight);
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.ok(e.getMessage());
+
         }
     }
 }
