@@ -52,7 +52,11 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
-        http.formLogin(formLogin -> formLogin.disable());
+        http.formLogin(formLogin -> {
+            formLogin
+                    .loginPage("/AllEat/users/login")  // 로그인 페이지 URL 설정
+                    .permitAll();  // 로그인 페이지 접근을 모든 사용자가 가능하도록 설정
+        });
         http.httpBasic(httpBasic -> httpBasic.disable());
 
         http.cors((cors) -> cors.configurationSource(new CorsConfigurationSource() {
@@ -87,7 +91,7 @@ public class SecurityConfig{
 
         // 허용 URL 및 인증 설정
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/login", "/AllEat/users/join").permitAll()
+                .requestMatchers("/AllEat/users/login", "/AllEat/users/join").permitAll()
                 .requestMatchers( "/oauth2/**", "/login/**" ).permitAll()
                 .anyRequest().authenticated() // 그 외 요청은 인증 필요
         );
