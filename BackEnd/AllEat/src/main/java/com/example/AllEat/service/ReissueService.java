@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class ReissueService {
     @Transactional
     public void updateRefreshEntity(String email, String refresh, Long expiredMs) {
 
-        Date expirationDate = new Date(System.currentTimeMillis() + expiredMs);
+        Timestamp expirationDate = new Timestamp(System.currentTimeMillis() + expiredMs);
 
         // 이메일로 사용자 조회
         UserEntity existingUserEntity = userRepository.findByEmail(email);

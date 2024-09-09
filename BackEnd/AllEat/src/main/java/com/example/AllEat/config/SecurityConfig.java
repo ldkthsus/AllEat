@@ -4,7 +4,9 @@ import com.example.AllEat.handler.CustomSuccessHandler;
 import com.example.AllEat.jwt.JwtFilter;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.jwt.LoginFilter;
+import com.example.AllEat.repository.UserRepository;
 import com.example.AllEat.service.CustomUserDetailsService;
+import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -50,13 +53,9 @@ public class SecurityConfig{
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, UserRepository userRepository) throws Exception {
         http.csrf(csrf -> csrf.disable());
-        http.formLogin(formLogin -> {
-            formLogin
-                    .loginPage("/login")  // 로그인 페이지 URL 설정
-                    .permitAll();  // 로그인 페이지 접근을 모든 사용자가 가능하도록 설정
-        });
+        http.formLogin(formLogin -> formLogin.disable());
         http.httpBasic(httpBasic -> httpBasic.disable());
 
         http.cors((cors) -> cors.configurationSource(new CorsConfigurationSource() {
@@ -76,7 +75,7 @@ public class SecurityConfig{
         }));
 
         // 폼 로그인을 위한 LoginFilter 추가
-        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 
         //oauth2
         http
