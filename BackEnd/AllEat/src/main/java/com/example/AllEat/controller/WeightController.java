@@ -81,5 +81,20 @@ public class WeightController {
         } catch (Exception e) {
             return ResponseEntity.ok(e.getMessage());
         }
+
+
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<?> getRecentWeight(HttpServletRequest request) {
+        try{
+            UserEntity user = userService.findByRequest(request);
+            WeightEntity weight = weightRepository.findRecent(user);
+            return ResponseEntity.ok(weight);
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.ok(e.getMessage());
+
+        }
     }
 }

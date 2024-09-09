@@ -1,5 +1,6 @@
 package com.example.AllEat.dto.user;
 
+import jakarta.persistence.JoinColumn;
 import lombok.Getter;
 import lombok.Setter;
 
