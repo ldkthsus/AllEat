@@ -1,6 +1,9 @@
 package com.example.AllEat.jwt;
 
 import com.example.AllEat.dto.user.CustomUserDetails;
+import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.repository.UserRepository;
+import com.example.AllEat.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +24,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
+    public LoginFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -61,10 +66,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String refreshToken = jwtUtil.createRefreshToken( email, role);
-        String AccessToken = jwtUtil.createAccessToken(email, role);
+        String accessToken = jwtUtil.createAccessToken(email, role);
 
-        response.setHeader("Authorization", "Bearer " + AccessToken);
+        response.setHeader("Authorization", "Bearer " + accessToken);
         response.setHeader("Refresh", "Bearer " + refreshToken);
+
+        UserEntity user = userRepository.findByEmail(email);
+        user.updateRefreshToken(refreshToken, jwtUtil.getExpiration(refreshToken));
+        userRepository.save(user);
+        System.out.println(jwtUtil.getExpiration(refreshToken));
+
 
         System.out.println("successful authentication");
     }
