@@ -12,7 +12,7 @@ public class FavoriteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "favorite_id")
+    @Column(name = "id")
     private Integer id;
 
     // MenuEntity와 1대1 관계 설정

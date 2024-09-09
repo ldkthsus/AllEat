@@ -16,7 +16,7 @@ public class AlarmEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alarm_id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "breakfast_alarm")
