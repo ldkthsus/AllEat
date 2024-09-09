@@ -4,6 +4,7 @@ import com.example.AllEat.entity.RestaurantsEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.dto.restaurants.RestaurantsCreateDTO;
 import com.example.AllEat.dto.restaurants.RestaurantsDTO;
+import com.example.AllEat.dto.menu.MenuDTO;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.RestaurantsRepository;
 import com.example.AllEat.repository.UserRepository;
@@ -54,10 +55,27 @@ public class RestaurantsService {
 
     // Entity를 DTO로 변환
     private RestaurantsDTO convertToDTO(RestaurantsEntity restaurant) {
+        // RestaurantsEntity에서 메뉴 리스트 가져오기
+        List<MenuDTO> menuDTOs = restaurant.getMenuList().stream()
+                .map(menu -> new MenuDTO(
+                        menu.getId(),
+                        menu.getMenuName(),
+                        menu.getMenuCalories(),
+                        menu.getMenuCarbohydrate(),
+                        menu.getMenuProtein(),
+                        menu.getMenuFat(),
+                        menu.getMenuPrice(),
+                        menu.getMenuType(),
+                        menu.getMenuValue(),
+                        menu.getRestaurants().getId()
+                )).collect(Collectors.toList());
+
+        // RestaurantsDTO로 변환할 때 메뉴 리스트 포함
         return new RestaurantsDTO(
                 restaurant.getId(),
                 restaurant.getRestaurantsName(),
-                restaurant.getRestaurantsType().name()
+                restaurant.getRestaurantsType().name(),
+                menuDTOs
         );
     }
 

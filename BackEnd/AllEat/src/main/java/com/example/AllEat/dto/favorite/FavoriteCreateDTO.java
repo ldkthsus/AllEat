@@ -5,20 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FavoriteCreateDTO {
 
     @JsonProperty("restaurant_id")
-    private Integer restaurantId;  // 추가된 필드
+    private Integer restaurantId;
+
     @JsonProperty("menu_id")
     private Integer menuId;
 
-    // 기본 생성자
-    public FavoriteCreateDTO() {}
-
-    // 생성자
-    public FavoriteCreateDTO(Integer restaurantId, Integer menuId) {
-        this.restaurantId = restaurantId;
-        this.menuId = menuId;
-    }
-
-    // Getters and Setters
+    // Getters and setters
     public Integer getRestaurantId() {
         return restaurantId;
     }
