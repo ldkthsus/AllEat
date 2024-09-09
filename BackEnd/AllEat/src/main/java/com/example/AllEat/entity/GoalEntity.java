@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 public class GoalEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "goal_id")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,4 +32,9 @@ public class GoalEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
+
+    public void update(double goalWeight, int goalCost) {
+        this.goalWeight = goalWeight;
+        this.goalCost = goalCost;
+    }
 }

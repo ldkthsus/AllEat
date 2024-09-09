@@ -21,10 +21,6 @@ public class UserService {
 
     private final JwtUtil jwtUtil;
 
-    public UserService(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
-
 
     public UserEntity findByRequest(HttpServletRequest request) {
 

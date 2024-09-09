@@ -17,7 +17,7 @@ public class AlarmEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "alarm_id")
-    private int alarmId;
+    private Integer id;
 
     @Column(name = "breakfast_alarm")
     private java.sql.Time breakfastAlarm;
