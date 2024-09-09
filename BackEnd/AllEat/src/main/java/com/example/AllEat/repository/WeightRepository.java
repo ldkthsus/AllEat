@@ -24,4 +24,7 @@ public interface WeightRepository extends JpaRepository<WeightEntity, Integer> {
     // 변경을 위해 해당 유저의 오늘 weight값을 받아옴
     @Query("SELECT w FROM WeightEntity w WHERE FUNCTION('DATE', w.createdAt) = CURRENT_DATE AND w.user = :user")
     WeightEntity findTodayWeightsByUser(@Param("user") UserEntity user);
+
+    @Query("SELECT w FROM WeightEntity w WHERE w.user = :user ORDER BY w.createdAt DESC LIMIT 1")
+    WeightEntity findRecent(@Param("user") UserEntity user);
 }

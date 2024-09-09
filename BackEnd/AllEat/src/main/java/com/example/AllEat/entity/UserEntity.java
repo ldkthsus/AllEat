@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private String role = "ROLE_USER";
 
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
 
     @Column(name = "social_login")
@@ -51,14 +51,6 @@ public class UserEntity {
 
     @Column(name = "alarm_time")
     private int alarmTime;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference
-    private List<WeightEntity> weights;
-
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    @JsonManagedReference
-    private List<GoalEntity> goals;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true)
     @JsonManagedReference
