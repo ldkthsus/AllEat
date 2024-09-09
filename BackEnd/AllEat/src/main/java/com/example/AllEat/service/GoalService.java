@@ -46,10 +46,11 @@ public class GoalService {
             throw new RuntimeException("Goal already exists for this user. Please update the existing goal.");
         }
 
-        GoalEntity goalEntity = new GoalEntity();
-        goalEntity.setUser(userEntity);
-        goalEntity.setGoalWeight(goalDTO.getGoalWeight());
-        goalEntity.setGoalCost(goalDTO.getGoalCost());
+        GoalEntity goalEntity = GoalEntity.builder()
+                .user(userEntity)
+                .goalWeight(goalDTO.getGoalWeight())
+                .goalCost(goalDTO.getGoalCost())
+                .build();
 
         return goalRepository.save(goalEntity);
     }
@@ -64,9 +65,7 @@ public class GoalService {
         Optional<GoalEntity> optionalGoal = goalRepository.findByUserId(userEntity.getId());
         if (optionalGoal.isPresent()) {
             GoalEntity goalEntity = optionalGoal.get();
-            goalEntity.setGoalWeight(goalDTO.getGoalWeight());
-            goalEntity.setGoalCost(goalDTO.getGoalCost());
-
+            goalEntity.update(goalDTO.getGoalWeight(), goalDTO.getGoalCost());
             return goalRepository.save(goalEntity);
         } else {
             throw new RuntimeException("Goal not found or user does not have permission to update this goal");

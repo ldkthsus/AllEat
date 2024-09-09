@@ -33,8 +33,8 @@ public class CustomUserDetails implements UserDetails {
         return collection;
     }
 
-    public int getUserId() {
-        return userEntity.getUserId();
+    public int getId() {
+        return userEntity.getId();
     }
 
     @Override

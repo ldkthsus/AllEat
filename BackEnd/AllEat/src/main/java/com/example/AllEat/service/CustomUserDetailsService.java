@@ -11,6 +11,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CustomUserDetailsService extends DefaultOAuth2UserService implements UserDetailsService {
@@ -33,10 +34,9 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService implement
 
     // 소셜 로그인을 처리하는 메서드
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
-
-        System.out.println("request : " + oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -53,22 +53,23 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService implement
         }
 
         UserEntity existData = userRepository.findByEmail(oAuth2Response.getEmail());
-            System.out.println("here : " + existData);
 
         if (existData == null) {
             UserEntity user = UserEntity.builder()
                     .email(oAuth2Response.getEmail())
                     .userName(oAuth2Response.getName())
+                    .profileUrl(oAuth2Response.getProfilePicture())
                     .role("ROLE_USER")
                     .build();
             userRepository.save(user);
             return new CustomOAuth2User(user);
         } else {
-            existData.builder()
-                    .email(oAuth2Response.getEmail())
-                    .userName(oAuth2Response.getName())
-                    .build();
+            System.out.println("response : " + oAuth2Response.getProfilePicture());
+            existData.updateProfile(oAuth2Response.getEmail(), oAuth2Response.getName(), oAuth2Response.getProfilePicture());
             userRepository.save(existData);
+            System.out.println("exist : " + existData.getProfileUrl());
+            System.out.println("response2 : " + oAuth2Response.getProfilePicture());
+
             return new CustomOAuth2User(existData);
         }
     }

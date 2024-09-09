@@ -17,7 +17,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private int userId;
+    private Integer id;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -71,6 +71,11 @@ public class UserEntity {
         this.expiration = expiration;
     }
 
+    public void updateProfile(String email, String userName, String profileUrl){
+        this.email = email;
+        this.userName = userName;
+        this.profileUrl = profileUrl;
+    }
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FavoriteEntity> favorites;

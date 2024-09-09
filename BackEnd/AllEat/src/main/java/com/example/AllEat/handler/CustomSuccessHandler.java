@@ -45,8 +45,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String AccessToken = jwtUtil.createJwt("access", email, role, 600000L);
         String RefreshToken = jwtUtil.createJwt("refresh", email, role, 86400000L);
 
-        System.out.println("access : " + AccessToken);
-        System.out.println("refresh : " + RefreshToken);
         //Refresh 토큰 저장
         updateRefreshToken(email, RefreshToken, 86400000L);
 
@@ -56,23 +54,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setStatus(HttpStatus.OK.value());
         response.sendRedirect("http://localhost:3000/");
     }
-
     @Transactional
     public void updateRefreshToken(String email, String refresh, Long expiredMs) {
-        System.out.println("refresh : " + refresh);
-        System.out.println("expiredMs : " + expiredMs);
 
         Date expirationDate = new Date(System.currentTimeMillis() + expiredMs);
 
         // 이메일로 사용자 조회
         UserEntity existingUserEntity = userRepository.findByEmail(email);
-
-        System.out.println("existingUserEntity : " + existingUserEntity.getUserName());
-
         existingUserEntity.updateRefreshToken(refresh, expirationDate);
         userRepository.save(existingUserEntity);
-
-        System.out.println("existingUserEntity : " + existingUserEntity.getRefreshToken());
     }
 
 
