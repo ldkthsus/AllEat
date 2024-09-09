@@ -65,7 +65,6 @@ public class UserEntity {
     private AlarmEntity alarm;
 
 
-
     public void updateRefreshToken(String refreshToken, Date expiration){
         this.refreshToken = refreshToken;
         this.expiration = expiration;
