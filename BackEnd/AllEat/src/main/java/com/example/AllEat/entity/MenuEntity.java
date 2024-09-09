@@ -12,7 +12,7 @@ public class MenuEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "menu_id")
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne

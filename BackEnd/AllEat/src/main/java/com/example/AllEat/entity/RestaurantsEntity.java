@@ -13,7 +13,7 @@ import java.util.List;
 public class RestaurantsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurants_id")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "restaurants_name", nullable = false)
