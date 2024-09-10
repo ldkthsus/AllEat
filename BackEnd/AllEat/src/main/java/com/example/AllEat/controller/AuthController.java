@@ -1,29 +1,38 @@
 package com.example.AllEat.controller;
 
+import com.example.AllEat.dto.user.UpdateRequest;
 import com.example.AllEat.dto.user.UserJoinDTO;
 import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.handler.FileHandler;
+import com.example.AllEat.jwt.JwtFilter;
 import com.example.AllEat.jwt.JwtUtil;
 
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/AllEat/users")
+@Slf4j
 public class AuthController {
 
     private final UserService userService;
+    private final FileHandler fileHandler;
 
     private JwtUtil jwtUtil;
 
     @Autowired
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, FileHandler fileHandler) {
         this.userService = userService;
+        this.fileHandler = fileHandler;
     }
 
     // 회원가입
@@ -58,6 +67,41 @@ public class AuthController {
             return ResponseEntity.ok("User deleted successfully");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+//    @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정할 때 사용합니다. ")
+    @PutMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateUserInfo( @RequestPart(value = "photoFile", required = false) MultipartFile photoFile,
+                                            @RequestPart("data") UpdateRequest updateRequest, HttpServletRequest request) {
+        try {
+            UserEntity getUser = userService.findByRequest(request);
+            if (getUser == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            String profilePicture = null;
+            try {
+                if (photoFile != null && !photoFile.isEmpty()) {
+                    System.out.println("파일 들어가요");
+                    System.out.println(photoFile.getContentType());
+                    profilePicture = fileHandler.parseFileInfo(photoFile);
+                }
+            }
+            catch (Exception e) {
+                log.error("파일 처리 중 오류 발생: {}", e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("파일 처리 중 오류가 발생했습니다: " + e.getMessage());
+            }
+            Boolean same = userService.comparePassword(updateRequest.getPassword1(), updateRequest.getPassword2());
+            if (same) {
+                UserEntity updateUser = userService.updateUserInfo(getUser.getEmail(), updateRequest, profilePicture);
+                return ResponseEntity.status(HttpStatus.OK).body(updateUser);
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.AllEat.entity;
 
+import com.example.AllEat.dto.user.UpdateRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -55,15 +56,14 @@ public class UserEntity {
     @Column(name = "expiration")
     private Timestamp expiration;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WeightEntity> weights;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
-    private List<GoalEntity> goals;
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    private GoalEntity goals;
 
-    @OneToOne(mappedBy = "user", orphanRemoval = true)  // 외래키는 AlarmEntity에서 관리
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
     private AlarmEntity alarm;
-
 
 
     public void updateRefreshToken(String refreshToken, Timestamp expiration){
@@ -74,6 +74,16 @@ public class UserEntity {
     public void updateProfile(String email, String userName, String profileUrl){
         this.email = email;
         this.userName = userName;
+        this.profileUrl = profileUrl;
+    }
+
+    public void updateInfo(UpdateRequest updateRequest, String profileUrl){
+        this.password = updateRequest.getPassword2();
+        goals.update(updateRequest.getGoalWeight(), updateRequest.getGoalCost());
+        if (this.weights != null && !this.weights.isEmpty()) {
+            WeightEntity lastWeight = this.weights.get(this.weights.size() - 1);
+            lastWeight.updateWeight(updateRequest.getWeight()); // 필요에 따라 세부 수정
+        }
         this.profileUrl = profileUrl;
     }
 
