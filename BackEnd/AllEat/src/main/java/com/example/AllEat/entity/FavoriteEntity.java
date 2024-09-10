@@ -16,7 +16,7 @@ public class FavoriteEntity {
     private Integer id;
 
     // MenuEntity와 1대1 관계 설정
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "menu_id", nullable = false)
     private MenuEntity menu;
 

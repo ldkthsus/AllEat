@@ -26,7 +26,7 @@ public class RestaurantsEntity {
     // MenuEntity와 1대N 관계 설정
     @OneToMany(mappedBy = "restaurants", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<MenuEntity> menu;
+    private List<MenuEntity> menuList;
 
 //    // PayTransactionsEntity와 1대N 관계 설정
 //    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)

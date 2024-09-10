@@ -29,11 +29,11 @@ public class FavoriteController {
         return new ResponseEntity<>(favorite, HttpStatus.CREATED);
     }
 
+    // 즐겨찾기 해제 (favorite_id로 삭제)
     @DeleteMapping("/{favoriteId}")
-    public ResponseEntity<Void> removeFavorite(@PathVariable Integer favoriteId, HttpServletRequest request) {
-        // request도 함께 전달
-        favoriteService.removeFavoriteById(favoriteId, request);
-
+    public ResponseEntity<Void> removeFavorite(@PathVariable Integer favoriteId) {
+        // favorite_id로 즐겨찾기 삭제
+        favoriteService.removeFavoriteById(favoriteId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

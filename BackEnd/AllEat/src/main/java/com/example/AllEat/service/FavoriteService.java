@@ -25,7 +25,7 @@ public class FavoriteService {
     private FavoriteRepository favoriteRepository;
 
     @Autowired
-    private MenuRepository menuRepository; // 여기에 주입
+    private MenuRepository menuRepository;
 
     @Autowired
     private RestaurantsRepository restaurantsRepository;
@@ -62,21 +62,14 @@ public class FavoriteService {
     }
 
     // 즐겨찾기 해제 (favoriteId로)
-    public void removeFavoriteById(Integer favoriteId, HttpServletRequest request) {
-        // 유저를 요청에서 가져오기
-        UserEntity user = getUserFromRequest(request);
-
-        // 해당 유저의 즐겨찾기인지 확인 후 삭제
+    public void removeFavoriteById(Integer favoriteId) {
+        // favoriteId로 즐겨찾기 찾기
         FavoriteEntity favorite = favoriteRepository.findById(favoriteId)
                 .orElseThrow(() -> new IllegalArgumentException("Favorite not found"));
 
-        if (!favorite.getUser().equals(user)) {
-            throw new IllegalArgumentException("Unauthorized to delete this favorite");
-        }
-
+        // 삭제 처리
         favoriteRepository.delete(favorite);
     }
-
 
     // 해당 유저의 즐겨찾기 조회
     public List<FavoriteDTO> getUserFavorites(HttpServletRequest request) {
