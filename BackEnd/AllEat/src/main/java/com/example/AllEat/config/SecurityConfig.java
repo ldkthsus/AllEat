@@ -88,12 +88,12 @@ public class SecurityConfig{
         // 요청에 대한 JWT 검증 필터
         http.addFilterBefore(new JwtFilter(jwtUtil), LoginFilter.class);
 
-        // 허용 URL 및 인증 설정
-        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/AllEat/users/login", "/AllEat/users/join").permitAll()
-                .requestMatchers( "/oauth2/**", "/login/**" ).permitAll()
-                .anyRequest().authenticated() // 그 외 요청은 인증 필요
-        );
+//        // 허용 URL 및 인증 설정
+//        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
+//                .requestMatchers("/AllEat/users/login", "/AllEat/users/join").permitAll()
+//                .requestMatchers( "/oauth2/**", "/login/**" ).permitAll()
+//                .anyRequest().authenticated() // 그 외 요청은 인증 필요
+//        );
 
         // 세션 사용 안 함 (JWT 사용 시 필요)
         http.sessionManagement(session -> session

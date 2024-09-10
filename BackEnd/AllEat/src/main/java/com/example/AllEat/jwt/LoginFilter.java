@@ -74,8 +74,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         UserEntity user = userRepository.findByEmail(email);
         user.updateRefreshToken(refreshToken, jwtUtil.getExpiration(refreshToken));
         userRepository.save(user);
-        System.out.println(jwtUtil.getExpiration(refreshToken));
-
+        System.out.println(accessToken);
 
         System.out.println("successful authentication");
     }

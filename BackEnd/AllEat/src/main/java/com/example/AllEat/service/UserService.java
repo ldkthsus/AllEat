@@ -1,5 +1,6 @@
 package com.example.AllEat.service;
 
+import com.example.AllEat.dto.user.UpdateRequest;
 import com.example.AllEat.dto.user.UserJoinDTO;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.jwt.JwtUtil;
@@ -59,5 +60,21 @@ public class UserService {
         } else {
             throw new RuntimeException("User not found");
         }
+    }
+
+    public UserEntity updateUserInfo(String email,UpdateRequest updateRequest, String prifileUrl) {
+        UserEntity findUser = userRepository.findByEmail(email);
+        if(findUser != null) {
+            findUser.updateInfo(updateRequest, prifileUrl);
+            userRepository.save(findUser);
+            return findUser;
+        }
+        else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    public boolean comparePassword(String firstPassword, String secondPassword) {
+        return firstPassword.equals(secondPassword);
     }
 }

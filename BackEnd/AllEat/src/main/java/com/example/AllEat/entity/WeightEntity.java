@@ -28,4 +28,8 @@ public class WeightEntity {
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
 
+    public void updateWeight(double weight) {
+        this.weight = weight;
+    }
+
 }
