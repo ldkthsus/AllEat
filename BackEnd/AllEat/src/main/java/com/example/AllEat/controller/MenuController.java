@@ -22,10 +22,14 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    // 메뉴 추가
+    // 메뉴와 레스토랑 추가
     @PostMapping("/add-menu")
-    public ResponseEntity<MenuEntity> addMenu(@RequestBody MenuCreateDTO menuCreateDTO, HttpServletRequest request) {
-        MenuEntity createdMenu = menuService.createMenu(menuCreateDTO, request);
+    public ResponseEntity<MenuEntity> addMenuWithRestaurant(@RequestBody MenuCreateDTO menuCreateDTO) {
+        MenuEntity createdMenu = menuService.addMenuWithRestaurantCheck(
+                menuCreateDTO.getRestaurantName(),
+                menuCreateDTO.getRestaurantType(),
+                menuCreateDTO
+        );
         return new ResponseEntity<>(createdMenu, HttpStatus.CREATED);
     }
 
@@ -52,15 +56,15 @@ public class MenuController {
 
     // 메뉴 수정
     @PutMapping("/update-menu/{id}")
-    public ResponseEntity<MenuEntity> updateMenu(@PathVariable Integer id, @RequestBody MenuCreateDTO menuCreateDTO) {
-        MenuEntity updatedMenu = menuService.updateMenu(id, menuCreateDTO);
+    public ResponseEntity<MenuEntity> updateMenu(@PathVariable Integer id, @RequestBody MenuCreateDTO menuCreateDTO, HttpServletRequest request) {
+        MenuEntity updatedMenu = menuService.updateMenu(id, menuCreateDTO, request);
         return new ResponseEntity<>(updatedMenu, HttpStatus.OK);
     }
 
     // 메뉴 삭제
     @DeleteMapping("/delete-menu/{id}")
-    public ResponseEntity<Void> deleteMenu(@PathVariable Integer id) {
-        menuService.deleteMenu(id);
+    public ResponseEntity<Void> deleteMenu(@PathVariable Integer id, HttpServletRequest request) {
+        menuService.deleteMenu(id, request);  // HttpServletRequest 추가
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

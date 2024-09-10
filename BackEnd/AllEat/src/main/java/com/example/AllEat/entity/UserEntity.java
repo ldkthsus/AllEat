@@ -57,7 +57,7 @@ public class UserEntity {
     private Timestamp expiration;
 
     @Column(name = "amount_activity")
-    private int amountActivity;
+    private Integer amountActivity;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WeightEntity> weights;
