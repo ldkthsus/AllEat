@@ -50,17 +50,17 @@ pipeline {
         //     }
         // }
 
-        stage('Push Docker Images') {
-            steps {
-                echo 'Pushing Docker Images to Registry...'
-                script {
-                    withDockerRegistry(url: 'https://index.docker.io/v1/', credentialsId: "${env.DOCKER_CREDENTIALS_ID}") {
-                        sh 'docker push happyjellyfish/alleat-image:latest'
+        // stage('Push Docker Images') {
+        //     steps {
+        //         echo 'Pushing Docker Images to Registry...'
+        //         script {
+        //             withDockerRegistry(url: 'https://index.docker.io/v1/', credentialsId: "${env.DOCKER_CREDENTIALS_ID}") {
+        //                 sh 'docker push happyjellyfish/alleat-image:latest'
 
-                    }
-                }
-            }
-        }
+        //             }
+        //         }
+        //     }
+        // }
 
        stage('Cleanup Old Images') {
             steps {
