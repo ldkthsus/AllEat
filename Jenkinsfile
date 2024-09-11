@@ -3,10 +3,35 @@ pipeline {
 
     environment {
         // Docker Hub or other Docker registry details (if needed)
-        DOCKER_CREDENTIALS_ID = 'jenkins-docker-hub' // Jenkins에 설정된 Docker 자격 증명 ID
+        // DOCKER_CREDENTIALS_ID = 'jenkins-docker-hub' // Jenkins에 설정된 Docker 자격 증명 ID
     }
 
     stages {
+
+        stage('Example') {
+            steps {
+                // 비밀 파일을 임시 디렉토리로 복사하고, env 파일을 로드합니다
+                withCredentials([file(credentialsId: 'jenkins-env', variable: 'SECRET_FILE')]) {
+                    script {
+                        // 비밀 파일을 /tmp 디렉토리로 복사합니다
+                        def secretFilePath = "${env.SECRET_FILE}"
+                        def envFile = readFile(secretFilePath)
+                        
+                        // env 파일에서 환경 변수를 로드합니다
+                        envFile.eachLine { line ->
+                            def (key, value) = line.split('=')
+                            if (key && value) {
+                                env[key] = value
+                            }
+                        }
+                        
+                        // 환경 변수를 사용하는 예
+                        echo "Loaded variable: ${env.JWT_SECRET}"
+                    }
+                }
+            }
+        }
+
         stage('Build Backend') {
             steps {
                 script {
@@ -79,26 +104,6 @@ pipeline {
             }
         }
 
-
-
-        // stage('Deploy Containers') {
-        //     steps {
-        //         echo 'Deploying Docker Containers...'
-        //         script {
-        //             sh '''
-        //             docker stop happyre-container
-        //             docker rm happyre-container
-        //             docker run -d --name happyre-container -p 8080:8080 happyre-image:latest
-        //             '''
-        //             sh '''
-        //             docker stop frontend-container
-        //             docker rm frontend-container
-        //             docker run -d --name frontend-container -p 3000:3000 happyjellyfish/frontend-image:latest
-        //             '''
-        //         }
-        //         //docker run -d --name fastapi-container -p 8000:8000 fastapi-image:latest
-        //     }
-        // }
 
         stage('Deploy using Docker Down') { 
             steps{
