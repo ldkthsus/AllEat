@@ -137,7 +137,6 @@ public class MenuService {
     }
 
     public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
-        RestaurantsEntity restaurants = restaurantsRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
         List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
         return findMenu;
 
