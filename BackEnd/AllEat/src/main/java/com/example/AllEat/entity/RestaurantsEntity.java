@@ -1,4 +1,5 @@
 package com.example.AllEat.entity;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Setter
 @Table(name = "restaurants")
 public class RestaurantsEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,10 +29,6 @@ public class RestaurantsEntity {
     @OneToMany(mappedBy = "restaurants", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<MenuEntity> menuList;
-
-//    // PayTransactionsEntity와 1대N 관계 설정
-//    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<PayTransactionsEntity> payTransactions;
 
     // RestaurantsType을 내부 static enum으로 정의
     public enum RestaurantsType {
