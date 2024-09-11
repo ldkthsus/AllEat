@@ -24,7 +24,7 @@ pipeline {
                 script {
                     // Build HappyRe Docker image
                     dir('BackEnd/AllEat') {
-                        sh 'docker build -t happyjellyfish/alleat-image .'
+                        sh 'docker build -t alleat/alleat-image .'
                     }
                     // Build Fast_API Docker image
                     // dir('BackEnd/AllEat') {
@@ -69,8 +69,8 @@ pipeline {
                     # Remove dangling images
                     docker image prune -f
 
-                    # Remove images that start with 'happyjellyfish/' and do not have the 'latest' tag
-                    docker images --filter "dangling=false" --format "{{.Repository}}:{{.Tag}}" | grep '^happyjellyfish/' | grep -v ':latest' | while read -r image; do
+                    # Remove images that start with 'alleat/' and do not have the 'latest' tag
+                    docker images --filter "dangling=false" --format "{{.Repository}}:{{.Tag}}" | grep '^alleat/' | grep -v ':latest' | while read -r image; do
                         docker rmi -f "$image" || true
                     done
                     '''
