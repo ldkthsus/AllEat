@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // Docker Hub or other Docker registry details (if needed)
-        // DOCKER_CREDENTIALS_ID = 'jenkins-docker-hub' // Jenkins에 설정된 Docker 자격 증명 ID
-    }
-
     stages {
 
         stage('Example') {
