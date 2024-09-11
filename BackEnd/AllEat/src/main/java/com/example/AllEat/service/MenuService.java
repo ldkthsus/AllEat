@@ -7,26 +7,26 @@ import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.MenuRepository;
 import com.example.AllEat.repository.RestaurantsRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MenuService {
 
-    @Autowired
-    private RestaurantsRepository restaurantsRepository;
+    private final RestaurantsRepository restaurantsRepository;
 
-    @Autowired
-    private MenuRepository menuRepository;
+    private final MenuRepository menuRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     // 메뉴 생성
     public MenuEntity createMenu(MenuCreateDTO menuCreateDTO, HttpServletRequest request) {
         // restaurant_id로 가게 정보 가져오기
+        System.out.println("id : " + menuCreateDTO.getRestaurantId());
         RestaurantsEntity restaurant = restaurantsRepository.findById(menuCreateDTO.getRestaurantId())
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
 
@@ -86,5 +86,12 @@ public class MenuService {
         RestaurantsEntity restaurant = restaurantsRepository.findById(restaurantId)
                 .orElseThrow(() -> new RuntimeException("Restaurant not found"));
         return menuRepository.findByRestaurants(restaurant);
+    }
+
+    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
+        RestaurantsEntity restaurants = restaurantsRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
+        return findMenu;
+
     }
 }
