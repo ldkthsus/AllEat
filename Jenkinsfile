@@ -2,31 +2,6 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Example') {
-            steps {
-                // 비밀 파일을 임시 디렉토리로 복사하고, env 파일을 로드합니다
-                withCredentials([file(credentialsId: 'jenkins-env', variable: 'SECRET_FILE')]) {
-                    script {
-                        // 비밀 파일을 /tmp 디렉토리로 복사합니다
-                        def secretFilePath = "${env.SECRET_FILE}"
-                        def envFile = readFile(secretFilePath)
-                        
-                        // env 파일에서 환경 변수를 로드합니다
-                        envFile.eachLine { line ->
-                            def (key, value) = line.split('=')
-                            if (key && value) {
-                                env[key] = value
-                            }
-                        }
-                        
-                        // 환경 변수를 사용하는 예
-                        echo "Loaded variable: ${env.JWT_SECRET}"
-                    }
-                }
-            }
-        }
-
         stage('Build Backend') {
             steps {
                 script {
