@@ -67,4 +67,10 @@ public class MenuController {
         menuService.deleteMenu(id, request);  // HttpServletRequest 추가
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/menu/{restaurantId}/{balance}")
+    public ResponseEntity<?> getPossibleList(@PathVariable(name = "restaurantId") Integer restaurantId, @PathVariable(name = "balance") Integer balance) {
+        List<MenuEntity> menus = menuService.getMenusByRestaurantIdAndBalance(restaurantId, balance);
+        return new ResponseEntity<>(menus, HttpStatus.OK);
+    }
 }

@@ -6,8 +6,11 @@ import com.example.AllEat.entity.RestaurantsEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.MenuRepository;
+import com.example.AllEat.repository.RestaurantsRepository;
+import com.example.AllEat.repository.UserRepository;
 import com.example.AllEat.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +18,15 @@ import java.util.Optional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MenuService {
 
-    @Autowired
-    private RestaurantsService restaurantsService;
 
-    @Autowired
-    private MenuRepository menuRepository;
-
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final RestaurantsService restaurantsService;
+    private final MenuRepository menuRepository;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final RestaurantsRepository restaurantsRepository;
 
     // JWT 토큰을 이용해 사용자 식별
     public UserEntity findUserByRequest(HttpServletRequest request) {
@@ -59,18 +58,22 @@ public class MenuService {
 
     // 메뉴 생성
     public MenuEntity createMenu(MenuCreateDTO menuCreateDTO, HttpServletRequest request) {
+        // restaurant_id로 가게 정보 가져오기
+        System.out.println("id : " + menuCreateDTO.getRestaurantId());
+        RestaurantsEntity restaurant = restaurantsRepository.findById(menuCreateDTO.getRestaurantId())
+                .orElseThrow(() -> new RuntimeException("Restaurant not found"));
         UserEntity userEntity = findUserByRequest(request);
         if (userEntity == null) {
             throw new RuntimeException("User not found");
         }
 
         // restaurant_name으로 레스토랑 검색 또는 생성
-        RestaurantsEntity restaurant = restaurantsService.findOrCreateRestaurant(
+        RestaurantsEntity findRestaurant = restaurantsService.findOrCreateRestaurant(
                 menuCreateDTO.getRestaurantName(), menuCreateDTO.getRestaurantType());
 
         // MenuEntity 생성 및 가게 연결
         MenuEntity menuEntity = new MenuEntity();
-        menuEntity.setRestaurants(restaurant);
+        menuEntity.setRestaurants(findRestaurant);
         menuEntity.setMenuName(menuCreateDTO.getMenuName());
         menuEntity.setMenuCalories(menuCreateDTO.getMenuCalories());
         menuEntity.setMenuCarbohydrate(menuCreateDTO.getMenuCarbohydrate());
@@ -131,5 +134,12 @@ public class MenuService {
     public List<MenuEntity> getMenusByRestaurantId(Integer restaurantId) {
         RestaurantsEntity restaurant = restaurantsService.findRestaurantById(restaurantId);
         return menuRepository.findByRestaurants(restaurant);
+    }
+
+    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
+        RestaurantsEntity restaurants = restaurantsRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("Restaurant not found"));
+        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
+        return findMenu;
+
     }
 }

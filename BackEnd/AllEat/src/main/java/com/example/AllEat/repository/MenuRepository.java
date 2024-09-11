@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MenuRepository extends JpaRepository<MenuEntity, Integer> {
     List<MenuEntity> findByRestaurants(RestaurantsEntity restaurants);
+
+    List<MenuEntity> findByRestaurants_IdAndMenuPrice(Integer id, Integer balance);
 }
 
