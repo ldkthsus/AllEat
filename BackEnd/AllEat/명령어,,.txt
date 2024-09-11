@@ -1,0 +1,10 @@
+echo "export DB_CONNECTION=alleat" >> ~/.bashrc
+echo "export DB_USERNAME=root" >> ~/.bashrc
+echo "export DB_DOMAIN=172.22.0.3:3306" >> ~/.bashrc
+echo "export JWT_SECRET=f35bcda6447d58d40b97c07bdff5197458a74627b7cd3e354a9efc3d090db3cc" >> ~/.bashrc
+echo "export KAKAO_CLIENT_ID=d9d96f3f364dcc5d5e151c8b27bbe1ce" >> ~/.bashrc
+echo "export KAKAO_CLIENT_SECRET=77c1200e9defa29ee982a2463c70f918" >> ~/.bashrc
+echo "export NAVER_CLIENT_ID=40uCYT84k8_tj_eUakSw" >> ~/.bashrc
+echo "export NAVER_CLINET_SECRET=vwPX4RlFtZ" >> ~/.bashrc
+echo "export GOOGLE_CLIENT_SECRET=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" >> ~/.bashrc
+echo "export GOOGLE_CLIENT_ID=936574812414-vhv2et34n3dm85s271qe8rcb6vunp62p.apps.googleusercontent.com" >> ~/.bashrc
