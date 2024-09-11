@@ -8,6 +8,7 @@ import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.MenuRepository;
 import com.example.AllEat.repository.RestaurantsRepository;
 import com.example.AllEat.repository.UserRepository;
+import com.example.AllEat.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
