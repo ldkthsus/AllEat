@@ -2,11 +2,10 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '../../types/navigation';
-// import CustomButton from '../components/CustomButton';
-import {images} from '../../constants';
+import {RootStackParamList} from '../../../types/navigation';
+import {images} from '../../../constants';
 import {styles} from './IntroScreen.styles'; // 분리된 스타일을 임포트
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../../components/CustomButton';
 type IntroScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Intro'

@@ -1,36 +1,39 @@
-import {View, Text, Pressable} from 'react-native';
 import React, {useState} from 'react';
+import {View, Text, Pressable} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import FormField from '../../components/FormField/FormField';
-import CustomButton from '../../components/CustomButton';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../../types/navigation';
-import {styles} from './SignInScreen.styles'; // 스타일 임포트
-import {icons} from '../../constants';
-type SignInScreenNavigationProp = NativeStackNavigationProp<
+import FormField from '../../../components/FormField/FormField'; // 기존에 만든 form 컴포넌트 사용
+import CustomButton from '../../../components/CustomButton'; // 버튼 컴포넌트 사용
+import {styles} from './SignUpScreen.styles'; // 스타일 파일 임포트
+import {RootStackParamList} from '../../../types/navigation';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {icons} from '../../../constants';
+type SignUpScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
-  'SignIn'
+  'SignUp'
 >;
 
-const SignIn: React.FC = () => {
-  const navigation = useNavigation<SignInScreenNavigationProp>();
+const SignUp: React.FC = () => {
+  const navigation = useNavigation<SignUpScreenNavigationProp>();
   const [form, setForm] = useState({
     email: '',
     password: '',
+    confirmPassword: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const submit = () => {
+  const handleSubmit = () => {
     setIsSubmitting(true);
-    // Perform any form validation or API request here
-    navigation.replace('Home');
+    // 회원가입 로직
     setIsSubmitting(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>돌아오셨군요! 반가워요</Text>
+      <Text style={styles.text}>
+        <Text style={styles.text1}>올잇</Text>
+        <Text style={styles.text2}>과 함께 하시겠어요?</Text>
+      </Text>
 
       <View style={styles.socialContainer}>
         <View style={styles.socialButton}>
@@ -59,24 +62,31 @@ const SignIn: React.FC = () => {
           placeholder="패스워드를 입력하세요"
           secureTextEntry
         />
+        <FormField
+          title="패스워드 확인"
+          value={form.confirmPassword}
+          handleChangeText={text => setForm({...form, confirmPassword: text})}
+          placeholder="패스워드를 다시 입력하세요"
+          secureTextEntry
+        />
       </View>
 
       <CustomButton
-        title="로그인"
+        title="회원가입"
         containerStyles="w-[100%] h-[60px]" // Tailwind 스타일 전달
         textStyles="text-white font-pbold" // Tailwind 스타일 전달
-        handlePress={submit}
+        handlePress={handleSubmit}
         isLoading={isSubmitting}
       />
 
-      <View style={styles.signupTextContainer}>
-        <Text style={styles.text}>아직 회원이 아니신가요?</Text>
-        <Pressable onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.signupText}>회원가입</Text>
+      <View style={styles.loginTextContainer}>
+        <Text style={styles.text}>이미 올잇 회원이신가요?</Text>
+        <Pressable onPress={() => navigation.navigate('SignIn')}>
+          <Text style={styles.loginText}>로그인</Text>
         </Pressable>
       </View>
     </SafeAreaView>
   );
 };
 
-export default SignIn;
+export default SignUp;
