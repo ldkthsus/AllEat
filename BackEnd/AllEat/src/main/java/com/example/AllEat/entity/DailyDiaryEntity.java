@@ -28,7 +28,7 @@ public class DailyDiaryEntity {
     @Column(name = "daily_calories")
     private Integer dailyCalories;
 
-    @OneToMany(mappedBy = "daily_diary", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dailyDiary", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DiaryEntity> diaryEntities;
 
     @OneToOne(fetch = FetchType.LAZY)
