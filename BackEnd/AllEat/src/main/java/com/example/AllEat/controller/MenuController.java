@@ -1,8 +1,13 @@
 package com.example.AllEat.controller;
 
 import com.example.AllEat.dto.menu.MenuCreateDTO;
+import com.example.AllEat.entity.DiaryEntity;
 import com.example.AllEat.entity.MenuEntity;
+import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.jwt.JwtFilter;
+import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.service.MenuService;
+import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +21,12 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;
+    private final UserService userService;
 
     @Autowired
-    public MenuController(MenuService menuService) {
+    public MenuController(MenuService menuService, UserService userService) {
         this.menuService = menuService;
+        this.userService = userService;
     }
 
     // 메뉴와 레스토랑 추가
@@ -72,5 +79,13 @@ public class MenuController {
     public ResponseEntity<?> getPossibleList(@PathVariable(name = "restaurantId") Integer restaurantId, @PathVariable(name = "balance") Integer balance) {
         List<MenuEntity> menus = menuService.getMenusByRestaurantIdAndBalance(restaurantId, balance);
         return new ResponseEntity<>(menus, HttpStatus.OK);
+    }
+
+    @PostMapping("/menu")
+    public ResponseEntity<DiaryEntity> addMenu(@RequestBody List<MenuEntity> menuEntities, HttpServletRequest request) {
+           UserEntity findUser = userService.findByRequest(request);
+           if (findUser != null) {
+
+           }
     }
 }
