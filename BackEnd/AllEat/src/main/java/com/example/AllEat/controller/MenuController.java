@@ -81,11 +81,11 @@ public class MenuController {
         return new ResponseEntity<>(menus, HttpStatus.OK);
     }
 
-    @PostMapping("/menu")
-    public ResponseEntity<DiaryEntity> addMenu(@RequestBody List<MenuEntity> menuEntities, HttpServletRequest request) {
-           UserEntity findUser = userService.findByRequest(request);
-           if (findUser != null) {
-
-           }
-    }
+//    @PostMapping("/menu")
+//    public ResponseEntity<DiaryEntity> addMenu(@RequestBody List<MenuEntity> menuEntities, HttpServletRequest request) {
+//        UserEntity findUser = userService.findByRequest(request);
+//        if (findUser != null) {
+//
+//        }
+//    }
 }

@@ -34,7 +34,8 @@ public class RestaurantsEntity {
     public enum RestaurantsType {
         RESTAURANTS("restaurants"),
         MART("mart"),
-        HOME("home");
+        HOME("home"),
+        DELIVERY("delivery");
 
         private final String type;
 
