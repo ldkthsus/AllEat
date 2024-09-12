@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, Pressable} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
-import FormField from '../../components/FormField'; // 기존에 만든 form 컴포넌트 사용
+import FormField from '../../components/FormField/FormField'; // 기존에 만든 form 컴포넌트 사용
 import CustomButton from '../../components/CustomButton'; // 버튼 컴포넌트 사용
 import {styles} from './SignUpScreen.styles'; // 스타일 파일 임포트
 import {RootStackParamList} from '../../types/navigation';

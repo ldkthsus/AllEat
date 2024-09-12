@@ -1,7 +1,7 @@
 import {View, Text, TextInput, TextInputProps} from 'react-native';
 import React, {useState} from 'react';
 import {TouchableOpacity} from 'react-native';
-import {icons} from '../constants';
+import {icons} from '../../constants';
 import {styles} from './FormField.styles'; // 스타일 파일 임포트
 
 interface FormFieldProps extends TextInputProps {

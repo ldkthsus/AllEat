@@ -1,7 +1,7 @@
 import {View, Text, Pressable} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import FormField from '../../components/FormField';
+import FormField from '../../components/FormField/FormField';
 import CustomButton from '../../components/CustomButton';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';

@@ -1,24 +1,18 @@
 import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
-  textTypo: {
-    fontWeight: '300',
-    top: '71.93%',
-    textAlign: 'left',
-    color: '#000',
-    fontFamily: 'Pretendard',
-    fontSize: 14,
-    position: 'absolute',
-  },
-
   text: {
-    textAlign: 'left',
-    color: '#000',
-    fontFamily: 'Pretendard',
+    color: '#3d3d3d',
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     position: 'absolute',
+    top: 36,
   },
-
+  icon: {
+    width: '25%',
+    display: 'flex',
+    alignItems: 'center',
+  },
   appBar: {
     shadowColor: 'rgba(127, 127, 127, 0.2)',
     shadowOffset: {
@@ -30,7 +24,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 1,
     backgroundColor: '#fff',
     flex: 1,
-    height: 100,
+    height: 10,
     width: '100%',
   },
 });
