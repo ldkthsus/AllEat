@@ -1,9 +1,10 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import IntroScreen from '../features/auth/IntroScreen/IntroScreen';
+import InitialScreen from '../features/auth/InitialScreen/InitialScreen';
 import SignIn from '../features/auth/SignInScreen/SignInScreen';
 import SignUp from '../features/auth/SignUpScreen/SignUpScreen';
-import HomeScreen from '../features/HomeScreen';
+import HomeScreen from '../features/home/HomeScreen/HomeScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 
@@ -20,7 +21,7 @@ const AppNavigator = () => {
   // 특정 화면에서는 AppBar를 숨기고 싶은 경우
   const shouldShowAppBar =
     currentRouteName &&
-    !['Intro', 'SignUp', 'SignIn'].includes(currentRouteName);
+    !['Intro', 'SignUp', 'SignIn', 'Initial'].includes(currentRouteName);
 
   return (
     <>
@@ -43,6 +44,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Initial"
+          component={InitialScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
