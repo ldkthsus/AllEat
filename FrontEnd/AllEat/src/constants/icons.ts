@@ -1,7 +1,7 @@
 import home from '../assets/icons/home.svg';
 import log from '../assets/icons/log.svg';
 import man from '../assets/icons/man.svg';
-import manDisable from '../assets/icons/manDisable.svg';
+import manDisabled from '../assets/icons/manDisabled.svg';
 import mypage from '../assets/icons/mypage.svg';
 import notifications from '../assets/icons/notifications.svg';
 import passwordCheck from '../assets/icons/passwordCheck.svg';
@@ -15,7 +15,7 @@ const icons = {
   home,
   log,
   man,
-  manDisable,
+  manDisabled,
   mypage,
   notifications,
   passwordCheck,

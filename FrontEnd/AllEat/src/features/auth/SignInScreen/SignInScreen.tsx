@@ -1,13 +1,13 @@
 import {View, Text, Pressable} from 'react-native';
 import React, {useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import FormField from '../../components/FormField/FormField';
-import CustomButton from '../../components/CustomButton';
+import FormField from '../../../components/FormField/FormField';
+import CustomButton from '../../../components/CustomButton';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {RootStackParamList} from '../../types/navigation';
+import {RootStackParamList} from '../../../types/navigation';
 import {styles} from './SignInScreen.styles'; // 스타일 임포트
-import {icons} from '../../constants';
+import {icons} from '../../../constants';
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'SignIn'
@@ -33,18 +33,28 @@ const SignIn: React.FC = () => {
       <Text style={styles.title}>돌아오셨군요! 반가워요</Text>
 
       <View style={styles.socialContainer}>
-        <View style={styles.socialButton}>
-          <icons.socialGoogle width={24} height={24} />
+        <View style={styles.socialButtonGoogle}>
+          <icons.socialGoogle
+            style={styles.socialButton}
+            width={24}
+            height={24}
+          />
           <Text style={styles.socialButtonText}>구글로 계속하기</Text>
         </View>
-        <View style={styles.socialButton}>
-          <icons.socialKakao width={24} height={24} />
+        <View style={styles.socialButtonKakao}>
+          <icons.socialKakao
+            style={styles.socialButton}
+            width={24}
+            height={24}
+          />
           <Text style={styles.socialButtonText}>카카오로 계속하기</Text>
         </View>
       </View>
-
-      <Text style={styles.orText}>or</Text>
-
+      <View style={styles.orContainer}>
+        <View style={styles.hairline} />
+        <Text style={styles.orText}>or</Text>
+        <View style={styles.hairline} />
+      </View>
       <View style={styles.formContainer}>
         <FormField
           title="이메일"

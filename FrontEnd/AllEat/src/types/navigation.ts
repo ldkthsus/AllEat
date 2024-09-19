@@ -4,5 +4,6 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   Intro: undefined;
+  Initial: undefined;
   // 다른 화면도 추가할 수 있습니다.
 };
