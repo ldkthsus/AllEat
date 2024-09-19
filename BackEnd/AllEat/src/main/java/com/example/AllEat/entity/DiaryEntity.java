@@ -40,4 +40,11 @@ public class DiaryEntity {
     @JoinColumn(name = "daily_diary_id")
     private DailyDiaryEntity dailyDiary;
 
+    public void updateCalories(Integer calories) {
+        this.mealCalories = calories;
+    }
+
+    @OneToMany(mappedBy = "mealpay", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<MealPayEntity> mealPay;
+
 }
