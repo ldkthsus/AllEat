@@ -34,4 +34,8 @@ public class DailyDiaryEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public void updateCalories(Integer calories) {
+        this.dailyCalories = calories;
+    }
 }

@@ -1,15 +1,14 @@
 package com.example.AllEat.controller;
 
 import com.example.AllEat.dto.menu.MenuCreateDTO;
-import com.example.AllEat.entity.DiaryEntity;
+import com.example.AllEat.dto.menu.AddMenuRequest;
+import com.example.AllEat.entity.DailyDiaryEntity;
 import com.example.AllEat.entity.MenuEntity;
-import com.example.AllEat.entity.UserEntity;
-import com.example.AllEat.jwt.JwtFilter;
-import com.example.AllEat.jwt.JwtUtil;
+import com.example.AllEat.service.DailyDiaryService;
 import com.example.AllEat.service.MenuService;
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,16 +17,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/AllEat/record")
+@RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
     private final UserService userService;
-
-    @Autowired
-    public MenuController(MenuService menuService, UserService userService) {
-        this.menuService = menuService;
-        this.userService = userService;
-    }
+    private final DailyDiaryService dailyDiaryServie;
 
     // 메뉴와 레스토랑 추가
     @PostMapping("/add-menu")
@@ -78,14 +73,12 @@ public class MenuController {
     @GetMapping("/menu/{restaurantId}/{balance}")
     public ResponseEntity<?> getPossibleList(@PathVariable(name = "restaurantId") Integer restaurantId, @PathVariable(name = "balance") Integer balance) {
         List<MenuEntity> menus = menuService.getMenusByRestaurantIdAndBalance(restaurantId, balance);
-        return new ResponseEntity<>(menus, HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(menus);
     }
 
-//    @PostMapping("/menu")
-//    public ResponseEntity<DiaryEntity> addMenu(@RequestBody List<MenuEntity> menuEntities, HttpServletRequest request) {
-//        UserEntity findUser = userService.findByRequest(request);
-//        if (findUser != null) {
-//
-//        }
-//    }
+    @PostMapping("/menu")
+    public ResponseEntity<?> addMenu(@RequestBody List<AddMenuRequest> addMenuRequests, HttpServletRequest request) {
+        DailyDiaryEntity getDailyDiaryEntity = dailyDiaryServie.getDailyDiary(request, addMenuRequests);
+        return ResponseEntity.status(HttpStatus.OK).body(getDailyDiaryEntity);
+    }
 }
