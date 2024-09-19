@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -49,4 +51,7 @@ public class MenuEntity {
     @OneToOne(mappedBy = "menu", cascade = CascadeType.ALL)
     @JsonIgnore
     private FavoriteEntity favorite;
+
+    @OneToMany(mappedBy = "menu", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DiaryMappingEntity> diaryMappings;
 }
