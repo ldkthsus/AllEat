@@ -16,13 +16,4 @@ public class UserJoinDTO {
     @NotBlank(message = "Password is mandatory")
     private String password;
 
-    @NotBlank(message = "Name is mandatory")
-    private String name;
-
-    @JsonProperty("user_height")
-    private Double userHeight;
-    @JsonProperty("user_gender")
-    private int userGender;
-    @JsonProperty("user_age")
-    private int userAge;
 }
