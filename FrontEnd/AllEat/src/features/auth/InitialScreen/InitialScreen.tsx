@@ -12,6 +12,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
 import GenderSelection from '../components/GenderSelection/GenderSelection';
 import ActivityLevelSelection from '../components/ActivityLevelSelection/ActivityLevelSelection';
+import api from '../../../utils/api';
 
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -73,7 +74,7 @@ const InitialScreen: React.FC = () => {
   const onCancel = () => {
     setVisiblePicker(null);
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const submittedForm = {
       ...form,
       breakfast: isBreakfastEnabled ? form.breakfast.toLocaleTimeString() : '',
@@ -88,7 +89,31 @@ const InitialScreen: React.FC = () => {
     //goal은 /AllEat/users/goals(POST)
     //weight은 /AllEat/weight(POST)
     //submittedForm은 /AllEat/users/info(PUT)
-    navigation.navigate('Home');
+    try {
+      // goal에 대한 POST 요청
+      const goalResponse = await api.post('/AllEat/users/goals', {
+        goal,
+      });
+      console.log('Goal Response:', goalResponse.data);
+
+      // weight에 대한 POST 요청
+      const weightResponse = await api.post('/AllEat/weight', {
+        weight,
+      });
+      console.log('Weight Response:', weightResponse.data);
+
+      // submittedForm에 대한 PUT 요청
+      const formResponse = await api.put('/AllEat/users/info', {
+        ...submittedForm,
+      });
+      console.log('Form Response:', formResponse.data);
+
+      // 모든 요청이 성공하면 홈으로 이동
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error occurred during form submission:', error);
+      // 에러 처리 추가
+    }
   };
 
   return (
