@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GoalDTO {
-    private Integer id;
     @JsonProperty("goal_weight")
     private double goalWeight;
     @JsonProperty("goal_cost")

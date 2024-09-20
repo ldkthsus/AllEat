@@ -71,7 +71,6 @@ public class DailyDiaryService {
         DailyDiaryResponse dailyDiaryResponse = new DailyDiaryResponse();
         dailyDiaryResponse.FromEntity(requestDailyDiary, requestUser);
 
-        for ()
         return dailyDiaryResponse;
     }
 }
