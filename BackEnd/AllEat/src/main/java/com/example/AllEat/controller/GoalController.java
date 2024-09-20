@@ -58,7 +58,6 @@ public class GoalController {
 
     private GoalDTO convertToDTO(GoalEntity goalEntity) {
         GoalDTO goalDTO = new GoalDTO();
-        goalDTO.setId(goalEntity.getId());
         goalDTO.setGoalWeight(goalEntity.getGoalWeight());
         goalDTO.setGoalCost(goalEntity.getGoalCost());
         return goalDTO;
