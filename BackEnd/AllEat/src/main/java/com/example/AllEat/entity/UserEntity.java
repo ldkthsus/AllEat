@@ -80,11 +80,23 @@ public class UserEntity {
     }
 
     public void updateInfo(UpdateRequest updateRequest, String profileUrl){
-        this.password = updateRequest.getPassword2();
-        goals.update(updateRequest.getGoalWeight(), updateRequest.getGoalCost());
-        if (this.weights != null && !this.weights.isEmpty()) {
-            WeightEntity lastWeight = this.weights.get(this.weights.size() - 1);
-            lastWeight.updateWeight(updateRequest.getWeight()); // 필요에 따라 세부 수정
+        if (updateRequest.getPassword1() != null){
+            this.password = updateRequest.getPassword1();
+        }
+        if (updateRequest.getUserAge() != null){
+            this.userAge = updateRequest.getUserAge();
+        }
+        if (updateRequest.getUserGender() != null){
+            this.userGender = updateRequest.getUserGender();
+        }
+        if (updateRequest.getUserHeight() != null){
+            this.userHeight = updateRequest.getUserHeight();
+        }
+        if (updateRequest.getAmountActivity() != null){
+            this.amountActivity = updateRequest.getAmountActivity();
+        }
+        if (updateRequest.getName() != null){
+            this.userName = updateRequest.getName();
         }
         this.profileUrl = profileUrl;
     }
