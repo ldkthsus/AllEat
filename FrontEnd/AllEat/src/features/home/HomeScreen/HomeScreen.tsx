@@ -1,10 +1,9 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View,  Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
-import CustomButton from '../../../components/CustomButton';
-// import {icons} from '../../../constants';
+import {icons} from '../../../constants';
 import {styles} from './HomeScreen.styles';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
@@ -15,14 +14,12 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   return (
-    <View style={styles.container}>
-      <CustomButton
-        title="계속하기"
-        handlePress={() => navigation.navigate('SignIn')}
-        containerStyles="w-[80%] h-[60px]" // Tailwind 스타일 전달
-        textStyles="text-white font-pbold" // Tailwind 스타일 전달
-        isLoading={false} // 로딩 상태 설정
-      />
+    <View style={styles.topbar} >
+      <icons.arrowBackLeft style={styles.arrowBackLeft} height={30} width={30} />
+      <Text style={styles.day}>오늘</Text>
+      <icons.notifications style={styles.notificationIcon} height={20} width={20}/>
+      <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+      <icons.arrowBackRight style={styles.arrowBackRight} height={30} width={30} /> 
     </View>
   );
 };

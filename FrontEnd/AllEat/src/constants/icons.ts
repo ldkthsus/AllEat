@@ -10,6 +10,9 @@ import socialGoogle from '../assets/icons/socialGoogle.svg';
 import socialKakao from '../assets/icons/socialKakao.svg';
 import woman from '../assets/icons/woman.svg';
 import womanDisabled from '../assets/icons/womanDisable.svg';
+import notiBadge from '../assets/icons/notiBadge.svg';
+import arrowBackRight from '../assets/icons/arrowBackRight.svg';
+import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
 
 const icons = {
   home,
@@ -24,5 +27,8 @@ const icons = {
   socialKakao,
   woman,
   womanDisabled,
+  notiBadge,
+  arrowBackRight,
+  arrowBackLeft,
 };
 export default icons;
