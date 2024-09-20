@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -30,5 +32,19 @@ public class DiaryEntity {
         LUNCH,
         DINNER
     }
+
+    @OneToMany(mappedBy = "diary",orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DiaryMappingEntity> diaryMapping;
+
+    @ManyToOne
+    @JoinColumn(name = "daily_diary_id")
+    private DailyDiaryEntity dailyDiary;
+
+    public void updateCalories(Integer calories) {
+        this.mealCalories = calories;
+    }
+
+    @OneToMany(mappedBy = "mealpay", orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<MealPayEntity> mealPay;
 
 }
