@@ -12,6 +12,9 @@ import woman from '../assets/icons/woman.svg';
 import womanDisabled from '../assets/icons/womanDisable.svg';
 import plus from '../assets/icons/plus.svg';
 import minus from '../assets/icons/minus.svg';
+import notiBadge from '../assets/icons/notiBadge.svg';
+import arrowBackRight from '../assets/icons/arrowBackRight.svg';
+import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
 
 const icons = {
   home,
@@ -28,5 +31,8 @@ const icons = {
   womanDisabled,
   plus,
   minus,
+  notiBadge,
+  arrowBackRight,
+  arrowBackLeft,
 };
 export default icons;
