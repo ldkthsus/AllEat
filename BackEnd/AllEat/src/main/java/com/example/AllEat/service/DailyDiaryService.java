@@ -1,6 +1,7 @@
 package com.example.AllEat.service;
 
 import com.example.AllEat.dto.menu.AddMenuRequest;
+import com.example.AllEat.dto.menu.DailyDiaryResponse;
 import com.example.AllEat.entity.*;
 import com.example.AllEat.entity.DiaryEntity.DiaryTime;
 import com.example.AllEat.repository.DailyDiaryRepository;
@@ -24,34 +25,26 @@ public class DailyDiaryService {
     private final DiaryRepository diaryRepository;
     private final DiaryMappingRepository diaryMappingRepository;
 
-    public DailyDiaryEntity getDailyDiary(HttpServletRequest request, List<AddMenuRequest> addMenuRequests) {
+    public DailyDiaryResponse getDailyDiary(HttpServletRequest request, List<AddMenuRequest> addMenuRequests) {
         UserEntity findUser = userService.findByRequest(request);
         if (findUser != null) {
             DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now());
             Integer mealCalories = 0;
-            System.out.println("여기에 들어오나");
             if (findDailyDiary == null) {
-                System.out.println("비어있으니까 여기 들어와야 함");
                 DailyDiaryEntity dailyDiaryEntity = DailyDiaryEntity.builder()
                         .date(LocalDate.now())
                         .dailyCalories(mealCalories)
                         .user(findUser)
                         .build();
                 dailyDiaryRepository.save(dailyDiaryEntity);
-                updateDailyDiary(dailyDiaryEntity, addMenuRequests, mealCalories);
-                return dailyDiaryEntity;
+                return updateDailyDiary(dailyDiaryEntity, addMenuRequests, mealCalories, findUser);
             }
-            System.out.println("그럼 여기구나");
-            System.out.println(addMenuRequests.get(0).getDiaryTime());
-            updateDailyDiary(findDailyDiary, addMenuRequests, mealCalories);
-            return findDailyDiary;
+            return updateDailyDiary(findDailyDiary, addMenuRequests, mealCalories, findUser);
+
         }
         return null;
     }
-    public void updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequest> addMenuRequests, Integer mealCalories) {
-        System.out.println("근데 왜 여기는 안들어옴 ?");
-        System.out.println("diarytime : " + addMenuRequests.get(1).getDiaryTime());
-        System.out.println("diarytime : " + addMenuRequests.get(0).getDiaryTime());
+    public DailyDiaryResponse updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequest> addMenuRequests, Integer mealCalories, UserEntity requestUser) {
         DiaryEntity diaryEntity = DiaryEntity.builder()
                 .diaryTime(DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
                 .mealCalories(mealCalories)
@@ -74,5 +67,11 @@ public class DailyDiaryService {
 
         requestDailyDiary.updateCalories(mealCalories);
         dailyDiaryRepository.save(requestDailyDiary);
+
+        DailyDiaryResponse dailyDiaryResponse = new DailyDiaryResponse();
+        dailyDiaryResponse.FromEntity(requestDailyDiary, requestUser);
+
+        for ()
+        return dailyDiaryResponse;
     }
 }

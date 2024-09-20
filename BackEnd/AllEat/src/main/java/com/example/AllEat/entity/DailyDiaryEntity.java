@@ -21,8 +21,8 @@ public class DailyDiaryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "daily_diary_id")
-    private Integer dailyDiaryId;
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "date")
     private LocalDate date;
@@ -31,7 +31,8 @@ public class DailyDiaryEntity {
     private Integer dailyCalories;
 
     @OneToMany(mappedBy = "dailyDiary", orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonManagedReference
+//    @JsonBackReference
     private List<DiaryEntity> diaryEntities;
 
     @OneToOne(fetch = FetchType.LAZY)

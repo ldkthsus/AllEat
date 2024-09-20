@@ -44,10 +44,10 @@ public class UserEntity {
     private Double userHeight;
 
     @Column(name = "user_gender")
-    private int userGender;
+    private Integer userGender;
 
     @Column(name = "user_age")
-    private int userAge;
+    private Integer userAge;
 
     @Column(name = "refresh_Token")
     private String refreshToken;
