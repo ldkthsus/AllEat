@@ -43,10 +43,6 @@ public class UserService {
         UserEntity userEntity = UserEntity.builder()
                 .email(userJoinDTO.getEmail())
                 .password(passwordEncoder.encode(userJoinDTO.getPassword()))
-                .userName(userJoinDTO.getName())
-                .userHeight(userJoinDTO.getUserHeight())
-                .userGender(userJoinDTO.getUserGender())
-                .userAge(userJoinDTO.getUserAge())
                 .role("ROLE_USER")
                 .build();
 
@@ -75,6 +71,9 @@ public class UserService {
     }
 
     public boolean comparePassword(String firstPassword, String secondPassword) {
+        if (firstPassword == null){
+            return true;
+        }
         return firstPassword.equals(secondPassword);
     }
 }
