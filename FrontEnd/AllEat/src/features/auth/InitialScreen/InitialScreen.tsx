@@ -1,9 +1,8 @@
 import React from 'react';
-import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
+import {ScrollView, View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
-import {icons} from '../../../constants';
 import {images} from '../../../constants';
 import {styles} from './InitialScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
@@ -11,36 +10,41 @@ import FormField from '../../../components/FormField/FormField';
 import {useState} from 'react';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
+import GenderSelection from '../components/GenderSelection/GenderSelection';
+import ActivityLevelSelection from '../components/ActivityLevelSelection/ActivityLevelSelection';
+import api from '../../../utils/api';
+
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Initial'
 >;
 const InitialScreen: React.FC = () => {
   const navigation = useNavigation<InitialScreenNavigationProp>();
-  const [form, setForm] = useState({
-    nickname: '',
-    age: '',
-    height: '',
-    currentWeight: '',
-    targetWeight: '',
+  const [weight, setWeight] = useState({
+    weight: '',
   });
-  const [selectedGender, setSelectedGender] = useState<'woman' | 'man'>(
-    'woman',
-  );
-  const [selectedActiveRange, setSelectedActiveRange] = useState<
-    'normal' | 'notActive' | 'active'
-  >('normal');
+  const [goal, setGoal] = useState({
+    goal_weight: '',
+    goal_cost: '',
+  });
+  const [form, setForm] = useState({
+    name: '',
+    user_age: '',
+    user_height: '',
+    user_gender: 0 as 0 | 1, // 0 또는 1만 허용
+    user_activity: 1 as 0 | 1 | 2, // 0, 1, 2만 허용
+    breakfast: new Date(new Date().setHours(8, 0, 0, 0)),
+    lunch: new Date(new Date().setHours(12, 0, 0, 0)),
+    dinner: new Date(new Date().setHours(18, 0, 0, 0)),
+  });
 
-  const [breakfastTime, setBreakfastTime] = useState(new Date());
-  const [lunchTime, setLunchTime] = useState(new Date());
-  const [dinnerTime, setDinnerTime] = useState(new Date());
   const [visiblePicker, setVisiblePicker] = useState<
     'breakfast' | 'lunch' | 'dinner' | null
   >(null);
 
-  const [isBreakfastEnabled, setIsBreakfastEnabled] = useState(true);
-  const [isLunchEnabled, setIsLunchEnabled] = useState(true);
-  const [isDinnerEnabled, setIsDinnerEnabled] = useState(true);
+  const [isBreakfastEnabled, setIsBreakfastEnabled] = useState(false);
+  const [isLunchEnabled, setIsLunchEnabled] = useState(false);
+  const [isDinnerEnabled, setIsDinnerEnabled] = useState(false);
 
   const toggleAlarm = (type: 'breakfast' | 'lunch' | 'dinner') => {
     if (type === 'breakfast') {
@@ -58,11 +62,11 @@ const InitialScreen: React.FC = () => {
 
   const onConfirm = (selectedDate: Date) => {
     if (visiblePicker === 'breakfast') {
-      setBreakfastTime(selectedDate);
+      setForm({...form, breakfast: selectedDate});
     } else if (visiblePicker === 'lunch') {
-      setLunchTime(selectedDate);
+      setForm({...form, lunch: selectedDate});
     } else if (visiblePicker === 'dinner') {
-      setDinnerTime(selectedDate);
+      setForm({...form, dinner: selectedDate});
     }
     setVisiblePicker(null);
   };
@@ -70,113 +74,122 @@ const InitialScreen: React.FC = () => {
   const onCancel = () => {
     setVisiblePicker(null);
   };
+  const handleSubmit = async () => {
+    const submittedForm = {
+      ...form,
+      breakfast: isBreakfastEnabled ? form.breakfast.toLocaleTimeString() : '',
+      lunch: isLunchEnabled ? form.lunch.toLocaleTimeString() : '',
+      dinner: isDinnerEnabled ? form.dinner.toLocaleTimeString() : '',
+    };
+
+    console.log(submittedForm);
+    console.log(weight);
+    console.log(goal);
+    //여기서 axios요청 보내기
+    //goal은 /AllEat/users/goals(POST)
+    //weight은 /AllEat/weight(POST)
+    //submittedForm은 /AllEat/users/info(PUT)
+    try {
+      // goal에 대한 POST 요청
+      const goalResponse = await api.post('/AllEat/users/goals', {
+        goal,
+      });
+      console.log('Goal Response:', goalResponse.data);
+
+      // weight에 대한 POST 요청
+      const weightResponse = await api.post('/AllEat/weight', {
+        weight,
+      });
+      console.log('Weight Response:', weightResponse.data);
+
+      // submittedForm에 대한 PUT 요청
+      const formResponse = await api.put('/AllEat/users/info', {
+        ...submittedForm,
+      });
+      console.log('Form Response:', formResponse.data);
+
+      // 모든 요청이 성공하면 홈으로 이동
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error occurred during form submission:', error);
+      // 에러 처리 추가
+    }
+  };
+
   return (
     <ScrollView>
       <View style={styles.body}>
         <Text style={styles.title}>추가 정보를 입력해주세요!</Text>
         <FormField
           title="닉네임"
-          value={form.nickname}
-          handleChangeText={text => setForm({...form, nickname: text})}
+          value={form.name}
+          handleChangeText={text => setForm({...form, name: text})}
           placeholder="키키"
         />
         <FormField
           title="나이"
-          value={form.age}
+          value={form.user_age}
           unit="세"
-          handleChangeText={text => setForm({...form, age: text})}
+          handleChangeText={text => setForm({...form, user_age: text})}
           otherStyles={styles.field}
+          placeholder="0"
+          isNumeric={true}
+          isDecimal={false}
         />
         <FormField
           title="키"
-          value={form.height}
+          value={form.user_height}
           unit="cm"
-          handleChangeText={text => setForm({...form, height: text})}
+          handleChangeText={text => setForm({...form, user_height: text})}
           otherStyles={styles.field}
+          placeholder="0.0"
+          isNumeric={true}
+          isDecimal={true}
         />
         <FormField
           title="현재 몸무게"
-          value={form.currentWeight}
+          value={weight.weight}
           unit="kg"
-          handleChangeText={text => setForm({...form, currentWeight: text})}
+          handleChangeText={text => setWeight({weight: text})}
           otherStyles={styles.field}
+          placeholder="00.0"
+          isNumeric={true}
+          isDecimal={true}
         />
         <FormField
           title="목표 몸무게"
-          value={form.targetWeight}
+          value={goal.goal_weight}
           unit="kg"
-          handleChangeText={text => setForm({...form, targetWeight: text})}
+          handleChangeText={text => setGoal({...goal, goal_weight: text})}
           otherStyles={styles.field}
+          placeholder="00.0"
+          isNumeric={true}
+          isDecimal={true}
         />
         <FormField
           title="이달의 목표 식비"
-          value={form.age}
+          value={goal.goal_cost}
           unit="원"
-          handleChangeText={text => setForm({...form, age: text})}
+          handleChangeText={text => setGoal({...goal, goal_cost: text})}
+          placeholder="0"
+          isNumeric={true}
+          isDecimal={false}
         />
-        <View style={styles.form}>
-          <Text style={styles.formLabel}>성별</Text>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => setSelectedGender('woman')}>
-            {selectedGender === 'woman' ? (
-              <icons.woman width={80} height={80} />
-            ) : (
-              <icons.womanDisabled width={80} height={80} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.icon}
-            onPress={() => setSelectedGender('man')}>
-            {selectedGender === 'man' ? (
-              <icons.man width={70} height={70} />
-            ) : (
-              <icons.manDisabled width={70} height={70} />
-            )}
-          </TouchableOpacity>
-          <Text>여성</Text>
-          <Text>남성</Text>
-        </View>
-        <View style={styles.form}>
-          <Text style={styles.formLabel}>활동량</Text>
-          <TouchableOpacity
-            style={styles.image}
-            onPress={() => setSelectedActiveRange('notActive')}>
-            {selectedActiveRange === 'notActive' ? (
-              <images.notActive width={80} height={80} />
-            ) : (
-              <images.notActiveDisabled width={80} height={80} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.image}
-            onPress={() => setSelectedActiveRange('normal')}>
-            {selectedActiveRange === 'normal' ? (
-              <images.normalActive width={80} height={80} />
-            ) : (
-              <images.normalActiveDisabled width={80} height={80} />
-            )}
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.image}
-            onPress={() => setSelectedActiveRange('active')}>
-            {selectedActiveRange === 'active' ? (
-              <images.veryActive width={90} height={90} />
-            ) : (
-              <images.veryActiveDisabled width={90} height={90} />
-            )}
-          </TouchableOpacity>
-          <Text>적음</Text>
-          <Text>보통</Text>
-          <Text>많음</Text>
-        </View>
+        <GenderSelection
+          selectedGender={form.user_gender}
+          onSelect={user_gender => setForm({...form, user_gender})}
+        />
+        <ActivityLevelSelection
+          selectedActiveRange={form.user_activity}
+          onSelect={user_activity => setForm({...form, user_activity})}
+        />
         <View style={styles.form}>
           <Text style={styles.formLabel}>알람을 언제 보낼까요?</Text>
           <AlarmSetting
             isEnabled={isBreakfastEnabled}
             onToggle={() => toggleAlarm('breakfast')}
             label="아침식사 기록 알림"
-            time={breakfastTime}
+            time={form.breakfast}
             onPress={() => onPressTime('breakfast')}
             icon={images.breakfast}
           />
@@ -184,7 +197,7 @@ const InitialScreen: React.FC = () => {
             isEnabled={isLunchEnabled}
             onToggle={() => toggleAlarm('lunch')}
             label="점심식사 기록 알림"
-            time={lunchTime}
+            time={form.lunch}
             onPress={() => onPressTime('lunch')}
             icon={images.lunch}
           />
@@ -192,14 +205,14 @@ const InitialScreen: React.FC = () => {
             isEnabled={isDinnerEnabled}
             onToggle={() => toggleAlarm('dinner')}
             label="저녁식사 기록 알림"
-            time={dinnerTime}
+            time={form.dinner}
             onPress={() => onPressTime('dinner')}
             icon={images.dinner}
           />
         </View>
         <CustomButton
           title="계속하기"
-          handlePress={() => navigation.navigate('Agreement')}
+          handlePress={handleSubmit}
           containerStyles="w-[100%] h-[60px]" // Tailwind 스타일 전달
           textStyles="text-white font-pbold" // Tailwind 스타일 전달
           isLoading={false} // 로딩 상태 설정
@@ -211,10 +224,10 @@ const InitialScreen: React.FC = () => {
           mode="time"
           date={
             visiblePicker === 'breakfast'
-              ? breakfastTime
+              ? form.breakfast
               : visiblePicker === 'lunch'
-              ? lunchTime
-              : dinnerTime
+              ? form.lunch
+              : form.dinner
           }
         />
       </View>
