@@ -2,6 +2,7 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.dto.menu.AddMenuRequest;
 import com.example.AllEat.entity.*;
+import com.example.AllEat.entity.DiaryEntity.DiaryTime;
 import com.example.AllEat.repository.DailyDiaryRepository;
 import com.example.AllEat.repository.DiaryMappingRepository;
 import com.example.AllEat.repository.DiaryRepository;
@@ -28,7 +29,9 @@ public class DailyDiaryService {
         if (findUser != null) {
             DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now());
             Integer mealCalories = 0;
+            System.out.println("여기에 들어오나");
             if (findDailyDiary == null) {
+                System.out.println("비어있으니까 여기 들어와야 함");
                 DailyDiaryEntity dailyDiaryEntity = DailyDiaryEntity.builder()
                         .date(LocalDate.now())
                         .dailyCalories(mealCalories)
@@ -38,14 +41,19 @@ public class DailyDiaryService {
                 updateDailyDiary(dailyDiaryEntity, addMenuRequests, mealCalories);
                 return dailyDiaryEntity;
             }
+            System.out.println("그럼 여기구나");
+            System.out.println(addMenuRequests.get(0).getDiaryTime());
             updateDailyDiary(findDailyDiary, addMenuRequests, mealCalories);
             return findDailyDiary;
         }
         return null;
     }
     public void updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequest> addMenuRequests, Integer mealCalories) {
+        System.out.println("근데 왜 여기는 안들어옴 ?");
+        System.out.println("diarytime : " + addMenuRequests.get(1).getDiaryTime());
+        System.out.println("diarytime : " + addMenuRequests.get(0).getDiaryTime());
         DiaryEntity diaryEntity = DiaryEntity.builder()
-                .diaryTime(DiaryEntity.DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
+                .diaryTime(DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
                 .mealCalories(mealCalories)
                 .dailyDiary(requestDailyDiary)
                 .build();
