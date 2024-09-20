@@ -46,6 +46,7 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService implement
             System.out.println("naver : " + oAuth2Response);
         } else if (registrationId.equals("google")) {
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
+            System.out.println("구글이다");
         } else if (registrationId.equals("kakao")) {
             oAuth2Response = new KakaoResponse(oAuth2User.getAttributes());
         } else {
@@ -66,6 +67,7 @@ public class CustomUserDetailsService extends DefaultOAuth2UserService implement
         } else {
             existData.updateProfile(oAuth2Response.getEmail(), oAuth2Response.getName(), oAuth2Response.getProfilePicture());
             userRepository.save(existData);
+            System.out.println("google login succ");
             return new CustomOAuth2User(existData);
         }
     }

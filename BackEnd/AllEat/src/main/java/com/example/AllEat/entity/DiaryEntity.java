@@ -1,5 +1,7 @@
 package com.example.AllEat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +40,7 @@ public class DiaryEntity {
 
     @ManyToOne
     @JoinColumn(name = "daily_diary_id")
+    @JsonManagedReference
     private DailyDiaryEntity dailyDiary;
 
     public void updateCalories(Integer calories) {

@@ -1,5 +1,7 @@
 package com.example.AllEat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +31,7 @@ public class DailyDiaryEntity {
     private Integer dailyCalories;
 
     @OneToMany(mappedBy = "dailyDiary", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<DiaryEntity> diaryEntities;
 
     @OneToOne(fetch = FetchType.LAZY)
