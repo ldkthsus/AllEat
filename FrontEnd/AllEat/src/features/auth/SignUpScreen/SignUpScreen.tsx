@@ -1,13 +1,17 @@
-import React, {useState} from 'react';
-import {View, Text, Pressable} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import FormField from '../../../components/FormField/FormField'; // 기존에 만든 form 컴포넌트 사용
-import CustomButton from '../../../components/CustomButton'; // 버튼 컴포넌트 사용
-import {styles} from './SignUpScreen.styles'; // 스타일 파일 임포트
-import {RootStackParamList} from '../../../types/navigation';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {icons} from '../../../constants';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Pressable, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import FormField from '../../../components/FormField/FormField'; 
+import CustomButton from '../../../components/CustomButton';
+import { styles } from './SignUpScreen.styles';
+import { RootStackParamList } from '../../../types/navigation';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { icons } from '../../../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { signupUser } from '../../../redux/auth/authSlice'; 
+import { RootState } from '../../../redux/store'; 
+
 type SignUpScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'SignUp'
@@ -15,19 +19,45 @@ type SignUpScreenNavigationProp = NativeStackNavigationProp<
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
+  
+  const dispatch = useDispatch();
+  const { loading, error, isAuthenticated } = useSelector((state: RootState) => state.auth);  // Redux 상태에서 로그인 여부 확인
+
   const [form, setForm] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
+    confirmPassword: '',  // 패스워드 확인용 필드
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
-    setIsSubmitting(true);
-    navigation.navigate('Initial');
-    setIsSubmitting(false);
+  // isAuthenticated 상태 변화 감지 후 초기 화면으로 이동
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigation.navigate('Initial');
+    }
+  }, [isAuthenticated, navigation]);
+
+  const handleSubmit = async () => {
+    // 패스워드 확인 로직
+    if (form.password !== form.confirmPassword) {
+      Alert.alert('오류', '패스워드가 일치하지 않습니다.');
+      return;
+    }
+
+    // 백엔드로 보낼 데이터 형식
+    const signupData = {
+      email: form.email,
+      password: form.password, 
+    };
+
+    try {
+      // 회원가입 및 로그인 액션 디스패치
+      await dispatch(signupUser(signupData));
+    } catch (error) {
+      // 에러 처리 (회원가입 실패 시)
+      Alert.alert('오류', error?.message || '회원가입에 실패했습니다.');
+    }
   };
-
+  
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
@@ -87,7 +117,7 @@ const SignUp: React.FC = () => {
         containerStyles="w-[100%] h-[60px]" // Tailwind 스타일 전달
         textStyles="text-white font-pbold" // Tailwind 스타일 전달
         handlePress={handleSubmit}
-        isLoading={isSubmitting}
+        isLoading={loading}  // 로딩 상태 연동
       />
 
       <View style={styles.loginTextContainer}>
