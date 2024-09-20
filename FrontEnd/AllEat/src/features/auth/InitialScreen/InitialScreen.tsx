@@ -9,6 +9,8 @@ import {styles} from './InitialScreen.styles'; // 분리된 스타일을 임포�
 import CustomButton from '../../../components/CustomButton';
 import FormField from '../../../components/FormField/FormField';
 import {useState} from 'react';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Initial'
@@ -28,6 +30,46 @@ const InitialScreen: React.FC = () => {
   const [selectedActiveRange, setSelectedActiveRange] = useState<
     'normal' | 'notActive' | 'active'
   >('normal');
+
+  const [breakfastTime, setBreakfastTime] = useState(new Date());
+  const [lunchTime, setLunchTime] = useState(new Date());
+  const [dinnerTime, setDinnerTime] = useState(new Date());
+  const [visiblePicker, setVisiblePicker] = useState<
+    'breakfast' | 'lunch' | 'dinner' | null
+  >(null);
+
+  const [isBreakfastEnabled, setIsBreakfastEnabled] = useState(true);
+  const [isLunchEnabled, setIsLunchEnabled] = useState(true);
+  const [isDinnerEnabled, setIsDinnerEnabled] = useState(true);
+
+  const toggleAlarm = (type: 'breakfast' | 'lunch' | 'dinner') => {
+    if (type === 'breakfast') {
+      setIsBreakfastEnabled(!isBreakfastEnabled);
+    } else if (type === 'lunch') {
+      setIsLunchEnabled(!isLunchEnabled);
+    } else if (type === 'dinner') {
+      setIsDinnerEnabled(!isDinnerEnabled);
+    }
+  };
+
+  const onPressTime = (time: 'breakfast' | 'lunch' | 'dinner') => {
+    setVisiblePicker(time);
+  };
+
+  const onConfirm = (selectedDate: Date) => {
+    if (visiblePicker === 'breakfast') {
+      setBreakfastTime(selectedDate);
+    } else if (visiblePicker === 'lunch') {
+      setLunchTime(selectedDate);
+    } else if (visiblePicker === 'dinner') {
+      setDinnerTime(selectedDate);
+    }
+    setVisiblePicker(null);
+  };
+
+  const onCancel = () => {
+    setVisiblePicker(null);
+  };
   return (
     <ScrollView>
       <View style={styles.body}>
@@ -65,6 +107,12 @@ const InitialScreen: React.FC = () => {
           unit="kg"
           handleChangeText={text => setForm({...form, targetWeight: text})}
           otherStyles={styles.field}
+        />
+        <FormField
+          title="이달의 목표 식비"
+          value={form.age}
+          unit="원"
+          handleChangeText={text => setForm({...form, age: text})}
         />
         <View style={styles.form}>
           <Text style={styles.formLabel}>성별</Text>
@@ -122,13 +170,52 @@ const InitialScreen: React.FC = () => {
           <Text>보통</Text>
           <Text>많음</Text>
         </View>
-
+        <View style={styles.form}>
+          <Text style={styles.formLabel}>알람을 언제 보낼까요?</Text>
+          <AlarmSetting
+            isEnabled={isBreakfastEnabled}
+            onToggle={() => toggleAlarm('breakfast')}
+            label="아침식사 기록 알림"
+            time={breakfastTime}
+            onPress={() => onPressTime('breakfast')}
+            icon={images.breakfast}
+          />
+          <AlarmSetting
+            isEnabled={isLunchEnabled}
+            onToggle={() => toggleAlarm('lunch')}
+            label="점심식사 기록 알림"
+            time={lunchTime}
+            onPress={() => onPressTime('lunch')}
+            icon={images.lunch}
+          />
+          <AlarmSetting
+            isEnabled={isDinnerEnabled}
+            onToggle={() => toggleAlarm('dinner')}
+            label="저녁식사 기록 알림"
+            time={dinnerTime}
+            onPress={() => onPressTime('dinner')}
+            icon={images.dinner}
+          />
+        </View>
         <CustomButton
           title="계속하기"
           handlePress={() => navigation.navigate('Home')}
           containerStyles="w-[100%] h-[60px]" // Tailwind 스타일 전달
           textStyles="text-white font-pbold" // Tailwind 스타일 전달
           isLoading={false} // 로딩 상태 설정
+        />
+        <DateTimePickerModal
+          isVisible={visiblePicker !== null}
+          onConfirm={onConfirm}
+          onCancel={onCancel}
+          mode="time"
+          date={
+            visiblePicker === 'breakfast'
+              ? breakfastTime
+              : visiblePicker === 'lunch'
+              ? lunchTime
+              : dinnerTime
+          }
         />
       </View>
     </ScrollView>

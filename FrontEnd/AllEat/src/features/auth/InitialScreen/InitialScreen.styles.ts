@@ -8,7 +8,8 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 30,
+    paddingHorizontal: 30,
+    paddingBottom: 30,
     height: '100%',
   },
   title: {
@@ -32,12 +33,12 @@ export const styles = StyleSheet.create({
     width: '50%',
     alignItems: 'center',
   },
-  image: {width: '33%', alignItems: 'center'},
   formLabel: {
     fontSize: 16,
     color: '#3D3D3D', // 회색 텍스트 색상
     fontFamily: 'Pretendard-SemiBold',
-    marginBottom: 3,
+    marginBottom: 10,
     width: '100%',
   },
+  image: {width: '33%', alignItems: 'center'},
 });
