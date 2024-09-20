@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './auth/authSlice';  // authSlice 리듀서 임포트
+import authReducer from './auth/authSlice';
+import paymonyReducer from './auth/paymoneySlice';
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,  // auth 리듀서 등록
+    auth: authReducer,    // auth 리듀서 등록
+    paymony: paymonyReducer, // paymony 리듀서 등록
   },
 });
 

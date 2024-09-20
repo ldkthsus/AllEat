@@ -15,6 +15,7 @@ import minus from '../assets/icons/minus.svg';
 import notiBadge from '../assets/icons/notiBadge.svg';
 import arrowBackRight from '../assets/icons/arrowBackRight.svg';
 import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
+import emptyCheck from '../assets/icons/emptyCheck.svg';
 
 const icons = {
   home,
@@ -24,6 +25,7 @@ const icons = {
   mypage,
   notifications,
   passwordCheck,
+  emptyCheck,
   pay,
   socialGoogle,
   socialKakao,
