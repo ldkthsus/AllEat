@@ -4,9 +4,9 @@ import React from 'react';
 interface CustomButtonProps {
   title: string;
   handlePress: (event: GestureResponderEvent) => void;
-  containerStyles?: string; // Tailwind 스타일을 문자열로 전달
-  textStyles?: string; // Tailwind 스타일을 문자열로 전달
-  isLoading?: boolean; // 로딩 상태 여부
+  containerStyles?: string;
+  textStyles?: string;
+  isLoading?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
