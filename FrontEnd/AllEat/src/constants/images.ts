@@ -14,6 +14,9 @@ import QRCode from '../assets/images/QRCode.svg';
 import veryActive from '../assets/images/veryActive.svg';
 import veryActiveDisabled from '../assets/images/veryActiveDisabled.svg';
 import intro from '../assets/images/intro.svg';
+import breakfast from '../assets/images/breakfast.svg';
+import lunch from '../assets/images/lunch.svg';
+import dinner from '../assets/images/dinner.svg';
 const images = {
   intro,
   addMenu,
@@ -31,6 +34,9 @@ const images = {
   QRCode,
   veryActive,
   veryActiveDisabled,
+  breakfast,
+  lunch,
+  dinner,
 };
 
 export default images;
