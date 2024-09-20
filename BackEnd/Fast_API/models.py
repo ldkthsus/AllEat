@@ -14,7 +14,7 @@ class MenuItem(BaseModel):
     restaurant: Restaurant
     menu_name: str  # 메뉴 이름
     menu_price: int
-    menu_type: str 
+    menu_type: str
     menu_value: int
     menu_carbohydrate : int
     menu_protein : int
