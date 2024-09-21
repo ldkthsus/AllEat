@@ -1,7 +1,7 @@
 package com.example.AllEat.service;
 
-import com.example.AllEat.dto.menu.AddMenuRequest;
-import com.example.AllEat.dto.menu.DailyDiaryResponse;
+import com.example.AllEat.dto.menu.AddMenuRequestDTO;
+import com.example.AllEat.dto.menu.DailyDiaryResponseDTO;
 import com.example.AllEat.entity.*;
 import com.example.AllEat.entity.DiaryEntity.DiaryTime;
 import com.example.AllEat.repository.DailyDiaryRepository;
@@ -25,7 +25,7 @@ public class DailyDiaryService {
     private final DiaryRepository diaryRepository;
     private final DiaryMappingRepository diaryMappingRepository;
 
-    public DailyDiaryResponse getDailyDiary(HttpServletRequest request, List<AddMenuRequest> addMenuRequests) {
+    public DailyDiaryResponseDTO getDailyDiary(HttpServletRequest request, List<AddMenuRequestDTO> addMenuRequests) {
         UserEntity findUser = userService.findByRequest(request);
         if (findUser != null) {
             DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now());
@@ -44,7 +44,7 @@ public class DailyDiaryService {
         }
         return null;
     }
-    public DailyDiaryResponse updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequest> addMenuRequests, Integer mealCalories, UserEntity requestUser) {
+    public DailyDiaryResponseDTO updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequestDTO> addMenuRequests, Integer mealCalories, UserEntity requestUser) {
         DiaryEntity diaryEntity = DiaryEntity.builder()
                 .diaryTime(DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
                 .mealCalories(mealCalories)
@@ -52,7 +52,7 @@ public class DailyDiaryService {
                 .build();
         diaryRepository.save(diaryEntity);
 
-        for (AddMenuRequest menuIdRequest : addMenuRequests) {
+        for (AddMenuRequestDTO menuIdRequest : addMenuRequests) {
             MenuEntity findMenu = menuRepository.findById(menuIdRequest.getMenuId()).orElseThrow(() -> new IllegalArgumentException("menu not found"));
             mealCalories += findMenu.getMenuCalories();
             DiaryMappingEntity diaryMappingEntity = DiaryMappingEntity.builder()
@@ -68,7 +68,7 @@ public class DailyDiaryService {
         requestDailyDiary.updateCalories(mealCalories);
         dailyDiaryRepository.save(requestDailyDiary);
 
-        DailyDiaryResponse dailyDiaryResponse = new DailyDiaryResponse();
+        DailyDiaryResponseDTO dailyDiaryResponse = new DailyDiaryResponseDTO();
         dailyDiaryResponse.FromEntity(requestDailyDiary, requestUser);
 
         return dailyDiaryResponse;

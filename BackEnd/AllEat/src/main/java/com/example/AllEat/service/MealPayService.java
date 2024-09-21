@@ -1,6 +1,6 @@
 package com.example.AllEat.service;
 
-import com.example.AllEat.dto.mealPay.MealPayRequest;
+import com.example.AllEat.dto.mealPay.MealPayRequestDTO;
 import com.example.AllEat.entity.DiaryEntity;
 import com.example.AllEat.entity.MealPayEntity;
 import com.example.AllEat.entity.PayTransactionEntity;
@@ -18,7 +18,7 @@ public class MealPayService {
     private final PayTransactionRepository payTransactionRepository;
     private final DiaryRepository diaryRepository;
 
-    public MealPayEntity getMealPayResult(MealPayRequest mealPayRequest){
+    public MealPayEntity getMealPayResult(MealPayRequestDTO mealPayRequest){
         PayTransactionEntity findPayTransaction = payTransactionRepository.findById(mealPayRequest.getTransactionId()).orElseThrow(()-> new IllegalArgumentException("거래 내역을 찾을 수 없습니다. "));
         DiaryEntity findDiary = diaryRepository.findById(mealPayRequest.getDiaryId()).orElseThrow(()-> new IllegalArgumentException("한 끼 식단을 찾을 수 없습니다. "));
         MealPayEntity findMealPay = mealPayRepository.findByPayTransaction_id(findPayTransaction.getId());

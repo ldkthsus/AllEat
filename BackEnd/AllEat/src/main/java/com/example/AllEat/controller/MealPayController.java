@@ -1,6 +1,6 @@
 package com.example.AllEat.controller;
 
-import com.example.AllEat.dto.mealPay.MealPayRequest;
+import com.example.AllEat.dto.mealPay.MealPayRequestDTO;
 import com.example.AllEat.entity.MealPayEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.service.MealPayService;
@@ -22,7 +22,7 @@ public class MealPayController {
     private final UserService userService;
 
     @PostMapping("/meal-pay")
-    public ResponseEntity<?> recordMealPay(MealPayRequest mealPayRequest, HttpServletRequest request) {
+    public ResponseEntity<?> recordMealPay(MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
         UserEntity findUserEntity = userService.findByRequest(request);
         if (findUserEntity != null) {
             MealPayEntity mealPayEntity = mealPayService.getMealPayResult(mealPayRequest);

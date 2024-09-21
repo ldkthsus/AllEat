@@ -16,7 +16,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyDiaryResponse {
+public class DailyDiaryResponseDTO {
 
     @JsonProperty("daily_diary_id")
     private Integer dailyDiaryId;

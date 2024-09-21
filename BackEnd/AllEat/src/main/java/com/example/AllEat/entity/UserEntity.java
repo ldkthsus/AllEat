@@ -1,6 +1,6 @@
 package com.example.AllEat.entity;
 
-import com.example.AllEat.dto.user.UpdateRequest;
+import com.example.AllEat.dto.user.UpdateRequestDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -79,7 +79,7 @@ public class UserEntity {
         this.profileUrl = profileUrl;
     }
 
-    public void updateInfo(UpdateRequest updateRequest, String profileUrl){
+    public void updateInfo(UpdateRequestDTO updateRequest, String profileUrl){
         if (updateRequest.getPassword1() != null){
             this.password = updateRequest.getPassword1();
         }
