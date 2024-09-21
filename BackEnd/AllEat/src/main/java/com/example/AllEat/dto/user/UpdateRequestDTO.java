@@ -6,13 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateRequest {
+public class UpdateRequestDTO {
 
     private String password1;
     private String password2;

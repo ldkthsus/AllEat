@@ -1,12 +1,10 @@
 package com.example.AllEat.dto.menu;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data
-public class AddMenuRequest {
+public class AddMenuRequestDTO {
 
     @JsonProperty("menu_id")
     private Integer menuId;

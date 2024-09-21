@@ -1,12 +1,11 @@
 package com.example.AllEat.service;
 
-import com.example.AllEat.dto.user.UpdateRequest;
+import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -58,7 +57,7 @@ public class UserService {
         }
     }
 
-    public UserEntity updateUserInfo(String email,UpdateRequest updateRequest, String prifileUrl) {
+    public UserEntity updateUserInfo(String email, UpdateRequestDTO updateRequest, String prifileUrl) {
         UserEntity findUser = userRepository.findByEmail(email);
         if(findUser != null) {
             findUser.updateInfo(updateRequest, prifileUrl);

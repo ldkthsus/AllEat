@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MealPayRequest {
+public class MealPayRequestDTO {
 
     @JsonProperty("transaction_id")
     private Integer transactionId;
