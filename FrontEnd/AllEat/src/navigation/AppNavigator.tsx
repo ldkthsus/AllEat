@@ -5,7 +5,8 @@ import InitialScreen from '../features/auth/InitialScreen/InitialScreen';
 import SignIn from '../features/auth/SignInScreen/SignInScreen';
 import SignUp from '../features/auth/SignUpScreen/SignUpScreen';
 import HomeScreen from '../features/home/HomeScreen/HomeScreen';
-import AgreementScreen from '../features/auth/AgreementScreen/AgreementScreen';
+import AgreementScreen from '../features/paymoney/AgreementScreen/AgreementScreen';
+import PaymoneyScreen from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 
@@ -57,6 +58,12 @@ const AppNavigator = () => {
           component={AgreementScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="Paymoney"
+          component={PaymoneyScreen}
+          options={{headerShown: false}}
+        />
+        
       </Stack.Navigator>
       {shouldShowAppBar && <AppBar />}
     </>

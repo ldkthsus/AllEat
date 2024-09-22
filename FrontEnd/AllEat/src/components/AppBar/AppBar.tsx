@@ -18,7 +18,9 @@ const AppBar: React.FC = () => {
         <Text style={styles.text}>홈</Text>
       </Pressable>
 
-      <Pressable style={styles.icon} onPress={() => {}}>
+      <Pressable
+        style={styles.icon}
+        onPress={() => navigation.navigate('Paymoney')}>
         <icons.pay height={30} width={30} />
         <Text style={styles.text}>페이머니</Text>
       </Pressable>

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './auth/authSlice';
-import paymonyReducer from './auth/paymoneySlice';
+import authReducer from './features/authSlice';
+import paymonyReducer from './features/paymoneySlice';
 
 export const store = configureStore({
   reducer: {
