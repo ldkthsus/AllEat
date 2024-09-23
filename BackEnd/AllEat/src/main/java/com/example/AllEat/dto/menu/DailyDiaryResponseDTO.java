@@ -51,8 +51,8 @@ public class DailyDiaryResponseDTO {
     @JsonProperty("user_age")
     private Integer userAge;
 
-    @JsonProperty("amount_activity")
-    private Integer amountActivity;
+    @JsonProperty("activity_amount")
+    private Integer activityAmount;
 
     public void FromEntity(DailyDiaryEntity dailyDiaryEntity, UserEntity userEntity) {
         this.dailyDiaryId = dailyDiaryEntity.getId();
@@ -66,6 +66,6 @@ public class DailyDiaryResponseDTO {
         this.userHeight = userEntity.getUserHeight();
         this.userGender = userEntity.getUserGender();
         this.userAge = userEntity.getUserAge();
-        this.amountActivity = userEntity.getAmountActivity();
+        this.activityAmount = userEntity.getActivityAmount();
     }
 }
