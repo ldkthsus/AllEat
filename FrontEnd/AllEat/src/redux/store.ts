@@ -1,11 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './auth/authSlice';  // authSlice 리듀서 임포트
+import {configureStore} from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // AsyncStorage 사용
+import {persistReducer, persistStore} from 'redux-persist';
+import authReducer from './auth/authSlice'; // auth 리듀서 임포트
 
+// Redux Persist 설정
+const persistConfig = {
+  key: 'auth', // auth 상태를 영구적으로 저장
+  storage: AsyncStorage, // AsyncStorage를 사용하여 저장
+};
+
+// authReducer를 persistReducer로 감쌉니다.
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+
+// Redux 스토어 생성
 export const store = configureStore({
   reducer: {
-    auth: authReducer,  // auth 리듀서 등록
+    auth: persistedAuthReducer, // 영구적으로 저장되는 리듀서
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false, // redux-persist 관련 경고 무시
+    }),
 });
 
+// Persistor 생성
+export const persistor = persistStore(store);
+
+// 타입 정의
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;
