@@ -21,6 +21,6 @@ public class UpdateRequestDTO {
     private Integer userGender;
     @JsonProperty("user_age")
     private Integer userAge;
-    @JsonProperty("activity")
-    private Integer amountActivity;
+    @JsonProperty("activity_amount")
+    private Integer activityAmount;
 }
