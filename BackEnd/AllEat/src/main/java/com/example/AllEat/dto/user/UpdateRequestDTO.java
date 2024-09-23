@@ -14,7 +14,8 @@ public class UpdateRequestDTO {
 
     private String password1;
     private String password2;
-    private String name;
+    @JsonProperty("user_name")
+    private String userName;
     @JsonProperty("user_height")
     private Double userHeight;
     @JsonProperty("user_gender")

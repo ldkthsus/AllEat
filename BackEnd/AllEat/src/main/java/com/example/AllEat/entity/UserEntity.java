@@ -97,8 +97,8 @@ public class UserEntity {
         if (updateRequest.getActivityAmount() != null){
             this.activityAmount = updateRequest.getActivityAmount();
         }
-        if (updateRequest.getName() != null){
-            this.userName = updateRequest.getName();
+        if (updateRequest.getUserName() != null){
+            this.userName = updateRequest.getUserName();
         }
         this.profileUrl = profileUrl;
     }
