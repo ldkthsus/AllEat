@@ -9,6 +9,8 @@ import com.example.AllEat.repository.GoalRepository; // GoalEntity 정보를 가
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -110,5 +112,44 @@ public class ReportService {
         reportData.put("goal_cost", goalCost); // 목표 식비
 
         return reportData;
+    }
+
+    public List<Map<String, Object>> collectDayFoodInfo(String day, HttpServletRequest request) {
+        // JWT 토큰을 이용해 사용자 식별
+        UserEntity user = findUserByRequest(request);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // day 값을 LocalDate로 변환
+        LocalDate date = LocalDate.parse(day);
+
+        // 해당 사용자의 특정 날짜의 일간 데이터를 가져옴
+        DailyDiaryEntity dailyDiary = dailyDiaryRepository.findByUserAndDate(user, date);
+        if (dailyDiary == null) {
+            throw new RuntimeException("No daily diary found for the user on this date");
+        }
+
+        List<Map<String, Object>> foodDetails = new ArrayList<>();
+
+        // 해당 일의 메뉴들에 대한 정보 수집
+        for (DiaryEntity diary : dailyDiary.getDiaryEntities()) {
+            for (DiaryMappingEntity diaryMapping : diary.getDiaryMapping()) {
+                MenuEntity menu = diaryMapping.getMenu();
+                Map<String, Object> menuDetail = new HashMap<>();
+                menuDetail.put("menuName", menu.getMenuName());
+                menuDetail.put("menuPrice", menu.getMenuPrice());
+                menuDetail.put("menuCarbohydrate", menu.getMenuCarbohydrate());
+                menuDetail.put("menuProtein", menu.getMenuProtein());
+                menuDetail.put("menuFat", menu.getMenuFat());
+                menuDetail.put("menuCalories", menu.getMenuCalories());
+                menuDetail.put("restaurantName", menu.getRestaurants().getRestaurantsName());
+                menuDetail.put("restaurantType", menu.getRestaurants().getRestaurantsType().name());
+
+                foodDetails.add(menuDetail);
+            }
+        }
+
+        return foodDetails;
     }
 }

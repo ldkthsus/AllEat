@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import java.util.List;
+import java.util.HashMap;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class ReportController {
 
     @PostMapping("/day-report")
     public ResponseEntity<?> getDayReport(
-            @RequestBody Map<String, String> requestBody, // JSON 데이터로 받기 위해 @RequestBody 사용
+            @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
         // JSON 데이터에서 'day' 값 추출
@@ -57,8 +59,17 @@ public class ReportController {
         // FastAPI 서버로 요청을 보냄
         ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8000/fast-api/report/day", requestEntity, String.class);
 
-        return ResponseEntity.ok(response.getBody());
+        // 그날 먹은 모든 음식의 정보 가져오기
+        List<Map<String, Object>> dailyFoodInfo = reportService.collectDayFoodInfo(day, request); // 새롭게 추가된 메서드
+
+        // FastAPI로부터 받은 response와 먹은 음식 정보를 하나의 JSON으로 합침
+        Map<String, Object> fullResponse = new HashMap<>();
+        fullResponse.put("gptResponse", response.getBody());
+        fullResponse.put("foodDetails", dailyFoodInfo);
+
+        return ResponseEntity.ok(fullResponse);
     }
+
 
     // 주간 레포트 생성
     @PostMapping("/week-report")
