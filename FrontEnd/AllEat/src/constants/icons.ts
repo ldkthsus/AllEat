@@ -15,6 +15,7 @@ import minus from '../assets/icons/minus.svg';
 import notiBadge from '../assets/icons/notiBadge.svg';
 import arrowBackRight from '../assets/icons/arrowBackRight.svg';
 import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
+import re_check from '../assets/icons/re_check.svg';
 
 const icons = {
   home,
@@ -34,5 +35,6 @@ const icons = {
   notiBadge,
   arrowBackRight,
   arrowBackLeft,
+  re_check,
 };
 export default icons;

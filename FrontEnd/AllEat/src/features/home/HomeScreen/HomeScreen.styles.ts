@@ -41,5 +41,34 @@ export const styles = StyleSheet.create({
     color: 'black',
     fontSize: 20,
     fontFamily: 'Pretendard-Bold',
-  }
+  },
+  mainbox: {
+    flex: 1,
+    width: '100%',
+    height: '20.3%',
+    backgroundColor: '#EAF0FF',
+  },
+  eatpay: {
+    fontSize: 15,
+    fontFamily: 'Pretendard-Light',
+    marginTop: 10,
+
+  },
+  eatpayValue: {
+    fontSize: 15,
+    fontFamily: 'Pretendard-SemiBold',
+    color: '#769BFF',
+    marginTop: 10,
+  },
+  re_checkIcon: {
+    marginTop: 13,
+  },
+  kiki:{
+    position: 'absolute',
+  },
+  kikiShadow: {
+    position: 'absolute',
+    marginTop: 78,
+    marginLeft: 6,
+  },
 });
