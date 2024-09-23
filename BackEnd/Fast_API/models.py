@@ -2,42 +2,40 @@ from pydantic import BaseModel
 from typing import List, Dict
 from datetime import date 
 
-class GPTRequest(BaseModel):
-    prompt: str
+from pydantic import BaseModel
 
-class Restaurant(BaseModel):
-    restaurants_name: str
-    restaurants_type: str
+class DayDiaryRequest(BaseModel):
+    total_carbohydrates: float
+    total_proteins: float
+    total_fats: float
+    total_calories: int
+    total_cost: int
+    goal_weight: float  # 추가된 목표 체중
+    goal_cost: int      # 추가된 목표 식비
+    recent_weight: float  # 추가된 현재 체중
 
-# 메뉴에 대한 데이터 구조 정의
-class MenuItem(BaseModel):
-    restaurant: Restaurant
-    menu_name: str  # 메뉴 이름
-    menu_price: int
-    menu_type: str
-    menu_value: int
-    menu_carbohydrate : int
-    menu_protein : int
-    menu_fat : int
-    menu_calories: int
-
-class WeightItem(BaseModel):
+class WeightRecord(BaseModel):
     date: date
     weight: float
 
-# 요청 모델 정의
-class DayDiaryRequest(BaseModel):
-    goal_kcal: int
-    goal_cost: int  # 한 달 목표 식비
-    day_diary: List[MenuItem]  # 하루 동안 먹은 메뉴 리스트
-
 class WeekDiaryRequest(BaseModel):
-    goal_kcal: int
-    goal_cost: int
-    day_diaries: List[MenuItem]
+    goal_weight: float  # 목표 체중
+    goal_cost: int      # 목표 식비
+    recent_weight: float  # 현재 체중
+    average_carbohydrates: float
+    average_proteins: float
+    average_fats: float
+    average_calories: float
+    total_cost: int
+    most_common_restaurant_type: str
 
 class MonthDiaryRequest(BaseModel):
-    weight: List[WeightItem]
-    goal_weight : float
-    goal_cost : int
-    day_diaries: List[MenuItem]
+    goal_weight: float
+    goal_cost: int
+    weight_records: List[WeightRecord]
+    average_carbohydrates: float
+    average_proteins: float
+    average_fats: float
+    average_calories: float
+    total_cost: int
+    most_common_restaurant_type: str
