@@ -26,8 +26,10 @@ public class DailyDiaryService {
     public DailyDiaryEntity getDailyDiary(HttpServletRequest request, List<AddMenuRequest> addMenuRequests) {
         UserEntity findUser = userService.findByRequest(request);
         if (findUser != null) {
-            DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now());
+            // 메서드 명을 정확히 수정: findByUser_IdAndDate
+            DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_IdAndDate(findUser.getId(), LocalDate.now());
             Integer mealCalories = 0;
+
             if (findDailyDiary == null) {
                 DailyDiaryEntity dailyDiaryEntity = DailyDiaryEntity.builder()
                         .date(LocalDate.now())
@@ -43,6 +45,7 @@ public class DailyDiaryService {
         }
         return null;
     }
+
     public void updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequest> addMenuRequests, Integer mealCalories) {
         DiaryEntity diaryEntity = DiaryEntity.builder()
                 .diaryTime(DiaryEntity.DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
@@ -61,6 +64,8 @@ public class DailyDiaryService {
 
             diaryMappingRepository.save(diaryMappingEntity);
         }
+
+        // 업데이트된 칼로리를 엔티티에 반영
         diaryEntity.updateCalories(mealCalories);
         diaryRepository.save(diaryEntity);
 
