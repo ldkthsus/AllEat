@@ -23,15 +23,12 @@ public class AlarmEntity {
     @Column(name = "id")
     private Integer id;
 
-    @JsonFormat(pattern = "HH:mm:ss")
     @Column(name = "breakfast_alarm", nullable = true)
     private LocalTime breakfastAlarm;
 
-    @JsonFormat(pattern = "HH:mm:ss")
     @Column(name = "lunch_alarm", nullable = true)
     private LocalTime lunchAlarm;
 
-    @JsonFormat(pattern = "HH:mm:ss")
     @Column(name = "dinner_alarm", nullable = true)
     private LocalTime dinnerAlarm;
 
