@@ -9,9 +9,10 @@ import {RootStackParamList} from '../../../types/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {icons} from '../../../constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {signupUser} from '../../../redux/auth/authSlice';
+import {signupUser} from '../../../redux/features/authSlice';
 import {RootState} from '../../../redux/store';
 import {AppDispatch} from '../../../redux/store';
+
 type SignUpScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'SignUp'

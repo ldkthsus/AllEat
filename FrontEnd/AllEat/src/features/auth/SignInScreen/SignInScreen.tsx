@@ -9,7 +9,7 @@ import { RootStackParamList } from '../../../types/navigation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { icons } from '../../../constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../../redux/auth/authSlice'; 
+import { loginUser } from '../../../redux/features/authSlice'; 
 import { RootState } from '../../../redux/store';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<

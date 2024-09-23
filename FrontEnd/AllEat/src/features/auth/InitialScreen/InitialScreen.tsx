@@ -225,7 +225,8 @@ const InitialScreen: React.FC = () => {
         </View>
         <CustomButton
           title="계속하기"
-          handlePress={handleSubmit}
+          // handlePress={handleSubmit}
+          handlePress={() => navigation.navigate('Agreement')}
           containerStyles="w-[100%] h-[60px]" // Tailwind 스타일 전달
           textStyles="text-white font-pbold" // Tailwind 스타일 전달
           isLoading={false} // 로딩 상태 설정

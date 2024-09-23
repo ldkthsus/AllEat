@@ -1,7 +1,8 @@
-import {configureStore} from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // AsyncStorage 사용
 import {persistReducer, persistStore} from 'redux-persist';
-import authReducer from './auth/authSlice'; // auth 리듀서 임포트
+import {configureStore} from '@reduxjs/toolkit';
+import authReducer from './features/authSlice';
+import paymonyReducer from './features/paymoneySlice';
 
 // Redux Persist 설정
 const persistConfig = {
@@ -16,6 +17,7 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer, // 영구적으로 저장되는 리듀서
+    paymony: paymonyReducer, // paymony 리듀서 등록
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
