@@ -1,6 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import IntroScreen from '../features/auth/IntroScreen/IntroScreen';
+import MyPageScreen from '../features/auth/MyPageScreen/MyPageScreen';
 import InitialScreen from '../features/auth/InitialScreen/InitialScreen';
 import SignIn from '../features/auth/SignInScreen/SignInScreen';
 import SignUp from '../features/auth/SignUpScreen/SignUpScreen';
@@ -9,7 +10,8 @@ import AgreementScreen from '../features/paymoney/AgreementScreen/AgreementScree
 import PaymoneyScreen from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
-
+import {useSelector} from 'react-redux';
+import {RootState} from '../redux/store'; // Redux 스토어 타입
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -23,11 +25,16 @@ const AppNavigator = () => {
   // 특정 화면에서는 AppBar를 숨기고 싶은 경우
   const shouldShowAppBar =
     currentRouteName &&
-    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement'].includes(currentRouteName);
+    !['Intro', 'SignUp', 'SignIn', 'Initial'].includes(currentRouteName);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  ); // Redux에서 로그인 상태 확인
+  // 초기 경로를 조건에 따라 설정
+  const initialRoute = isAuthenticated ? 'Home' : 'Intro'; // 조건에 따라 초기 경로 설정
 
   return (
     <>
-      <Stack.Navigator initialRouteName="Intro">
+      <Stack.Navigator initialRouteName={initialRoute}>
         <Stack.Screen
           name="Intro"
           component={IntroScreen}
@@ -63,7 +70,12 @@ const AppNavigator = () => {
           component={PaymoneyScreen}
           options={{headerShown: false}}
         />
-        
+
+        <Stack.Screen
+          name="MyPage"
+          component={MyPageScreen}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
       {shouldShowAppBar && <AppBar />}
     </>

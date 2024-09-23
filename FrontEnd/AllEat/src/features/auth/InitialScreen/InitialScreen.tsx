@@ -32,12 +32,13 @@ const InitialScreen: React.FC = () => {
     user_age: '',
     user_height: '',
     user_gender: 0 as 0 | 1, // 0 또는 1만 허용
-    user_activity: 1 as 0 | 1 | 2, // 0, 1, 2만 허용
+    activity: 1 as 0 | 1 | 2, // 0, 1, 2만 허용
+  });
+  const [alarm, setAlarm] = useState({
     breakfast: new Date(new Date().setHours(8, 0, 0, 0)),
     lunch: new Date(new Date().setHours(12, 0, 0, 0)),
     dinner: new Date(new Date().setHours(18, 0, 0, 0)),
   });
-
   const [visiblePicker, setVisiblePicker] = useState<
     'breakfast' | 'lunch' | 'dinner' | null
   >(null);
@@ -62,11 +63,11 @@ const InitialScreen: React.FC = () => {
 
   const onConfirm = (selectedDate: Date) => {
     if (visiblePicker === 'breakfast') {
-      setForm({...form, breakfast: selectedDate});
+      setAlarm({...alarm, breakfast: selectedDate});
     } else if (visiblePicker === 'lunch') {
-      setForm({...form, lunch: selectedDate});
+      setAlarm({...alarm, lunch: selectedDate});
     } else if (visiblePicker === 'dinner') {
-      setForm({...form, dinner: selectedDate});
+      setAlarm({...alarm, dinner: selectedDate});
     }
     setVisiblePicker(null);
   };
@@ -75,39 +76,51 @@ const InitialScreen: React.FC = () => {
     setVisiblePicker(null);
   };
   const handleSubmit = async () => {
-    const submittedForm = {
-      ...form,
-      breakfast: isBreakfastEnabled ? form.breakfast.toLocaleTimeString() : '',
-      lunch: isLunchEnabled ? form.lunch.toLocaleTimeString() : '',
-      dinner: isDinnerEnabled ? form.dinner.toLocaleTimeString() : '',
+    const alarmTime = {
+      breakfastAlarm: isBreakfastEnabled
+        ? alarm.breakfast.toLocaleTimeString('it-IT')
+        : '',
+      lunchAlarm: isLunchEnabled ? alarm.lunch.toLocaleTimeString('it-IT') : '',
+      dinnerAlarm: isDinnerEnabled
+        ? alarm.dinner.toLocaleTimeString('it-IT')
+        : '',
     };
 
-    console.log(submittedForm);
+    console.log(form);
     console.log(weight);
     console.log(goal);
+    console.log(alarmTime);
     //여기서 axios요청 보내기
     //goal은 /AllEat/users/goals(POST)
     //weight은 /AllEat/weight(POST)
     //submittedForm은 /AllEat/users/info(PUT)
     try {
       // goal에 대한 POST 요청
+
       const goalResponse = await api.post('/AllEat/users/goals', {
-        goal,
+        goal_cost: Number(goal.goal_cost),
+        goal_weight: parseFloat(goal.goal_weight),
       });
       console.log('Goal Response:', goalResponse.data);
 
+      // submittedForm에 대한 PUT 요청
+      const formResponse = await api.put('/AllEat/users/info', {
+        user_age: Number(form.user_age),
+        user_gender: form.user_gender,
+        user_height: parseFloat(form.user_height),
+        activity: form.activity,
+        name: form.name,
+      });
+      console.log('Form Response:', formResponse.data);
       // weight에 대한 POST 요청
       const weightResponse = await api.post('/AllEat/weight', {
-        weight,
+        weight: parseFloat(weight.weight),
       });
       console.log('Weight Response:', weightResponse.data);
 
-      // submittedForm에 대한 PUT 요청
-      const formResponse = await api.put('/AllEat/users/info', {
-        ...submittedForm,
-      });
-      console.log('Form Response:', formResponse.data);
-
+      // alarm에 대한 POST 요청
+      const alarmResponse = await api.post('/AllEat/alarm', alarmTime);
+      console.log('Weight Response:', alarmResponse.data);
       // 모든 요청이 성공하면 홈으로 이동
       navigation.navigate('Home');
     } catch (error) {
@@ -180,8 +193,8 @@ const InitialScreen: React.FC = () => {
           onSelect={user_gender => setForm({...form, user_gender})}
         />
         <ActivityLevelSelection
-          selectedActiveRange={form.user_activity}
-          onSelect={user_activity => setForm({...form, user_activity})}
+          selectedActiveRange={form.activity}
+          onSelect={activity => setForm({...form, activity})}
         />
         <View style={styles.form}>
           <Text style={styles.formLabel}>알람을 언제 보낼까요?</Text>
@@ -189,7 +202,7 @@ const InitialScreen: React.FC = () => {
             isEnabled={isBreakfastEnabled}
             onToggle={() => toggleAlarm('breakfast')}
             label="아침식사 기록 알림"
-            time={form.breakfast}
+            time={alarm.breakfast}
             onPress={() => onPressTime('breakfast')}
             icon={images.breakfast}
           />
@@ -197,7 +210,7 @@ const InitialScreen: React.FC = () => {
             isEnabled={isLunchEnabled}
             onToggle={() => toggleAlarm('lunch')}
             label="점심식사 기록 알림"
-            time={form.lunch}
+            time={alarm.lunch}
             onPress={() => onPressTime('lunch')}
             icon={images.lunch}
           />
@@ -205,7 +218,7 @@ const InitialScreen: React.FC = () => {
             isEnabled={isDinnerEnabled}
             onToggle={() => toggleAlarm('dinner')}
             label="저녁식사 기록 알림"
-            time={form.dinner}
+            time={alarm.dinner}
             onPress={() => onPressTime('dinner')}
             icon={images.dinner}
           />
@@ -225,10 +238,10 @@ const InitialScreen: React.FC = () => {
           mode="time"
           date={
             visiblePicker === 'breakfast'
-              ? form.breakfast
+              ? alarm.breakfast
               : visiblePicker === 'lunch'
-              ? form.lunch
-              : form.dinner
+              ? alarm.lunch
+              : alarm.dinner
           }
         />
       </View>
