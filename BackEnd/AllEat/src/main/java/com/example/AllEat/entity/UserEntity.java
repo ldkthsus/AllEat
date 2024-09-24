@@ -1,6 +1,7 @@
 package com.example.AllEat.entity;
 
 import com.example.AllEat.dto.user.UpdateRequestDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Lazy;
@@ -59,13 +60,14 @@ public class UserEntity {
     @Column(name = "expiration")
     private Timestamp expiration;
 
-    @Column(name = "amount_activity")
-    private Integer amountActivity;
+    @Column(name = "activity_amount")
+    private Integer activityAmount;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WeightEntity> weights;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private GoalEntity goals;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
@@ -96,11 +98,11 @@ public class UserEntity {
         if (updateRequest.getUserHeight() != null){
             this.userHeight = updateRequest.getUserHeight();
         }
-        if (updateRequest.getAmountActivity() != null){
-            this.amountActivity = updateRequest.getAmountActivity();
+        if (updateRequest.getActivityAmount() != null){
+            this.activityAmount = updateRequest.getActivityAmount();
         }
-        if (updateRequest.getName() != null){
-            this.userName = updateRequest.getName();
+        if (updateRequest.getUserName() != null){
+            this.userName = updateRequest.getUserName();
         }
         this.profileUrl = profileUrl;
     }
