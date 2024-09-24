@@ -10,14 +10,9 @@ import LinkButton from '../../../components/linkButton';
 import InoutModal from './components/InoutModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
-import { chargePaymoney, transferPaymoney, fetchPaymoneyBalance } from '../../../redux/features/paymoneySlice';
-import { format } from 'date-fns'; // date-fns 임포트
-
-
-type PaymoneyScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Paymoney'
->;
+import { chargePaymoney, transferPaymoney, fetchPaymoneyBalance, fetchMonthlyUsedAmount } from '../../../redux/features/paymoneySlice';
+import { format, getDaysInMonth } from 'date-fns'; // date-fns 임포트
+import { icons } from '../../../constants'
 
 const PaymoneyScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -27,12 +22,21 @@ const PaymoneyScreen: React.FC = () => {
   const [guideText, setGuideText] = useState<string>(''); 
   const [transactionType, setTransactionType] = useState<number>(0); // 거래 타입 저장 (충전 또는 송금)
   
-  // Redux state에서 balance와 loading, error 가져오기
-  const { balance, loading, error, usedAmount } = useSelector((state: RootState) => state.paymoney);
+  // Redux state에서 balance와 loading, error, monthlyUsedAmount 가져오기
+  const { balance, loading, error, monthlyUsedAmount } = useSelector((state: RootState) => state.paymoney);
+
+  // 현재 월의 사용 금액을 가져오는 함수
+  const fetchCurrentMonthUsedAmount = () => {
+    const today = new Date();
+    const startDate = format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd');
+    const period = getDaysInMonth(today);
+    dispatch(fetchMonthlyUsedAmount({ startDate, period }));
+  };
 
   useEffect(() => {
-    // 화면이 처음 렌더링될 때 잔액을 가져옴
+    // 화면이 처음 렌더링될 때 잔액과 현재 월의 사용 금액을 가져옴
     dispatch(fetchPaymoneyBalance());
+    fetchCurrentMonthUsedAmount();
   }, [dispatch]);
 
   const handleConfirm = async (amount: number) => {
@@ -45,6 +49,9 @@ const PaymoneyScreen: React.FC = () => {
         Alert.alert('송금 성공', `송금이 완료되었습니다.`);
       }
       await dispatch(fetchPaymoneyBalance());
+      
+      // 사용 금액을 다시 조회하여 업데이트
+      fetchCurrentMonthUsedAmount();
     } catch (error) {
       console.error('요청 실패:', error);
       Alert.alert('요청 실패', error as string);
@@ -66,18 +73,6 @@ const PaymoneyScreen: React.FC = () => {
     setModalVisible(true);
   };
 
-  const currentMonth = format(new Date(), 'yyyy-MM');
-  const monthlyUsedAmount = usedAmount[currentMonth] || 0; // 현재 월의 사용 금액 조회
-  console.log('월 소비금액 확인', usedAmount)
-  
-  // if (loading) {
-  //   return (
-  //     <View style={[styles.bodyContainer, { justifyContent: 'center', alignItems: 'center' }]}>
-  //       <Text>로딩 중...</Text>
-  //     </View>
-  //   );
-  // }
-
   return (
     <LinearGradient style={[styles.gradientBackground]} locations={[0,1]} colors={['#769bff','#b7caff']} useAngle={true} angle={257.3}>
       <View style={styles.bodyContainer}>
@@ -86,9 +81,10 @@ const PaymoneyScreen: React.FC = () => {
         
         {error && <Text style={{ color: 'red' }}>에러: {error}</Text>}
         
-        <View style={styles.useAmountBox}>
-          <Text style={styles.usedAmonutText}>사용 금액 :  {monthlyUsedAmount.toLocaleString()}</Text>
-        </View>
+        <Pressable style={styles.useAmountBox} onPress={fetchCurrentMonthUsedAmount}>
+          <Text style={styles.usedAmonutText}>사용 금액 :  {monthlyUsedAmount?.toLocaleString() ?? 0}</Text>
+          <icons.sync height={20} width={20}/>
+        </Pressable>
         
         <View style={styles.inoutContainer}>
           {/* 충전 박스 */}

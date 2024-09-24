@@ -26,6 +26,9 @@ export const styles = StyleSheet.create({
     marginTop: '5%',
   },
   useAmountBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     borderRadius: 100,
     backgroundColor: "rgba(71, 110, 212, 0.21)",
     paddingHorizontal: 15,
@@ -38,6 +41,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Pretendard-Medium",
     color: "rgba(255, 255, 255, 0.9)",
     textAlign: "center",
+    paddingRight: 7,
   },
   inoutContainer: {
     marginTop: '7%',
