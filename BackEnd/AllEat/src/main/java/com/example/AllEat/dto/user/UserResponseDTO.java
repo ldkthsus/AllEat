@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -46,20 +47,11 @@ public class UserResponseDTO {
     @JsonProperty("weights")
     private List<WeightEntity> weights;
 
-    @JsonProperty("goal")
-    private GoalEntity goal;
+    @JsonProperty("alarms")
+    private AlarmConvertDTO alarms;
 
-    @JsonProperty("alarm")
-    private AlarmEntity alarm;
-
-    @JsonProperty("breakfast_alarm")
-    private LocalTime breakfastAlarm;
-
-    @JsonProperty("lunch_alarm")
-    private LocalTime lunchAlarm;
-
-    @JsonProperty("dinner_alarm")
-    private LocalTime dinnerAlarm;
+    @JsonProperty("goals")
+    private GoalConvertDTO goals;
 
     public void fromEntity(UserEntity userEntity) {
         this.email = userEntity.getEmail();
@@ -71,9 +63,35 @@ public class UserResponseDTO {
         this.userAge = userEntity.getUserAge();
         this.activityAmount = userEntity.getActivityAmount();
         this.weights = userEntity.getWeights();
-        this.goal = userEntity.getGoals();
-        this.breakfastAlarm = userEntity.getAlarm().getBreakfastAlarm();
-        this.lunchAlarm = userEntity.getAlarm().getLunchAlarm();
-        this.dinnerAlarm = userEntity.getAlarm().getDinnerAlarm();
+        this.goals = new GoalConvertDTO(userEntity.getGoals());
+        this.alarms = new AlarmConvertDTO(userEntity.getAlarm());
+    }
+
+    @Getter
+    public static class GoalConvertDTO {
+        private double goalWeight;
+        private Integer goalCost;
+        private Integer goalKcal;
+        private Timestamp createdAt;
+
+        public GoalConvertDTO(GoalEntity goalEntity) {
+            this.goalWeight = (goalEntity != null && goalEntity.getGoalWeight() != 0) ? goalEntity.getGoalWeight() : 0;
+            this.goalCost = (goalEntity != null && goalEntity.getGoalCost() != null) ? goalEntity.getGoalCost() : null;
+            this.goalKcal = (goalEntity!= null && goalEntity.getGoalKcal() != null) ? goalEntity.getGoalKcal() : null;
+            this.createdAt = (goalEntity != null && goalEntity.getCreatedAt() != null) ? goalEntity.getCreatedAt() : null;
+        }
+    }
+
+    @Getter
+    public static class AlarmConvertDTO{
+        private LocalTime breakfastAlarm;
+        private LocalTime lunchAlarm;
+        private LocalTime dinnerAlarm;
+
+        public AlarmConvertDTO(AlarmEntity alarmEntity) {
+            this.breakfastAlarm = (alarmEntity != null && alarmEntity.getBreakfastAlarm() != null) ? alarmEntity.getBreakfastAlarm() : null;
+            this.lunchAlarm = (alarmEntity != null &&  alarmEntity.getLunchAlarm() != null) ? alarmEntity.getLunchAlarm() : null;
+            this.dinnerAlarm = (alarmEntity != null &&  alarmEntity.getDinnerAlarm() != null) ? alarmEntity.getDinnerAlarm() : null;
+        }
     }
 }
