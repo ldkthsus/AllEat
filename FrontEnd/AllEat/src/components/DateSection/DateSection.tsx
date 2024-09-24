@@ -26,7 +26,7 @@ interface DateSectionProps {
 const DateSection: React.FC<DateSectionProps> = ({date, transactions}) => {
   return (
     <View style={styles.dateSection}>
-      <icons.passwordCheck width={24} height={24} style={styles.dateIcon} />
+      <icons.dan width={24} height={24} style={styles.dateIcon} />
       <Text style={styles.dateText}>{date}</Text>
       {transactions.map(transaction => (
         <TransactionItem key={transaction.id} transaction={transaction} />
