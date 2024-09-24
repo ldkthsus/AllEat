@@ -46,7 +46,7 @@ public class ReportService {
         return userRepository.findByEmail(email);
     }
 
-    public Object collectDayReport(String day, HttpServletRequest request) {
+    public Map<String, Object> collectDayReport(String day, HttpServletRequest request) {
         // JWT 토큰을 이용해 사용자 식별
         UserEntity user = findUserByRequest(request);
         if (user == null) {
@@ -111,8 +111,13 @@ public class ReportService {
         reportData.put("goal_weight", goalWeight); // 목표 체중
         reportData.put("goal_cost", goalCost); // 목표 식비
 
+        // 그날 먹은 모든 음식의 정보 추가
+        List<Map<String, Object>> dayFoodInfo = collectDayFoodInfo(day, request);
+        reportData.put("day_food_info", dayFoodInfo);
+
         return reportData;
     }
+
 
     public List<Map<String, Object>> collectDayFoodInfo(String day, HttpServletRequest request) {
         // JWT 토큰을 이용해 사용자 식별

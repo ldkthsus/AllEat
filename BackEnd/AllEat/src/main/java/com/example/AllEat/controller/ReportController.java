@@ -1,4 +1,5 @@
 package com.example.AllEat.controller;
+
 import com.example.AllEat.service.WeekReportService;
 import com.example.AllEat.service.MonthReportService;
 import com.example.AllEat.service.ReportService;
@@ -9,8 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
-
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -34,35 +35,19 @@ public class ReportController {
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
-        // JSON 데이터에서 'day' 값 추출
         String day = requestBody.get("day");
         if (day == null || day.isEmpty()) {
             return ResponseEntity.badRequest().body("The 'day' parameter is missing or empty.");
         }
 
-        // 사용자 식별 및 데이터 수집
+        // 데이터 수집
         Object reportData = reportService.collectDayReport(day, request);
 
-        // FastAPI로 데이터 전송
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
+        // FastAPI 전송
+        ResponseEntity<String> response = sendToFastApi(reportData, request, "http://localhost:8000/fast-api/report/day");
 
-        // Authorization 헤더를 그대로 전달
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null || authorization.isEmpty()) {
-            return ResponseEntity.status(401).body("Unauthorized");
-        }
-        headers.set("Authorization", authorization);
+        List<Map<String, Object>> dailyFoodInfo = reportService.collectDayFoodInfo(day, request);
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(reportData, headers);
-
-        // FastAPI 서버로 요청을 보냄
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8000/fast-api/report/day", requestEntity, String.class);
-
-        // 그날 먹은 모든 음식의 정보 가져오기
-        List<Map<String, Object>> dailyFoodInfo = reportService.collectDayFoodInfo(day, request); // 새롭게 추가된 메서드
-
-        // FastAPI로부터 받은 response와 먹은 음식 정보를 하나의 JSON으로 합침
         Map<String, Object> fullResponse = new HashMap<>();
         fullResponse.put("gptResponse", response.getBody());
         fullResponse.put("foodDetails", dailyFoodInfo);
@@ -70,32 +55,27 @@ public class ReportController {
         return ResponseEntity.ok(fullResponse);
     }
 
-
-    // 주간 레포트 생성
     @PostMapping("/week-report")
     public ResponseEntity<?> getWeekReport(
+            @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
-        // 사용자 식별 및 데이터 수집
-        Object reportData = weekReportService.collectWeekReport(request);
-
-        // FastAPI로 데이터 전송
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-
-        // Authorization 헤더를 그대로 전달
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null || authorization.isEmpty()) {
-            return ResponseEntity.status(401).body("Unauthorized");
+        // JSON 데이터에서 'day' 값 추출
+        String day = requestBody.get("day");
+        if (day == null || day.isEmpty()) {
+            return ResponseEntity.badRequest().body("The 'day' parameter is missing or empty.");
         }
-        headers.set("Authorization", authorization);
 
-        HttpEntity<Object> requestEntity = new HttpEntity<>(reportData, headers);
+        // 데이터 수집 수행 (collectWeekReport 호출)
+        Map<String, Object> collectedData = weekReportService.collectWeekReport(day, request);
 
-        // FastAPI 서버로 요청을 보냄
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8000/fast-api/report/week", requestEntity, String.class);
+        // FastAPI로 데이터 전송만 수행하고 응답받기
+        Map<String, Object> fastApiResponse = weekReportService.sendWeekReportToFastApi(collectedData, request);
 
-        return ResponseEntity.ok(response.getBody());
+        // 프론트엔드에 반환할 데이터를 구성
+        Map<String, Object> finalReport = weekReportService.prepareFrontendResponse(fastApiResponse, collectedData);
+
+        return ResponseEntity.ok(finalReport);
     }
 
     @PostMapping("/month-report")
@@ -103,31 +83,33 @@ public class ReportController {
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
-        // JSON 데이터에서 'year_month' 값 추출
         String yearMonth = requestBody.get("year_month");
         if (yearMonth == null || yearMonth.isEmpty()) {
             return ResponseEntity.badRequest().body("The 'year_month' parameter is missing or empty.");
         }
 
-        // 사용자 식별 및 데이터 수집
+        // 데이터 수집
         Object reportData = monthReportService.collectMonthReport(yearMonth, request);
 
-        // FastAPI로 데이터 전송
+        // FastAPI 전송
+        ResponseEntity<String> response = sendToFastApi(reportData, request, "http://localhost:8000/fast-api/report/month");
+
+        return ResponseEntity.ok(response.getBody());
+    }
+
+    private ResponseEntity<String> sendToFastApi(Object reportData, HttpServletRequest request, String url) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
-        // Authorization 헤더를 그대로 전달
+        // Authorization 헤더를 추가
         String authorization = request.getHeader("Authorization");
         if (authorization == null || authorization.isEmpty()) {
-            return ResponseEntity.status(401).body("Unauthorized");
+            throw new RuntimeException("Unauthorized - Missing Authorization header");
         }
         headers.set("Authorization", authorization);
 
         HttpEntity<Object> requestEntity = new HttpEntity<>(reportData, headers);
 
-        // FastAPI 서버로 요청을 보냄
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8000/fast-api/report/month", requestEntity, String.class);
-
-        return ResponseEntity.ok(response.getBody());
+        return restTemplate.postForEntity(url, requestEntity, String.class);
     }
-}// 안녕하세요
+}
