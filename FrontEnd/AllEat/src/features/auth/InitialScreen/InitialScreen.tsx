@@ -28,11 +28,11 @@ const InitialScreen: React.FC = () => {
     goal_cost: '',
   });
   const [form, setForm] = useState({
-    name: '',
+    user_name: '',
     user_age: '',
     user_height: '',
     user_gender: 0 as 0 | 1, // 0 또는 1만 허용
-    activity: 1 as 0 | 1 | 2, // 0, 1, 2만 허용
+    activity_amount: 1 as 0 | 1 | 2, // 0, 1, 2만 허용
   });
   const [alarm, setAlarm] = useState({
     breakfast: new Date(new Date().setHours(8, 0, 0, 0)),
@@ -77,16 +77,29 @@ const InitialScreen: React.FC = () => {
   };
   const handleSubmit = async () => {
     const alarmTime = {
-      breakfastAlarm: isBreakfastEnabled
+      breakfast_alarm: isBreakfastEnabled
         ? alarm.breakfast.toLocaleTimeString('it-IT')
         : '',
-      lunchAlarm: isLunchEnabled ? alarm.lunch.toLocaleTimeString('it-IT') : '',
-      dinnerAlarm: isDinnerEnabled
+      lunch_alarm: isLunchEnabled
+        ? alarm.lunch.toLocaleTimeString('it-IT')
+        : '',
+      dinner_alarm: isDinnerEnabled
         ? alarm.dinner.toLocaleTimeString('it-IT')
         : '',
     };
 
-    console.log(form);
+    const formData = new FormData();
+    formData.append('data', {
+      string: JSON.stringify({
+        user_age: Number(form.user_age),
+        user_gender: form.user_gender,
+        user_height: parseFloat(form.user_height),
+        activity_amount: form.activity_amount,
+        user_name: form.user_name,
+      }),
+      type: 'application/json',
+    });
+    console.log(formData);
     console.log(weight);
     console.log(goal);
     console.log(alarmTime);
@@ -104,12 +117,10 @@ const InitialScreen: React.FC = () => {
       console.log('Goal Response:', goalResponse.data);
 
       // submittedForm에 대한 PUT 요청
-      const formResponse = await api.put('/AllEat/users/info', {
-        user_age: Number(form.user_age),
-        user_gender: form.user_gender,
-        user_height: parseFloat(form.user_height),
-        activity: form.activity,
-        name: form.name,
+      const formResponse = await api.put('/AllEat/users/info', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       console.log('Form Response:', formResponse.data);
       // weight에 대한 POST 요청
@@ -121,8 +132,8 @@ const InitialScreen: React.FC = () => {
       // alarm에 대한 POST 요청
       const alarmResponse = await api.post('/AllEat/alarm', alarmTime);
       console.log('Weight Response:', alarmResponse.data);
-      // 모든 요청이 성공하면 홈으로 이동
-      navigation.navigate('Home');
+      // 모든 요청이 성공하면 약관페이지로 이동
+      navigation.navigate('Agreement');
     } catch (error) {
       console.error('Error occurred during form submission:', error);
       // 에러 처리 추가
@@ -135,8 +146,8 @@ const InitialScreen: React.FC = () => {
         <Text style={styles.title}>추가 정보를 입력해주세요!</Text>
         <FormField
           title="닉네임"
-          value={form.name}
-          handleChangeText={text => setForm({...form, name: text})}
+          value={form.user_name}
+          handleChangeText={text => setForm({...form, user_name: text})}
           placeholder="키키"
         />
         <FormField
@@ -193,8 +204,8 @@ const InitialScreen: React.FC = () => {
           onSelect={user_gender => setForm({...form, user_gender})}
         />
         <ActivityLevelSelection
-          selectedActiveRange={form.activity}
-          onSelect={activity => setForm({...form, activity})}
+          selectedActiveRange={form.activity_amount}
+          onSelect={activity_amount => setForm({...form, activity_amount})}
         />
         <View style={styles.form}>
           <Text style={styles.formLabel}>알람을 언제 보낼까요?</Text>
@@ -226,7 +237,7 @@ const InitialScreen: React.FC = () => {
         <CustomButton
           title="계속하기"
           // handlePress={handleSubmit}
-          handlePress={() => navigation.navigate('Agreement')}
+          handlePress={handleSubmit}
           containerStyles="w-[100%] h-[60px]" // Tailwind 스타일 전달
           textStyles="text-white font-pbold" // Tailwind 스타일 전달
           isLoading={false} // 로딩 상태 설정

@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import IntroScreen from '../features/auth/IntroScreen/IntroScreen';
 import MyPageScreen from '../features/auth/MyPageScreen/MyPageScreen';
+import MyPageUpdateScreen from '../features/auth/MyPageUpdateScreen/MyPageUpdateScreen';
 import InitialScreen from '../features/auth/InitialScreen/InitialScreen';
 import SignIn from '../features/auth/SignInScreen/SignInScreen';
 import SignUp from '../features/auth/SignUpScreen/SignUpScreen';
@@ -74,6 +75,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="MyPage"
           component={MyPageScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MyPageUpdate"
+          component={MyPageUpdateScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

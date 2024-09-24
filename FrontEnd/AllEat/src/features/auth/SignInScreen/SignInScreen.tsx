@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-import FormField from '../../../components/FormField/FormField'; 
+import React, {useState, useEffect} from 'react';
+import {View, Text, Pressable, Alert} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {useNavigation} from '@react-navigation/native';
+import FormField from '../../../components/FormField/FormField';
 import CustomButton from '../../../components/CustomButton';
-import { styles } from './SignInScreen.styles';
-import { RootStackParamList } from '../../../types/navigation';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { icons } from '../../../constants';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../../../redux/features/authSlice'; 
-import { RootState } from '../../../redux/store';
+import {styles} from './SignInScreen.styles';
+import {RootStackParamList} from '../../../types/navigation';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {icons} from '../../../constants';
+import {useDispatch, useSelector} from 'react-redux';
+import {loginUser} from '../../../redux/features/authSlice';
+import {RootState} from '../../../redux/store';
+import {fetchUserInfo} from '../../../redux/features/infoSlice'; // infoSlice에서 fetchUserInfo 가져오기
+import {unwrapResult} from '@reduxjs/toolkit'; // unwrapResult 추가
+import {AppDispatch} from '../../../redux/store';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -19,8 +22,10 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation<SignInScreenNavigationProp>();
-  const dispatch = useDispatch();
-  const { loading, error, isAuthenticated, token } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  const {isAuthenticated, token} = useSelector(
+    (state: RootState) => state.auth,
+  );
 
   const [form, setForm] = useState({
     email: '',
@@ -31,9 +36,9 @@ const SignIn: React.FC = () => {
 
   // 상태 변경 감지 및 console.log로 토큰 저장 확인
   useEffect(() => {
-    console.log('Redux auth 확인:', { isAuthenticated, token });
+    console.log('Redux auth 확인:', {isAuthenticated, token});
     if (isAuthenticated) {
-      navigation.replace('Home');  // 로그인 성공 후 Home으로 이동
+      navigation.replace('Home'); // 로그인 성공 후 Home으로 이동
     }
   }, [isAuthenticated, token, navigation]);
 
@@ -46,9 +51,23 @@ const SignIn: React.FC = () => {
     };
 
     try {
-      await dispatch(loginUser(loginData));
+      const resultAction = await dispatch(loginUser(loginData));
+      unwrapResult(resultAction); // 성공 여부만 확인
+
+      // 로그인 성공 시 fetchUserInfo 호출
+      console.log('로그인 성공, 유저 정보 가져오기 시도');
+      await dispatch(fetchUserInfo());
     } catch (error) {
-      Alert.alert('로그인 실패', error?.message || '로그인에 실패했습니다.');
+      // error가 unknown 타입일 때 처리
+      let errorMessage = '로그인에 실패했습니다.';
+
+      if (error instanceof Error) {
+        errorMessage = error.message; // 에러가 Error 타입일 경우 message를 가져옴
+      } else if (typeof error === 'string') {
+        errorMessage = error; // 에러가 string일 경우
+      }
+
+      Alert.alert('로그인 실패', errorMessage);
     }
 
     setIsSubmitting(false);
@@ -87,13 +106,13 @@ const SignIn: React.FC = () => {
         <FormField
           title="이메일"
           value={form.email}
-          handleChangeText={text => setForm({ ...form, email: text })}
+          handleChangeText={text => setForm({...form, email: text})}
           placeholder="이메일을 입력하세요"
         />
         <FormField
           title="패스워드"
           value={form.password}
-          handleChangeText={text => setForm({ ...form, password: text })}
+          handleChangeText={text => setForm({...form, password: text})}
           placeholder="패스워드를 입력하세요"
           secureTextEntry
         />
