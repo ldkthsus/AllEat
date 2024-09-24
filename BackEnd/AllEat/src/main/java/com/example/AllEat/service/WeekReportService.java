@@ -197,10 +197,14 @@ public class WeekReportService {
                 .limit(10)
                 .toList();
 
+        // 레스토랑 타입별 카운트 가져오기
         Map<String, Integer> restaurantTypeCount = (Map<String, Integer>) collectedData.get("restaurantTypeCount");
 
         List<Map<String, Object>> costWhere = new ArrayList<>();
         restaurantTypeCount.forEach((type, count) -> costWhere.add(Map.of("restaurant_type", type, "count", count)));
+
+        // "common_rest_type" 생성
+        Map<String, Integer> commonRestType = new HashMap<>(restaurantTypeCount);
 
         // 평균값 가져오기
         double kcalAvg = ((Number) collectedData.getOrDefault("kcalAvg", 0.0)).doubleValue();
@@ -223,12 +227,12 @@ public class WeekReportService {
         finalReport.put("cost_avg", totalCost);
         finalReport.put("cost_ranking", costRanking);
         finalReport.put("cost_where", costWhere);
+        finalReport.put("common_rest_type", commonRestType); // 추가된 부분
 
         // 로그 추가
         System.out.println("Final report prepared for frontend: " + finalReport);
 
         return finalReport;
     }
-
 
 }

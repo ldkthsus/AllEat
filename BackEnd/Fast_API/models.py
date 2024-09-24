@@ -30,7 +30,7 @@ class WeekDiaryRequest(BaseModel):
 class MonthDiaryRequest(BaseModel):
     goal_weight: Optional[float] = None
     goal_cost: Optional[int] = None
-    weight_records: List[WeightRecord]
+    weight_records: List[WeightRecord] = []  # 리스트 초기화
     average_carbohydrates: Optional[float] = None
     average_proteins: Optional[float] = None
     average_fats: Optional[float] = None

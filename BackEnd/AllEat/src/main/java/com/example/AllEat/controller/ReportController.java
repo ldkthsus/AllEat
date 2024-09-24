@@ -9,11 +9,10 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.HashMap;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/AllEat")
@@ -83,18 +82,22 @@ public class ReportController {
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
+        // year_month 값을 추출
         String yearMonth = requestBody.get("year_month");
         if (yearMonth == null || yearMonth.isEmpty()) {
             return ResponseEntity.badRequest().body("The 'year_month' parameter is missing or empty.");
         }
 
-        // 데이터 수집
-        Object reportData = monthReportService.collectMonthReport(yearMonth, request);
+        // 데이터 수집 수행 (collectMonthReport 호출)
+        Map<String, Object> collectedData = monthReportService.collectMonthReport(yearMonth, request);
 
-        // FastAPI 전송
-        ResponseEntity<String> response = sendToFastApi(reportData, request, "http://localhost:8000/fast-api/report/month");
+        // FastAPI로 데이터 전송만 수행하고 응답받기
+        Map<String, Object> fastApiResponse = monthReportService.sendMonthReportToFastApi(collectedData, request);
 
-        return ResponseEntity.ok(response.getBody());
+        // 프론트엔드에 반환할 데이터를 구성
+        Map<String, Object> finalReport = monthReportService.prepareFrontendResponse(fastApiResponse, collectedData);
+
+        return ResponseEntity.ok(finalReport);
     }
 
     private ResponseEntity<String> sendToFastApi(Object reportData, HttpServletRequest request, String url) {
