@@ -27,6 +27,8 @@ import emptyCheck from '../assets/icons/emptyCheck.svg';
 import tan from '../assets/icons/tan.svg';
 import dan from '../assets/icons/dan.svg';
 import ji from '../assets/icons/ji.svg';
+import sync from '../assets/icons/sync.svg';
+import sync_bold from '../assets/icons/sync_bold.svg';
 
 const icons = {
   settings,
@@ -57,6 +59,8 @@ const icons = {
   settingsWhite,
   tan,
   dan,
-  ji
+  ji,
+  sync,
+  sync_bold
 };
 export default icons;
