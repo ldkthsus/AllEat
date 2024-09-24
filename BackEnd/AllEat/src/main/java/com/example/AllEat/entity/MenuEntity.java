@@ -54,4 +54,7 @@ public class MenuEntity {
 
     @OneToMany(mappedBy = "menu", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<DiaryMappingEntity> diaryMappings;
+
+    @OneToOne(mappedBy = "menu", orphanRemoval = true)
+    private AutoEntity auto;
 }
