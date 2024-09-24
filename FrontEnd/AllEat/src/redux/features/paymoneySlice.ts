@@ -1,15 +1,13 @@
 // paymoneySlice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import api from '../../utils/api'; // Axios 인스턴스 임포트
-import { RootState } from '../../redux/store';
-import { format } from 'date-fns';
 
 // 페이머니 상태 타입 정의
 interface PaymoneyState {
   loading: boolean;
   error: string | null;
   balance: number; // 잔액
-  usedAmount: { [key: string]: number }; // 월별 사용 금액 관리
+  monthlyUsedAmount: number | null; // 월별 사용 금액
   success: boolean;
   accountCreated: boolean; // 계좌 개설 여부
 }
@@ -19,7 +17,7 @@ const initialState: PaymoneyState = {
   loading: false,
   error: null,
   balance: 0, // 잔액 초기화
-  usedAmount: {}, // 사용 금액 초기화
+  monthlyUsedAmount: null, // 사용 금액 초기화
   success: false,
   accountCreated: false, // 계좌 개설 여부 확인
 };
@@ -43,7 +41,6 @@ export const fetchPaymoneyBalance = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await api.get('/AllEat/paymoney'); // 잔액 조회 요청
-      console.log('잔액 확인: ', response.data.balance)
       return response.data.balance; // 응답 데이터 중 잔액 반환
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '잔액 조회 실패');
@@ -51,6 +48,19 @@ export const fetchPaymoneyBalance = createAsyncThunk(
   }
 );
 
+// 월별 사용 금액 조회 액션 생성
+export const fetchMonthlyUsedAmount = createAsyncThunk(
+  'paymoney/fetchMonthlyUsedAmount',
+  async ({ startDate, period }: { startDate: string; period: number }, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/AllEat/paymoney/amount_only?startDate=${startDate}&period=${period}`);
+      console.log('사용 금액 확인', response.data)
+      return Math.abs(response.data); // 해당 월 사용 금액 반환
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || '월별 사용 금액 조회 실패');
+    }
+  }
+);
 
 // 페이머니 충전 액션 생성
 export const chargePaymoney = createAsyncThunk(
@@ -62,7 +72,6 @@ export const chargePaymoney = createAsyncThunk(
         transaction_type: 0, // 충전
         restaurant_id: 1, // 고정 ID
       });
-      console.log('충전 금액 확인: ', response.data.amount);
       return response.data.amount; // 반환된 잔액
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '충전 실패');
@@ -89,11 +98,7 @@ export const transferPaymoney = createAsyncThunk(
         restaurant_id,
       });
 
-      const currentMonth = format(new Date(), 'yyyy-MM'); // 현재 월
-      const usedAmountForMonth = restaurant_id !== 1 ? amount : 0;
-      // restaurant_id가 1이 아닐 때만 사용 금액으로 간주
-
-      return { balance: response.data.amount, usedAmount: usedAmountForMonth, currentMonth };
+      return { balance: response.data.amount }; // 반환된 잔액
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '송금 실패');
     }
@@ -153,22 +158,33 @@ const paymoneySlice = createSlice({
 
     // 송금
     builder
-    .addCase(transferPaymoney.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    })
-    .addCase(transferPaymoney.fulfilled, (state, action: PayloadAction<{ balance: number; usedAmount: number; currentMonth: string }>) => {
-      state.loading = false;
-      state.balance = action.payload.balance; // 업데이트된 잔액으로 변경
-      // 현재 월의 사용 금액 업데이트
-      const { currentMonth, usedAmount } = action.payload;
-      state.usedAmount[currentMonth] = (state.usedAmount[currentMonth] || 0) + usedAmount;
-      console.log('확인ㅇㅇㅇ', state.usedAmount[currentMonth])
-    })
-    .addCase(transferPaymoney.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-    });
+      .addCase(transferPaymoney.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(transferPaymoney.fulfilled, (state, action: PayloadAction<{ balance: number }>) => {
+        state.loading = false;
+        state.balance = action.payload.balance; // 업데이트된 잔액으로 변경
+      })
+      .addCase(transferPaymoney.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    // 월별 사용 금액 조회
+    builder
+      .addCase(fetchMonthlyUsedAmount.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMonthlyUsedAmount.fulfilled, (state, action: PayloadAction<number>) => {
+        state.loading = false;
+        state.monthlyUsedAmount = action.payload; // 해당 월 사용 금액으로 업데이트
+      })
+      .addCase(fetchMonthlyUsedAmount.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
