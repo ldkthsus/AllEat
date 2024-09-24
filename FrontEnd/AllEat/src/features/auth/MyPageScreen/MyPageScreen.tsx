@@ -1,5 +1,12 @@
-import React from 'react';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
@@ -19,6 +26,13 @@ type MyPageScreenNavigationProp = NativeStackNavigationProp<
 const MyPageScreen: React.FC = () => {
   const navigation = useNavigation<MyPageScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentWeight, setCurrentWeight] = useState('75');
+  const [targetWeight, setTargetWeight] = useState('65');
+  const handleWeightChange = () => {
+    // 체중 변경 로직을 추가합니다. (API 호출 등)
+    setModalVisible(false); // 모달을 닫음
+  };
   const handleLogout = () => {
     // 로그아웃 액션 디스패치
     dispatch(logout());
@@ -40,11 +54,11 @@ const MyPageScreen: React.FC = () => {
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>
-                <icons.settingsWhite
+                <TouchableOpacity
                   style={styles.boxIcon}
-                  height={20}
-                  width={20}
-                />
+                  onPress={() => setModalVisible(true)}>
+                  <icons.settingsWhite height={20} width={20} />
+                </TouchableOpacity>
                 <icons.scale height={20} width={20} />
                 <Text style={styles.boxText}>목표 체중 변경</Text>
               </View>
@@ -106,6 +120,47 @@ const MyPageScreen: React.FC = () => {
               </View>
             </View>
           </View>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => setModalVisible(false)}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>체중 변경</Text>
+                <TextInput
+                  style={styles.input}
+                  value={currentWeight}
+                  onChangeText={setCurrentWeight}
+                  placeholder="현재 체중 입력"
+                  keyboardType="numeric"
+                />
+                <TextInput
+                  style={styles.input}
+                  value={targetWeight}
+                  onChangeText={setTargetWeight}
+                  placeholder="목표 체중 입력"
+                  keyboardType="numeric"
+                />
+                <View style={styles.buttonContainer}>
+                  <CustomButton
+                    title="저장"
+                    handlePress={handleWeightChange}
+                    containerStyles="w-[40%] h-[60px] m-3"
+                    textStyles="text-white font-pbold"
+                    isLoading={false}
+                  />
+                  <CustomButton
+                    title="취소"
+                    handlePress={() => setModalVisible(false)}
+                    containerStyles="w-[40%] h-[60px] m-3 bg-gray-500"
+                    textStyles="text-white font-pbold"
+                    isLoading={false}
+                  />
+                </View>
+              </View>
+            </View>
+          </Modal>
           <CustomButton
             title="로그아웃"
             handlePress={handleLogout}

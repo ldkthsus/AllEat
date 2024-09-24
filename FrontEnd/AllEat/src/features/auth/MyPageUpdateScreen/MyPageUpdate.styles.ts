@@ -20,14 +20,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     backgroundColor: 'white',
-    height: '4%',
+    height: 60,
   },
   myPageTitleText: {
     fontSize: 16,
     fontFamily: 'Pretendard-Bold',
     color: '#3d3d3d',
   },
-  myPageTitleIcon: {position: 'absolute', left: 30},
+  myPageTitleIcon: {position: 'absolute', left: 20},
   title: {
     fontSize: 24,
     marginBottom: 50,

@@ -12,13 +12,17 @@ import GenderSelection from '../components/GenderSelection/GenderSelection';
 import ActivityLevelSelection from '../components/ActivityLevelSelection/ActivityLevelSelection';
 import api from '../../../utils/api';
 import UserInfo from '../components/UserInfo/UserInfo';
+import {AppDispatch} from '../../../redux/store';
+import {useDispatch} from 'react-redux';
+import {fetchUserInfo} from '../../../redux/features/infoSlice';
+
 type MyPageUpdateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPageUpdate'
 >;
 const MyPageUpdateScreen: React.FC = () => {
   const navigation = useNavigation<MyPageUpdateScreenNavigationProp>();
-
+  const dispatch = useDispatch<AppDispatch>();
   const [form, setForm] = useState({
     user_name: '',
     user_age: '',
@@ -56,6 +60,7 @@ const MyPageUpdateScreen: React.FC = () => {
         headers: {'content-type': 'multipart/form-data'},
       });
       console.log('Form Response:', formResponse.data);
+      await dispatch(fetchUserInfo());
 
       // 모든 요청이 성공하면 홈으로 이동
       navigation.navigate('MyPage');
