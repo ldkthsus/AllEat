@@ -95,7 +95,8 @@ public class AuthController {
             Boolean same = userService.comparePassword(updateRequest.getPassword1(), updateRequest.getPassword2());
             if (same) {
                 UserEntity updateUser = userService.updateUserInfo(getUser.getEmail(), updateRequest, profilePicture);
-                return ResponseEntity.status(HttpStatus.OK).body(updateUser);
+                UserResponseDTO updateUserResponseDTO = userService.getUserDTO(updateUser);
+                return ResponseEntity.status(HttpStatus.OK).body(updateUserResponseDTO);
             }
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 

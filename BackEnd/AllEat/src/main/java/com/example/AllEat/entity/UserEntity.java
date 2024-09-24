@@ -109,4 +109,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<FavoriteEntity> favorites;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<AutoEntity> autos;
+
+
 }

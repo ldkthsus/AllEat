@@ -12,17 +12,24 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateRequestDTO {
 
+    @JsonProperty(value = "password1", required = false)
     private String password1;
+
+    @JsonProperty(value = "password2", required = false)
     private String password2;
+
     @JsonProperty("user_name")
     private String userName;
 
     @JsonProperty("user_height")
     private Double userHeight;
+
     @JsonProperty("user_gender")
     private Integer userGender;
+
     @JsonProperty("user_age")
     private Integer userAge;
+
     @JsonProperty("activity_amount")
     private Integer activityAmount;
 

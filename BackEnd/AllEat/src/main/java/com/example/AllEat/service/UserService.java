@@ -62,8 +62,15 @@ public class UserService {
     public UserEntity updateUserInfo(String email, UpdateRequestDTO updateRequest, String prifileUrl) {
         UserEntity findUser = userRepository.findByEmail(email);
         if(findUser != null) {
-            String encodedPassword = passwordEncoder.encode(updateRequest.getPassword1());
-            findUser.updateInfo(updateRequest, prifileUrl, encodedPassword);
+            String password = null;
+            if(updateRequest.getPassword1() == null && updateRequest.getPassword2() == null) {
+                password = null;
+                findUser.updateInfo(updateRequest, prifileUrl, password);
+                userRepository.save(findUser);
+                return findUser;
+            }
+            password= passwordEncoder.encode(updateRequest.getPassword1());
+            findUser.updateInfo(updateRequest, prifileUrl, password);
             userRepository.save(findUser);
             return findUser;
         }
@@ -73,8 +80,8 @@ public class UserService {
     }
 
     public boolean comparePassword(String firstPassword, String secondPassword) {
-        if (firstPassword == null || secondPassword == null){
-            return false;
+        if (firstPassword == null && secondPassword == null){
+            return true;
         }
         return firstPassword.equals(secondPassword);
     }
