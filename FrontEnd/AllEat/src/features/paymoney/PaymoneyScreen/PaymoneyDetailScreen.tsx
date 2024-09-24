@@ -33,6 +33,10 @@ interface Transaction {
 const PaymoneyDetailScreen: React.FC = () => {
   const navigation = useNavigation<PaymoneyDetailScreenNavigationProp>();
   const [loading, setLoading] = useState(true);
+  const today = new Date(); // 오늘 날짜
+  const oneWeekAgo = new Date(today); // 일주일 전 날짜
+  oneWeekAgo.setDate(today.getDate() - 6); // 일주일 전 날짜 계산
+  const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
   const [transactions, setTransactions] = useState<{
     [date: string]: Transaction[];
   }>({});
@@ -42,7 +46,7 @@ const PaymoneyDetailScreen: React.FC = () => {
       try {
         const response = await api.get('/AllEat/paymoney/balance', {
           params: {
-            startDate: '2024-09-18',
+            startDate: formattedOneWeekAgo,
             period: 7,
           },
         });
@@ -68,7 +72,7 @@ const PaymoneyDetailScreen: React.FC = () => {
     };
 
     fetchTransactionData();
-  }, []);
+  }, [formattedOneWeekAgo]);
 
   // 날짜별로 데이터를 그룹화하는 함수
   const groupByDate = (transactionList: Transaction[]) => {
