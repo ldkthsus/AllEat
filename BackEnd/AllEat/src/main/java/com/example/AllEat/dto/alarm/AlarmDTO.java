@@ -10,7 +10,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AlarmRequestDTO {
+public class AlarmDTO {
 
     @JsonProperty("breakfast_alarm")
     private LocalTime breakfastAlarm;

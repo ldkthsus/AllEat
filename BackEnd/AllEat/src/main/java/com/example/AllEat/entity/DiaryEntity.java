@@ -47,6 +47,10 @@ public class DiaryEntity {
     @JsonBackReference
     private DailyDiaryEntity dailyDiary;
 
+    @Column(name = "daily_price")
+    private Integer dailyPrice;
+
+
     public void updateCalories(Integer calories) {
         this.mealCalories = calories;
     }

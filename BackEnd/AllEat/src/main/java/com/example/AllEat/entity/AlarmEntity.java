@@ -1,6 +1,6 @@
 package com.example.AllEat.entity;
 
-import com.example.AllEat.dto.alarm.AlarmRequestDTO;
+import com.example.AllEat.dto.alarm.AlarmDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,15 +23,15 @@ public class AlarmEntity {
     @Column(name = "id")
     private Integer id;
 
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @Column(name = "breakfast_alarm", nullable = true)
     private LocalTime breakfastAlarm;
 
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @Column(name = "lunch_alarm", nullable = true)
     private LocalTime lunchAlarm;
 
-    @JsonFormat(pattern = "HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @Column(name = "dinner_alarm", nullable = true)
     private LocalTime dinnerAlarm;
 
@@ -39,7 +39,7 @@ public class AlarmEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public void updateAlarm(AlarmRequestDTO alarm) {
+    public void updateAlarm(AlarmDTO alarm) {
         this.breakfastAlarm = alarm.getBreakfastAlarm();
         this.lunchAlarm = alarm.getLunchAlarm();
         this.dinnerAlarm = alarm.getDinnerAlarm();

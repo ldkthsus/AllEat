@@ -1,19 +1,24 @@
 package com.example.AllEat.entity;
 
 import com.example.AllEat.dto.user.UpdateRequestDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.sql.Timestamp;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "user")
+@NoArgsConstructor
 public class UserEntity {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -55,13 +60,14 @@ public class UserEntity {
     @Column(name = "expiration")
     private Timestamp expiration;
 
-    @Column(name = "amount_activity")
-    private Integer amountActivity;
+    @Column(name = "activity_amount")
+    private Integer activityAmount;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WeightEntity> weights;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private GoalEntity goals;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
@@ -79,9 +85,9 @@ public class UserEntity {
         this.profileUrl = profileUrl;
     }
 
-    public void updateInfo(UpdateRequestDTO updateRequest, String profileUrl){
-        if (updateRequest.getPassword1() != null){
-            this.password = updateRequest.getPassword1();
+    public void updateInfo(UpdateRequestDTO updateRequest, String profileUrl, String encodedPassword){
+        if (encodedPassword != null){
+            this.password = encodedPassword;
         }
         if (updateRequest.getUserAge() != null){
             this.userAge = updateRequest.getUserAge();
@@ -92,11 +98,11 @@ public class UserEntity {
         if (updateRequest.getUserHeight() != null){
             this.userHeight = updateRequest.getUserHeight();
         }
-        if (updateRequest.getAmountActivity() != null){
-            this.amountActivity = updateRequest.getAmountActivity();
+        if (updateRequest.getActivityAmount() != null){
+            this.activityAmount = updateRequest.getActivityAmount();
         }
-        if (updateRequest.getName() != null){
-            this.userName = updateRequest.getName();
+        if (updateRequest.getUserName() != null){
+            this.userName = updateRequest.getUserName();
         }
         this.profileUrl = profileUrl;
     }

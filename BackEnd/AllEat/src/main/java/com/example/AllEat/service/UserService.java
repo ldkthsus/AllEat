@@ -2,6 +2,8 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
+import com.example.AllEat.dto.user.UserResponseDTO;
+import com.example.AllEat.entity.GoalEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.UserRepository;
@@ -60,7 +62,8 @@ public class UserService {
     public UserEntity updateUserInfo(String email, UpdateRequestDTO updateRequest, String prifileUrl) {
         UserEntity findUser = userRepository.findByEmail(email);
         if(findUser != null) {
-            findUser.updateInfo(updateRequest, prifileUrl);
+            String encodedPassword = passwordEncoder.encode(updateRequest.getPassword1());
+            findUser.updateInfo(updateRequest, prifileUrl, encodedPassword);
             userRepository.save(findUser);
             return findUser;
         }
@@ -70,9 +73,16 @@ public class UserService {
     }
 
     public boolean comparePassword(String firstPassword, String secondPassword) {
-        if (firstPassword == null){
-            return true;
+        if (firstPassword == null || secondPassword == null){
+            return false;
         }
         return firstPassword.equals(secondPassword);
     }
+
+    public UserResponseDTO getUserDTO(UserEntity userEntity) {
+        UserResponseDTO userResponseDTO = new UserResponseDTO();
+        userResponseDTO.fromEntity(userEntity);
+        return userResponseDTO;
+    }
+
 }
