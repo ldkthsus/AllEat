@@ -43,7 +43,7 @@ public class PayTransactionEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private RestaurantsEntity restaurant;
 
-    @OneToOne(mappedBy = "mealpay", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "payTransaction", orphanRemoval = true, fetch = FetchType.LAZY)
     private MealPayEntity mealpay;
 
 }

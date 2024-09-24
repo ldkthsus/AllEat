@@ -1,6 +1,7 @@
 package com.example.AllEat.entity;
 
-import com.example.AllEat.dto.user.UpdateRequest;
+import com.example.AllEat.dto.user.UpdateRequestDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,10 +45,10 @@ public class UserEntity {
     private Double userHeight;
 
     @Column(name = "user_gender")
-    private int userGender;
+    private Integer userGender;
 
     @Column(name = "user_age")
-    private int userAge;
+    private Integer userAge;
 
     @Column(name = "refresh_Token")
     private String refreshToken;
@@ -55,13 +56,14 @@ public class UserEntity {
     @Column(name = "expiration")
     private Timestamp expiration;
 
-    @Column(name = "amount_activity")
-    private Integer amountActivity;
+    @Column(name = "activity_amount")
+    private Integer activityAmount;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WeightEntity> weights;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private GoalEntity goals;
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
@@ -79,12 +81,24 @@ public class UserEntity {
         this.profileUrl = profileUrl;
     }
 
-    public void updateInfo(UpdateRequest updateRequest, String profileUrl){
-        this.password = updateRequest.getPassword2();
-        goals.update(updateRequest.getGoalWeight(), updateRequest.getGoalCost());
-        if (this.weights != null && !this.weights.isEmpty()) {
-            WeightEntity lastWeight = this.weights.get(this.weights.size() - 1);
-            lastWeight.updateWeight(updateRequest.getWeight()); // 필요에 따라 세부 수정
+    public void updateInfo(UpdateRequestDTO updateRequest, String profileUrl){
+        if (updateRequest.getPassword1() != null){
+            this.password = updateRequest.getPassword1();
+        }
+        if (updateRequest.getUserAge() != null){
+            this.userAge = updateRequest.getUserAge();
+        }
+        if (updateRequest.getUserGender() != null){
+            this.userGender = updateRequest.getUserGender();
+        }
+        if (updateRequest.getUserHeight() != null){
+            this.userHeight = updateRequest.getUserHeight();
+        }
+        if (updateRequest.getActivityAmount() != null){
+            this.activityAmount = updateRequest.getActivityAmount();
+        }
+        if (updateRequest.getUserName() != null){
+            this.userName = updateRequest.getUserName();
         }
         this.profileUrl = profileUrl;
     }

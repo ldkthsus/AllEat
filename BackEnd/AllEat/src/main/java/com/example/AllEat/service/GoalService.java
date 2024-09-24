@@ -40,12 +40,6 @@ public class GoalService {
             throw new RuntimeException("User not found");
         }
 
-        // 사용자가 이미 목표를 가지고 있는지 확인
-        Optional<GoalEntity> existingGoal = goalRepository.findByUserId(userEntity.getId());
-        if (existingGoal.isPresent()) {
-            throw new RuntimeException("Goal already exists for this user. Please update the existing goal.");
-        }
-
         GoalEntity goalEntity = GoalEntity.builder()
                 .user(userEntity)
                 .goalWeight(goalDTO.getGoalWeight())

@@ -2,12 +2,13 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import IntroScreen from '../features/auth/IntroScreen/IntroScreen';
 import MyPageScreen from '../features/auth/MyPageScreen/MyPageScreen';
+import MyPageUpdateScreen from '../features/auth/MyPageUpdateScreen/MyPageUpdateScreen';
 import InitialScreen from '../features/auth/InitialScreen/InitialScreen';
 import SignIn from '../features/auth/SignInScreen/SignInScreen';
 import SignUp from '../features/auth/SignUpScreen/SignUpScreen';
 import HomeScreen from '../features/home/HomeScreen/HomeScreen';
-import AgreementScreen from '../features/paymoney/AgreementScreen/AgreementScreen';
-import PaymoneyScreen from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
+import Agreement from '../features/paymoney/AgreementScreen/AgreementScreen';
+import Paymoney from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -25,7 +26,7 @@ const AppNavigator = () => {
   // 특정 화면에서는 AppBar를 숨기고 싶은 경우
   const shouldShowAppBar =
     currentRouteName &&
-    !['Intro', 'SignUp', 'SignIn', 'Initial'].includes(currentRouteName);
+    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement'].includes(currentRouteName);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   ); // Redux에서 로그인 상태 확인
@@ -62,18 +63,23 @@ const AppNavigator = () => {
         />
         <Stack.Screen
           name="Agreement"
-          component={AgreementScreen}
+          component={Agreement}
           options={{headerShown: false}}
         />
         <Stack.Screen
           name="Paymoney"
-          component={PaymoneyScreen}
+          component={Paymoney}
           options={{headerShown: false}}
         />
 
         <Stack.Screen
           name="MyPage"
           component={MyPageScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MyPageUpdate"
+          component={MyPageUpdateScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

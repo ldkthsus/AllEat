@@ -1,15 +1,14 @@
 package com.example.AllEat.controller;
 
-import com.example.AllEat.dto.user.UpdateRequest;
+import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
+import com.example.AllEat.dto.user.UserResponseDTO;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.handler.FileHandler;
-import com.example.AllEat.jwt.JwtFilter;
 import com.example.AllEat.jwt.JwtUtil;
 
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,7 +51,8 @@ public class AuthController {
     public ResponseEntity<?> getUser(HttpServletRequest request) {
         try {
             UserEntity userEntity = userService.findByRequest(request);
-            return new ResponseEntity<>(userEntity, HttpStatus.OK);
+            UserResponseDTO findUserResponseDTO = userService.getUserDTO(userEntity);
+            return new ResponseEntity<>(findUserResponseDTO, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -72,8 +72,8 @@ public class AuthController {
 
 //    @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정할 때 사용합니다. ")
     @PutMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateUserInfo( @RequestPart(value = "photoFile", required = false) MultipartFile photoFile,
-                                            @RequestPart("data") UpdateRequest updateRequest, HttpServletRequest request) {
+    public ResponseEntity<?> updateUserInfo(@RequestPart(value = "photoFile", required = false) MultipartFile photoFile,
+                                            @RequestPart("data") UpdateRequestDTO updateRequest, HttpServletRequest request) {
         try {
             UserEntity getUser = userService.findByRequest(request);
             if (getUser == null) {

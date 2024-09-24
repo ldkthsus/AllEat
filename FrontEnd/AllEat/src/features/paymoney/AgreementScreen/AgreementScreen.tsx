@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '../../../redux/store';
-import { paymonyRequest } from '../../../redux/features/paymoneySlice';
+import { createPaymoneyAccount } from '../../../redux/features/paymoneySlice';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../types/navigation';
 import { icons } from '../../../constants';
@@ -32,7 +32,7 @@ const AgreementScreen: React.FC = () => {
       if (token) {
         // Authorization 헤더에 토큰을 넣어 POST 요청 실행
         try {
-          await dispatch(paymonyRequest(token));
+          await dispatch(createPaymoneyAccount(token));
           navigation.navigate('Home'); // 성공 시 Home으로 이동
         } catch (error) {
           Alert.alert('페이머니 요청 실패', error?.message || '알 수 없는 오류 발생');

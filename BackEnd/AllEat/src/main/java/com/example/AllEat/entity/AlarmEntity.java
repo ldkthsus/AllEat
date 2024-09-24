@@ -1,10 +1,14 @@
 package com.example.AllEat.entity;
 
+import com.example.AllEat.dto.alarm.AlarmRequestDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -19,16 +23,25 @@ public class AlarmEntity {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "breakfast_alarm")
-    private java.sql.Time breakfastAlarm;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Column(name = "breakfast_alarm", nullable = true)
+    private LocalTime breakfastAlarm;
 
-    @Column(name = "lunch_alarm")
-    private java.sql.Time lunchAlarm;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Column(name = "lunch_alarm", nullable = true)
+    private LocalTime lunchAlarm;
 
-    @Column(name = "dinner_alarm")
-    private java.sql.Time dinnerAlarm;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @Column(name = "dinner_alarm", nullable = true)
+    private LocalTime dinnerAlarm;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    public void updateAlarm(AlarmRequestDTO alarm) {
+        this.breakfastAlarm = alarm.getBreakfastAlarm();
+        this.lunchAlarm = alarm.getLunchAlarm();
+        this.dinnerAlarm = alarm.getDinnerAlarm();
+    }
 }
