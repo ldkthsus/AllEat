@@ -29,5 +29,12 @@ public interface PayTransactionRepository extends JpaRepository<PayTransactionEn
     @Query("SELECT p FROM PayTransactionEntity p WHERE p.user = :user AND p.transactionDate > :startDate AND p.transactionDate <= :endDate")
     List<PayTransactionEntity> findByUserEntityAndDateRange(@Param("user") UserEntity user, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
+    // 해당 유저의 시작날부터 끝날까지의 소비 금액 반환
+    @Query("SELECT SUM(p.amount) FROM PayTransactionEntity p WHERE p.user = :user AND p.transactionDate > :startDate AND p.transactionDate <= :endDate AND p.restaurant.id != 1")
+    Integer findByUserEntityAndDateAndRestId(@Param("user") UserEntity user, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    // 해당 유저의 오늘 소비 금액 반환
+    @Query("SELECT SUM(p.amount) FROM PayTransactionEntity p WHERE p.user = :user AND FUNCTION('DATE', p.transactionDate) = CURRENT_DATE AND p.restaurant.id != 1")
+    Integer findByUserEntityAndRestId(@Param("user") UserEntity user);
 
 }

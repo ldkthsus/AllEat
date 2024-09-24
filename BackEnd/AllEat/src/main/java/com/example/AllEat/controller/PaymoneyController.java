@@ -118,4 +118,31 @@ public class PaymoneyController {
         }
 
     }
+
+    @GetMapping("/amount_only")
+    public ResponseEntity<?> getAmount(HttpServletRequest request,
+                                             @RequestParam(required = false) String startDate,
+                                             @RequestParam(required = false) Integer period) {
+        try{
+            UserEntity user = userService.findByRequest(request);
+            Integer payAmount;
+
+            if (startDate != null && period != null) {
+                Date start = Date.valueOf(startDate);
+                Date end = Date.valueOf(LocalDate.of(1900+start.getYear(), start.getMonth()+1, start.getDate()).plusDays(period));
+
+                payAmount = payTransactionRepository.findByUserEntityAndDateAndRestId(user, start, end);
+
+            } else {
+                payAmount = payTransactionRepository.findByUserEntityAndRestId(user);
+            }
+
+            return ResponseEntity.ok(payAmount);
+
+        } catch (Exception e){
+            System.out.println(e);
+            return ResponseEntity.ok(e.getMessage());
+        }
+
+    }
 }
