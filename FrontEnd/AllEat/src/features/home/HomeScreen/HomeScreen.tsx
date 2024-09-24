@@ -82,8 +82,8 @@ const HomeScreen: React.FC = () => {
         />
         <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
       </View>
-      <View style={[styles.mainbox, { alignItems: 'center' }]}>
-        <View style={{ flexDirection: 'row' }}>
+      <View style={styles.mainbox}>
+        <View style={styles.allText}>
         <icons.re_check
           style={styles.re_checkIcon}
             height={15}
@@ -95,28 +95,40 @@ const HomeScreen: React.FC = () => {
           <Text style={styles.eatpayValue}>5800원</Text>
           <Text style={styles.eatpay}> 소비했어요!</Text>
         </View>
-        <View style={{ flexDirection: 'row' }}>
-          <View>
-          <images.kikiShadow
-            style={styles.kikiShadow}
-            height={150}
-            width={150}
-            />
-            <images.kiki
-            style={styles.kiki}
-            height={150}
-            width={150}/>
+        <View style={styles.kikiBox}>
+          <View style={styles.charInfo}>
+            <images.kikiShadow
+              style={styles.kikiShadow}
+              height={90}
+              width={90}
+              />
+              <images.kiki
+              style={styles.kiki}
+              height={120}
+              width={120}/>
           </View>
-          <View>
-          <images.kikiShadow
-            style={styles.kikiShadow}
-            height={150}
-            width={150}
+            {/* 텍스트 및 게이지 추가 부분 */}
+          <View style={styles.nutrientInfo}>
+            <icons.tan
+            style={[styles.nutrientIcon, { marginRight: 10 }]}
+            height={15}
+            width={15}
             />
-            <images.kiki
-            style={styles.kiki}
-            height={150}
-            width={150}/>
+            <Text style={styles.nutrientText}>
+           탄수화물 <Text style={styles.nutrientCarb}>76.3g</Text>
+            </Text>
+            <Text style={styles.nutrientText}>
+              <Text style={styles.nutrientProtein}>단백질</Text> 43.7g
+            </Text>
+            <Text style={styles.nutrientText}>
+              <Text style={styles.nutrientFat}>지방</Text> 69.1g
+            </Text>
+
+            <View style={styles.gaugeBox}>
+              <View style={[styles.gaugeSegment, { width: '40%', backgroundColor: '#769BFF' }]} />
+              <View style={[styles.gaugeSegment, { width: '22%', backgroundColor: '#4D7CFE' }]} />
+              <View style={[styles.gaugeSegment, { width: '38%', backgroundColor: '#A0BFFF' }]} />
+            </View>
           </View>
         </View>
       </View>
