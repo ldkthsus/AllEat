@@ -120,32 +120,6 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
       </View>
-    <View style={styles.topbar}>
-      <TouchableOpacity onPress={handlePreviousDay}>
-        <icons.arrowBackLeft
-          style={styles.arrowBackLeft}
-          height={30}
-          width={30}
-        />
-      </TouchableOpacity>
-
-      <Text style={styles.day}>{formatDate(currentDate)}</Text>
-
-      <TouchableOpacity onPress={handleNextDay}>
-        <icons.arrowBackRight
-          style={styles.arrowBackRight}
-          height={30}
-          width={30}
-        />
-      </TouchableOpacity>
-
-      <icons.notifications
-        style={styles.notificationIcon}
-        height={20}
-        width={20}
-      />
-      <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
-    </View>
     </View>
   );
 };
