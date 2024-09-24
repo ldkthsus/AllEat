@@ -4,6 +4,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './features/authSlice';
 import paymonyReducer from './features/paymoneySlice';
 import infoReducer from './features/infoSlice';
+
 // Redux Persist 설정
 const persistConfig = {
   key: 'auth', // auth 상태를 영구적으로 저장

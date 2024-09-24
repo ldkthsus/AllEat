@@ -14,23 +14,27 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "mealpay")
+@Table(name = "meal_pay")
 public class MealPayEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer mealPayId;
+    private Integer id;
 
     @Column(name = "amount")
     private Integer amount;
 
     @OneToOne
-    @JoinColumn(name = "paytransaction_id")
+    @JoinColumn(name = "pay_transaction_id")
     private PayTransactionEntity payTransaction;
 
     @ManyToOne
     @JoinColumn(name = "diary_id")
     private DiaryEntity diary;
+
+    public void updateAmount(Integer amount) {
+        this.amount = amount;
+    }
 
 }

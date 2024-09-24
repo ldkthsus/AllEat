@@ -15,6 +15,7 @@ import minus from '../assets/icons/minus.svg';
 import notiBadge from '../assets/icons/notiBadge.svg';
 import arrowBackRight from '../assets/icons/arrowBackRight.svg';
 import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
+import re_check from '../assets/icons/re_check.svg';
 import settings from '../assets/icons/settings.svg';
 import scale from '../assets/icons/scale.svg';
 import wallet from '../assets/icons/wallet.svg';
@@ -44,6 +45,7 @@ const icons = {
   notiBadge,
   arrowBackRight,
   arrowBackLeft,
+  re_check,
   scale,
   wallet,
   clock,

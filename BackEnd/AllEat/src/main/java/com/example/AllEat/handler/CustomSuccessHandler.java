@@ -36,6 +36,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
         String email = customUserDetails.getEmail();
+        System.out.println("email: " + email);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -53,7 +54,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setHeader("Authorization", "Bearer " + AccessToken);
         response.setHeader("Refresh", "Bearer " + RefreshToken);
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:8080/");
+
+        System.out.println("response: " + response.getHeader("Authorization"));
+        System.out.println("response: " + response.getHeader("Refresh"));
+        response.sendRedirect("http://localhost:8080/login");
     }
     @Transactional
     public void updateRefreshToken(String email, String refresh, Long expiredMs) {

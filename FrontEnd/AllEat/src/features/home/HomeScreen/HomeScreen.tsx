@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
 import {icons} from '../../../constants';
+import {images} from '../../../constants';
 import {styles} from './HomeScreen.styles';
 import {format, addDays, subDays} from 'date-fns'; // 날짜 형식을 위해 date-fns 사용
 
@@ -54,6 +55,71 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
+    <View style={{ flex: 1, flexDirection: 'column' }}>
+      <View style={styles.topbar}>
+        <TouchableOpacity onPress={handlePreviousDay}>
+          <icons.arrowBackLeft
+            style={styles.arrowBackLeft}
+            height={30}
+            width={30}
+          />
+        </TouchableOpacity>
+
+        <Text style={styles.day}>{formatDate(currentDate)}</Text>
+
+        <TouchableOpacity onPress={handleNextDay}>
+          <icons.arrowBackRight
+            style={styles.arrowBackRight}
+            height={30}
+            width={30}
+          />
+        </TouchableOpacity>
+
+        <icons.notifications
+          style={styles.notificationIcon}
+          height={20}
+          width={20}
+        />
+        <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+      </View>
+      <View style={[styles.mainbox, { alignItems: 'center' }]}>
+        <View style={{ flexDirection: 'row' }}>
+        <icons.re_check
+          style={styles.re_checkIcon}
+            height={15}
+            width={15}
+          />
+          <Text style={styles.eatpay}> 총 </Text>
+          <Text style={styles.eatpayValue}>3301kcal</Text>
+          <Text style={styles.eatpay}> 섭취, </Text>
+          <Text style={styles.eatpayValue}>5800원</Text>
+          <Text style={styles.eatpay}> 소비했어요!</Text>
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <View>
+          <images.kikiShadow
+            style={styles.kikiShadow}
+            height={150}
+            width={150}
+            />
+            <images.kiki
+            style={styles.kiki}
+            height={150}
+            width={150}/>
+          </View>
+          <View>
+          <images.kikiShadow
+            style={styles.kikiShadow}
+            height={150}
+            width={150}
+            />
+            <images.kiki
+            style={styles.kiki}
+            height={150}
+            width={150}/>
+          </View>
+        </View>
+      </View>
     <View style={styles.topbar}>
       <TouchableOpacity onPress={handlePreviousDay}>
         <icons.arrowBackLeft
@@ -79,6 +145,7 @@ const HomeScreen: React.FC = () => {
         width={20}
       />
       <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+    </View>
     </View>
   );
 };

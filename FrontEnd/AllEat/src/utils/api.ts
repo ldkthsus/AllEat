@@ -2,6 +2,7 @@ import axios from 'axios';
 import {store} from '../redux/store'; // Redux 스토어 경로에 맞게 설정하세요
 import {BACK_URL} from '@env';
 
+// Axios 인스턴스 생성
 const api = axios.create({
   baseURL: BACK_URL,
   timeout: 10000,
@@ -16,6 +17,7 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    // console.log('token : ', token, config);
     return config;
   },
   error => {

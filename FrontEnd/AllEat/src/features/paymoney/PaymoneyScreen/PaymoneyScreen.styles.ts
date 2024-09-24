@@ -45,7 +45,15 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  inoutBox: {
+  inBox: {
+    borderRadius: 9,
+    backgroundColor: "rgba(71, 110, 212, 0.21)",
+    paddingHorizontal: 55,
+    paddingVertical: 7,
+    alignSelf: "center",
+    marginHorizontal: 3,
+  },
+  outBox: {
     borderRadius: 9,
     backgroundColor: "rgba(71, 110, 212, 0.21)",
     paddingHorizontal: 55,

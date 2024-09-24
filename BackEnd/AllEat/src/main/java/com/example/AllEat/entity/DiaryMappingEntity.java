@@ -1,5 +1,7 @@
 package com.example.AllEat.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +18,13 @@ public class DiaryMappingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "diary_mapping_id")
-    private Integer diaryMappingId;
+    @Column(name = "id")
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
+    @JsonManagedReference
+//    @JsonBackReference
     private DiaryEntity diary;
 
     @ManyToOne

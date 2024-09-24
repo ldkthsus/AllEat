@@ -91,7 +91,9 @@ public class SecurityConfig{
 //        // 허용 URL 및 인증 설정
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
                 .requestMatchers("/AllEat/users/login", "/AllEat/users/join").permitAll()
-                .requestMatchers( "/oauth2/**", "/login/**", "/swagger-ui/**", "swagger-resources/**", "/faviocn.ico","/error","/v3/api-docs/**" ).permitAll()
+                .requestMatchers( "/oauth2/**", "/login/**",
+                        "/h2-console/**",
+                        "/swagger-ui/**", "swagger-resources/**", "/faviocn.ico","/error","/v3/api-docs/**" ).permitAll()
                 .anyRequest().authenticated() // 그 외 요청은 인증 필요
         );
 
