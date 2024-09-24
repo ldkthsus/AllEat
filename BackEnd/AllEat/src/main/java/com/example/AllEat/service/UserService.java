@@ -3,6 +3,7 @@ package com.example.AllEat.service;
 import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
 import com.example.AllEat.dto.user.UserResponseDTO;
+import com.example.AllEat.entity.GoalEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.UserRepository;
