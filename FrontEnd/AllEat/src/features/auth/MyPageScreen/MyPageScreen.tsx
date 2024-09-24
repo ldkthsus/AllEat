@@ -8,7 +8,7 @@ import {icons} from '../../../constants';
 import {styles} from './MyPageScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
 import {useDispatch} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
-import {logout} from '../../../redux/auth/authSlice'; // 로그아웃 액션 임포트
+import {logout} from '../../../redux/features/authSlice'; // 로그아웃 액션 임포트
 import {AppDispatch} from '../../../redux/store';
 type MyPageScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
