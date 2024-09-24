@@ -21,4 +21,6 @@ public interface DailyDiaryRepository extends JpaRepository<DailyDiaryEntity, In
 
     // UserEntity와 날짜 범위로 검색하는 새로운 메서드 추가
     List<DailyDiaryEntity> findByUserAndDateBetween(UserEntity user, LocalDate startDate, LocalDate endDate);
+
+    Optional<List<DailyDiaryEntity>> findByUser_idAndDateBetween(Integer userId, LocalDate startDate, LocalDate endDate);
 }
