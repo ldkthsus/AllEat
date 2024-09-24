@@ -55,7 +55,6 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-<<<<<<< HEAD
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View style={styles.topbar}>
         <TouchableOpacity onPress={handlePreviousDay}>
@@ -121,7 +120,6 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
       </View>
-=======
     <View style={styles.topbar}>
       <TouchableOpacity onPress={handlePreviousDay}>
         <icons.arrowBackLeft
@@ -147,7 +145,7 @@ const HomeScreen: React.FC = () => {
         width={20}
       />
       <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
->>>>>>> cbfd37030bff1a7839ac4ce4fdc447796eede190
+    </View>
     </View>
   );
 };
