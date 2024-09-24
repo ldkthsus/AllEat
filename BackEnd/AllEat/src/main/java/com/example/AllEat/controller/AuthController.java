@@ -2,7 +2,6 @@ package com.example.AllEat.controller;
 
 import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
-import com.example.AllEat.dto.user.UserResponseDTO;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.handler.FileHandler;
 import com.example.AllEat.jwt.JwtUtil;
@@ -51,8 +50,7 @@ public class AuthController {
     public ResponseEntity<?> getUser(HttpServletRequest request) {
         try {
             UserEntity userEntity = userService.findByRequest(request);
-            UserResponseDTO findUserResponseDTO = userService.getUserDTO(userEntity);
-            return new ResponseEntity<>(findUserResponseDTO, HttpStatus.OK);
+            return new ResponseEntity<>(userEntity, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

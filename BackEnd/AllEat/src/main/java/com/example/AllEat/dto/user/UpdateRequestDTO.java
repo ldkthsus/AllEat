@@ -14,14 +14,13 @@ public class UpdateRequestDTO {
 
     private String password1;
     private String password2;
-    @JsonProperty("user_name")
-    private String userName;
+    private String name;
     @JsonProperty("user_height")
     private Double userHeight;
     @JsonProperty("user_gender")
     private Integer userGender;
     @JsonProperty("user_age")
     private Integer userAge;
-    @JsonProperty("activity_amount")
-    private Integer activityAmount;
+    @JsonProperty("activity")
+    private Integer amountActivity;
 }

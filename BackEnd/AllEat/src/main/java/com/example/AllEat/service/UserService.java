@@ -2,7 +2,6 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
-import com.example.AllEat.dto.user.UserResponseDTO;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.UserRepository;
@@ -76,11 +75,5 @@ public class UserService {
             return false;
         }
         return firstPassword.equals(secondPassword);
-    }
-
-    public UserResponseDTO getUserDTO(UserEntity userEntity) {
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userResponseDTO.fromEntity(userEntity);
-        return userResponseDTO;
     }
 }

@@ -1,37 +1,28 @@
-from fastapi import APIRouter, HTTPException
 import openai
-from models import GPTRequest, DayDiaryRequest, WeekDiaryRequest, MonthDiaryRequest
+import logging  # 추가된 부분
+# from models import GPTRequest, DayDiaryRequest, WeekDiaryRequest, MonthDiaryRequest
+from fastapi import APIRouter, HTTPException
+from models import DayDiaryRequest, WeekDiaryRequest, MonthDiaryRequest
 
+# 로깅 설정
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
 # 일간 총평 엔드포인트
 @router.post("/day")
 async def get_day_summary(request: DayDiaryRequest):
     try:
-        # 하루 목표 식비 계산 (한 달 목표 식비를 30으로 나눈 값)
-        daily_goal_cost = request.goal_cost / 30
-        
-        # 하루 총 비용 계산
-        total_cost = sum(item.menu_price for item in request.day_diary)
-        
-        # 하루 총 영양소 계산
-        total_carbs = sum(item.menu_carbohydrate for item in request.day_diary)
-        total_protein = sum(item.menu_protein for item in request.day_diary)
-        total_fat = sum(item.menu_fat for item in request.day_diary)
-
-        # 메뉴 요약 (이름과 영양소 요약)
-        menu_summary = "\n".join([
-            f"{item.menu_name}: 탄수화물 {item.menu_carbohydrate}g, 단백질 {item.menu_protein}g, 지방 {item.menu_fat}g, 비용 {item.menu_price}원, 장소 {item.restaurant.restaurants_name}"
-            for item in request.day_diary
-        ])
+        # 로그 출력
+        logger.info(f"Received DayDiaryRequest: {request.json()}")
 
         # 고정된 프롬프트 정의
         base_prompt = f"""
         너는 유능한 영양학자이자 재무 분석관이야. 
         내가 제공할 일간 식단과 식비 데이터를 보고, 영양과 비용 효율성을 고려해 100자 이내로 간단한 총평을 작성해줘.
-        오늘의 목표 칼로리는 {request.goal_kcal}kcal이고, 총 비용은 {total_cost}원이었으며, 하루 목표 식비는 {daily_goal_cost}원이야.
-        오늘 먹은 음식은 아래와 같아:
-        {menu_summary}
+        오늘의 총 섭취한 탄수화물은 {request.total_carbohydrates}g, 단백질은 {request.total_proteins}g, 지방은 {request.total_fats}g이며,
+        총 섭취한 칼로리는 {request.total_calories}kcal이고, 오늘 소비한 총 비용은 {request.total_cost}원이야.
+        목표 체중은 {request.goal_weight}kg이고, 목표 식비는 한 달에 {request.goal_cost}원이며, 현재 체중은 {request.recent_weight}kg이야.
         말투는 ~요로 끝나게끔 해주고 친근한 말투로 부탁해.
         """
 
@@ -43,42 +34,32 @@ async def get_day_summary(request: DayDiaryRequest):
                 {"role": "user", "content": base_prompt},
             ],
         )
+        
+        # GPT 응답을 로그에 출력
+        logger.info(f"GPT-4 Response: {response.choices[0].message['content']}")
+
         return {"response": response.choices[0].message['content']}
     
     except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # 주간 총평 엔드포인트
 @router.post("/week")
 async def get_week_summary(request: WeekDiaryRequest):
     try:
-        # 주간 목표 식비 계산 (한 달 목표 식비를 4로 나눈 값)
-        weekly_goal_cost = request.goal_cost / 4
-
-        # 주간 총 비용 계산
-        total_cost = sum(item.menu_price for item in request.day_diaries)
-        
-        # 주간 총 영양소 계산
-        total_carbs = sum(item.menu_carbohydrate for item in request.day_diaries)
-        total_protein = sum(item.menu_protein for item in request.day_diaries)
-        total_fat = sum(item.menu_fat for item in request.day_diaries)
-
-        # 메뉴 요약 (이름과 영양소 요약)
-        menu_summary = "\n".join([
-            f"{item.menu_name}: 탄수화물 {item.menu_carbohydrate}g, 단백질 {item.menu_protein}g, 지방 {item.menu_fat}g, 비용 {item.menu_price}원, 장소 {item.restaurant.restaurants_name}"
-            for item in request.day_diaries
-        ])
-
         # 고정된 프롬프트 정의
         base_prompt = f"""
         너는 유능한 영양학자이자 재무 분석관이야. 
         내가 제공할 주간 식단과 식비 데이터를 보고, 영양과 비용 효율성을 고려해 100자 이내로 간단한 총평을 작성해줘.
-        이번 주의 목표 칼로리는 {request.goal_kcal}kcal이고, 총 비용은 {total_cost}원이었으며, 주간 목표 식비는 {weekly_goal_cost}원이야.
-        이번 주 먹은 음식은 아래와 같아:
-        {menu_summary}
+        이번 주의 목표 체중은 {request.goal_weight}kg이고, 목표 식비는 한 달에 {request.goal_cost}원이야. 현재 체중은 {request.recent_weight}kg이야.
+        이번 주의 평균 섭취 탄수화물은 {request.average_carbohydrates}g, 단백질은 {request.average_proteins}g, 지방은 {request.average_fats}g, 평균 칼로리는 {request.average_calories}kcal이야.
+        총 사용한 식비는 {request.total_cost}원이었고, 외식 중 가장 많았던 유형은 '{request.most_common_restaurant_type}'이었어.
         말투는 ~요로 끝나게끔 해주고 친근한 말투로 부탁해.
         """
 
+        # OpenAI GPT 모델 호출
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
@@ -86,36 +67,22 @@ async def get_week_summary(request: WeekDiaryRequest):
                 {"role": "user", "content": base_prompt},
             ],
         )
+
         return {"response": response.choices[0].message['content']}
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# 월간 총평 엔드포인트
 @router.post("/month")
 async def get_month_summary(request: MonthDiaryRequest):
     try:
-        # 월간 총 비용 계산
-        total_cost = sum(item.menu_price for item in request.day_diaries)
-        
-        # 월간 총 영양소 계산
-        total_carbs = sum(item.menu_carbohydrate for item in request.day_diaries)
-        total_protein = sum(item.menu_protein for item in request.day_diaries)
-        total_fat = sum(item.menu_fat for item in request.day_diaries)
-
-        # 메뉴 요약 (이름과 영양소 요약)
-        menu_summary = "\n".join([
-            f"{item.menu_name}: 탄수화물 {item.menu_carbohydrate}g, 단백질 {item.menu_protein}g, 지방 {item.menu_fat}g, 비용 {item.menu_price}원, 장소 {item.restaurant.restaurants_name}"
-            for item in request.day_diaries
-        ])
-
-        # 고정된 프롬프트 정의
         base_prompt = f"""
         너는 유능한 영양학자이자 재무 분석관이야. 
         내가 제공할 월간 식단과 식비 데이터를 보고, 영양과 비용 효율성을 고려해 100자 이내로 간단한 총평을 작성해줘.
-        이번 달의 목표 체중은 {request.goal_weight}kg이고, 총 비용은 {total_cost}원이었으며, 이번 달 목표 식비는 {request.goal_cost}원이야.
-        이번 달 먹은 음식은 아래와 같아:
-        {menu_summary}
+        이번 달의 목표 체중은 {request.goal_weight}kg이고, 목표 식비는 {request.goal_cost}원이야.
+        이번 달 평균 섭취 탄수화물은 {request.average_carbohydrates}g, 단백질은 {request.average_proteins}g, 지방은 {request.average_fats}g, 평균 칼로리는 {request.average_calories}kcal이야.
+        총 사용한 식비는 {request.total_cost}원이었고, 외식 중 가장 많았던 유형은 '{request.most_common_restaurant_type}'이었어.
+        이번 달에 기록된 몸무게는 {request.weight_records}야.
         말투는 ~요로 끝나게끔 해주고 친근한 말투로 부탁해.
         """
 
@@ -126,6 +93,7 @@ async def get_month_summary(request: MonthDiaryRequest):
                 {"role": "user", "content": base_prompt},
             ],
         )
+
         return {"response": response.choices[0].message['content']}
     
     except Exception as e:
