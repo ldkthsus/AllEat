@@ -9,6 +9,7 @@ import SignUp from '../features/auth/SignUpScreen/SignUpScreen';
 import HomeScreen from '../features/home/HomeScreen/HomeScreen';
 import Agreement from '../features/paymoney/AgreementScreen/AgreementScreen';
 import Paymoney from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
+import PaymoneyDetail from '../features/paymoney/PaymoneyScreen/PaymoneyDetailScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -26,7 +27,7 @@ const AppNavigator = () => {
   // 특정 화면에서는 AppBar를 숨기고 싶은 경우
   const shouldShowAppBar =
     currentRouteName &&
-    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement'].includes(currentRouteName);
+    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement',].includes(currentRouteName);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   ); // Redux에서 로그인 상태 확인
@@ -80,6 +81,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="MyPageUpdate"
           component={MyPageUpdateScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PaymoneyDetail"
+          component={PaymoneyDetail}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

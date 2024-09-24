@@ -115,7 +115,7 @@ const PaymoneyScreen: React.FC = () => {
         </View>
         
         <View style={styles.linkButtonContainer}>
-          <LinkButton text="결제 내역 확인하기" targetScreen="Home" />
+          <LinkButton text="결제 내역 확인하기" targetScreen="PaymoneyDetail" />
         </View>
 
         {/* InoutModal 추가 */}
