@@ -15,9 +15,7 @@ import minus from '../assets/icons/minus.svg';
 import notiBadge from '../assets/icons/notiBadge.svg';
 import arrowBackRight from '../assets/icons/arrowBackRight.svg';
 import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
-<<<<<<< HEAD
 import re_check from '../assets/icons/re_check.svg';
-=======
 import settings from '../assets/icons/settings.svg';
 import scale from '../assets/icons/scale.svg';
 import wallet from '../assets/icons/wallet.svg';
@@ -26,7 +24,6 @@ import bookmark from '../assets/icons/bookmark.svg';
 import bookmarkDisabled from '../assets/icons/bookmarkDisabled.png';
 import settingsWhite from '../assets/icons/settingsWhite.svg';
 import emptyCheck from '../assets/icons/emptyCheck.svg';
->>>>>>> cbfd37030bff1a7839ac4ce4fdc447796eede190
 
 const icons = {
   settings,
@@ -48,15 +45,12 @@ const icons = {
   notiBadge,
   arrowBackRight,
   arrowBackLeft,
-<<<<<<< HEAD
   re_check,
-=======
   scale,
   wallet,
   clock,
   bookmark,
   bookmarkDisabled,
   settingsWhite,
->>>>>>> cbfd37030bff1a7839ac4ce4fdc447796eede190
 };
 export default icons;

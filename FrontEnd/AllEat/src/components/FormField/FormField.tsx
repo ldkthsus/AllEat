@@ -20,6 +20,7 @@ interface FormFieldProps extends TextInputProps {
   otherStyles?: StyleProp<ViewStyle>; // Optional Tailwind-style classes
   isNumeric?: boolean; // 숫자 입력 필드 여부
   isDecimal?: boolean; // 소수점 입력 허용 여부
+  isEqual?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -31,9 +32,9 @@ const FormField: React.FC<FormFieldProps> = ({
   otherStyles, // 추가된 스타일
   isNumeric = false, // 숫자 입력 필드 여부를 기본값 false로 설정
   isDecimal = false, // 소수점 입력 허용 여부를 기본값 false로 설정
+  isEqual = false,
   ...props
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
   const handleTextChange = (text: string) => {
     let newText = text;
 
@@ -63,15 +64,11 @@ const FormField: React.FC<FormFieldProps> = ({
           placeholderTextColor="lightgray"
           onChangeText={handleTextChange}
           keyboardType={isNumeric ? 'numeric' : 'default'} // 숫자 입력을 위한 keyboardType 설정
-          secureTextEntry={title === 'Password' && !showPassword}
+          secureTextEntry={title === 'Password'}
           {...props}
         />
 
-        {title === 'Password' && (
-          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-            <icons.passwordCheck width={30} height={30} />
-          </TouchableOpacity>
-        )}
+        {!title && isEqual && <icons.passwordCheck width={30} height={30} />}
         {unit && (
           <Text style={styles.unit}>{unit}</Text> // 단위 텍스트 추가
         )}

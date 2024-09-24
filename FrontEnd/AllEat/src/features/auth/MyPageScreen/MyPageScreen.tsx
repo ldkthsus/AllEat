@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
@@ -8,8 +8,10 @@ import {icons} from '../../../constants';
 import {styles} from './MyPageScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
 import {useDispatch} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
-import {logout} from '../../../redux/auth/authSlice'; // 로그아웃 액션 임포트
+import {logout} from '../../../redux/features/authSlice'; // 로그아웃 액션 임포트
 import {AppDispatch} from '../../../redux/store';
+import UserInfo from '../components/UserInfo/UserInfo';
+
 type MyPageScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPage'
@@ -28,21 +30,13 @@ const MyPageScreen: React.FC = () => {
         <View style={styles.myPageBody}>
           <View style={styles.myPageTitle}>
             <Text style={styles.myPageTitleText}>마이 페이지</Text>
-            <icons.settings
+            <TouchableOpacity
               style={styles.myPageTitleIcon}
-              height={24}
-              width={24}
-            />
+              onPress={() => navigation.navigate('MyPageUpdate')}>
+              <icons.settings height={24} width={24} />
+            </TouchableOpacity>
           </View>
-          <View style={styles.myPageInfo}>
-            <Text style={styles.nickname}>닉네임</Text>
-            <Text style={styles.email}>example.com</Text>
-            <images.mypageKiki height={120} width={120} />
-            <View style={styles.ageAndGender}>
-              <Text style={styles.age}>24세·</Text>
-              <Text style={styles.gender}>♂</Text>
-            </View>
-          </View>
+          <UserInfo nickname="닉네임" email="example.com" age={24} gender="♂" />
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>

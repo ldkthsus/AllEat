@@ -3,6 +3,7 @@ import {persistReducer, persistStore} from 'redux-persist';
 import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './features/authSlice';
 import paymonyReducer from './features/paymoneySlice';
+import infoReducer from './features/infoSlice';
 
 // Redux Persist 설정
 const persistConfig = {
@@ -18,6 +19,7 @@ export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer, // 영구적으로 저장되는 리듀서
     paymony: paymonyReducer, // paymony 리듀서 등록
+    info: infoReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

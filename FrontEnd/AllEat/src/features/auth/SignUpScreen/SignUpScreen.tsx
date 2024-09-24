@@ -21,7 +21,7 @@ type SignUpScreenNavigationProp = NativeStackNavigationProp<
 const SignUp: React.FC = () => {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
-  const {loading, error, isAuthenticated} = useSelector(
+  const {loading, isAuthenticated} = useSelector(
     (state: RootState) => state.auth,
   ); // Redux 상태에서 로그인 여부 확인
 
@@ -56,8 +56,16 @@ const SignUp: React.FC = () => {
       // 회원가입 및 로그인 액션 디스패치
       await dispatch(signupUser(signupData));
     } catch (error) {
-      // 에러 처리 (회원가입 실패 시)
-      Alert.alert('오류', error?.message || '회원가입에 실패했습니다.');
+      // error가 unknown 타입일 때 처리
+      let errorMessage = '회원가입에 실패했습니다.';
+
+      if (error instanceof Error) {
+        errorMessage = error.message; // 에러가 Error 타입일 경우 message를 가져옴
+      } else if (typeof error === 'string') {
+        errorMessage = error; // 에러가 string일 경우
+      }
+
+      Alert.alert('회원가입 실패', errorMessage);
     }
   };
 
@@ -112,6 +120,10 @@ const SignUp: React.FC = () => {
           handleChangeText={text => setForm({...form, confirmPassword: text})}
           placeholder="패스워드를 다시 입력하세요"
           secureTextEntry
+          isEqual={
+            form.confirmPassword !== '' &&
+            form.password === form.confirmPassword
+          }
         />
       </View>
 
