@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.AllEat.entity.WeightEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import java.util.Optional;
 import java.sql.Date;
 import java.util.List;
 
@@ -27,4 +27,6 @@ public interface WeightRepository extends JpaRepository<WeightEntity, Integer> {
 
     @Query("SELECT w FROM WeightEntity w WHERE w.user = :user ORDER BY w.createdAt DESC LIMIT 1")
     WeightEntity findRecent(@Param("user") UserEntity user);
+
+    Optional<WeightEntity> findTopByUserOrderByCreatedAtDesc(UserEntity user);
 }
