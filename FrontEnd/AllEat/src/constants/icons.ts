@@ -24,6 +24,9 @@ import bookmark from '../assets/icons/bookmark.svg';
 import bookmarkDisabled from '../assets/icons/bookmarkDisabled.png';
 import settingsWhite from '../assets/icons/settingsWhite.svg';
 import emptyCheck from '../assets/icons/emptyCheck.svg';
+import tan from '../assets/icons/tan.svg';
+import dan from '../assets/icons/dan.svg';
+import ji from '../assets/icons/ji.svg';
 import sync from '../assets/icons/sync.svg';
 import sync_bold from '../assets/icons/sync_bold.svg';
 
@@ -54,6 +57,9 @@ const icons = {
   bookmark,
   bookmarkDisabled,
   settingsWhite,
+  tan,
+  dan,
+  ji,
   sync,
   sync_bold
 };

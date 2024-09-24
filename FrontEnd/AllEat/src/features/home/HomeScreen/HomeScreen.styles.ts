@@ -47,6 +47,10 @@ export const styles = StyleSheet.create({
     width: '100%',
     height: '20.3%',
     backgroundColor: '#EAF0FF',
+    alignItems: 'center',
+  },
+  allText: {
+    flexDirection: 'row',
   },
   eatpay: {
     fontSize: 15,
@@ -66,9 +70,67 @@ export const styles = StyleSheet.create({
   kiki:{
     position: 'absolute',
   },
-  kikiShadow: {
+  kikiShadow: { 
     position: 'absolute',
-    marginTop: 78,
-    marginLeft: 6,
+    marginTop: 75,
+    marginLeft: 18,
   },
+  kikiBox: {
+    position: 'relative',
+    flexDirection: 'row',
+    // alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%', // 전체 너비를 사용
+    marginLeft: 90, // 캐릭터 왼쪽 여백
+    marginRight: 180,
+    marginTop: 30,
+  },
+  charInfo: {
+    position: 'absolute',
+    flexDirection: 'column',
+    left: 0,  // 왼쪽에 고정
+    top: 0,  // 필요한 경우 상단에 위치
+    marginLeft: 90,
+  },
+  // 게이지 새로 추가
+  nutrientInfo: {
+    position: 'absolute',
+    flexDirection: 'column',
+    right: 0,
+    top: 0,
+  },
+  nutrientText: {
+    fontSize: 16,
+    fontFamily: 'Pretendard-SemiBold',
+    marginBottom: 8,
+  },
+  nutrientCarb: {
+    color: '#769BFF',
+    fontFamily: 'Pretendard-Medium',
+  },
+  nutrientProtein: {
+    color: '#4D7CFE',
+    fontFamily: 'Pretendard-Medium',
+  },
+  nutrientFat: {
+    color: '#A0BFFF',
+    fontFamily: 'Pretendard-Medium',
+  },
+  gaugeBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  gaugeSegment: {
+    height: 20,
+    borderRadius: 10,
+    marginRight: 5, // 각 게이지 사이의 간격
+  },
+  nutrientIcon: {
+    // marginTop: 20,
+    marginRight: 10,
+    marginLeft: 100,
+  }
+
 });
