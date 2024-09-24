@@ -55,7 +55,6 @@ const HomeScreen: React.FC = () => {
   };
 
   return (
-<<<<<<< HEAD
     <View style={{ flex: 1, flexDirection: 'column' }}>
       <View style={styles.topbar}>
         <TouchableOpacity onPress={handlePreviousDay}>
@@ -121,33 +120,6 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
       </View>
-=======
-    <View style={styles.topbar}>
-      <TouchableOpacity onPress={handlePreviousDay}>
-        <icons.arrowBackLeft
-          style={styles.arrowBackLeft}
-          height={30}
-          width={30}
-        />
-      </TouchableOpacity>
-
-      <Text style={styles.day}>{formatDate(currentDate)}</Text>
-
-      <TouchableOpacity onPress={handleNextDay}>
-        <icons.arrowBackRight
-          style={styles.arrowBackRight}
-          height={30}
-          width={30}
-        />
-      </TouchableOpacity>
-
-      <icons.notifications
-        style={styles.notificationIcon}
-        height={20}
-        width={20}
-      />
-      <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
->>>>>>> cbfd37030bff1a7839ac4ce4fdc447796eede190
     </View>
   );
 };
