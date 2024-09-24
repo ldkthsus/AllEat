@@ -1,6 +1,6 @@
 package com.example.AllEat.service;
 
-import com.example.AllEat.dto.alarm.AlarmRequestDTO;
+import com.example.AllEat.dto.alarm.AlarmDTO;
 import com.example.AllEat.entity.AlarmEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.repository.AlarmRepository;
@@ -21,7 +21,7 @@ public class AlarmService {
         return findAlarm;
     }
 
-    public AlarmEntity addAlarm(AlarmRequestDTO alarm, UserEntity findUser){
+    public AlarmEntity addAlarm(AlarmDTO alarm, UserEntity findUser){
         AlarmEntity alarmEntity = AlarmEntity.builder()
                 .breakfastAlarm(alarm.getBreakfastAlarm())
                 .lunchAlarm(alarm.getLunchAlarm())
@@ -37,11 +37,23 @@ public class AlarmService {
         alarmRepository.deleteByUser_id(userId);
     }
 
-    public void updateAlarm(AlarmRequestDTO alarm, UserEntity findUser){
+    public void updateAlarm(AlarmDTO alarm, UserEntity findUser){
         AlarmEntity alarmEntity = alarmRepository.findByUser_id(findUser.getId());
         if(alarmEntity != null){
             alarmEntity.updateAlarm(alarm);
             alarmRepository.save(alarmEntity);
         }
+    }
+
+    public AlarmDTO convertDTO(AlarmEntity alarmEntity){
+        if(alarmEntity == null){
+            return null;
+        }
+        AlarmDTO alarmDTO = AlarmDTO.builder()
+                .breakfastAlarm(alarmEntity.getBreakfastAlarm())
+                .lunchAlarm(alarmEntity.getLunchAlarm())
+                .dinnerAlarm(alarmEntity.getDinnerAlarm())
+                .build();
+        return alarmDTO;
     }
 }
