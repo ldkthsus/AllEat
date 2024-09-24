@@ -1,6 +1,6 @@
 package com.example.AllEat.controller;
 
-import com.example.AllEat.dto.alarm.AlarmRequestDTO;
+import com.example.AllEat.dto.alarm.AlarmDTO;
 import com.example.AllEat.entity.AlarmEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.service.AlarmService;
@@ -25,13 +25,17 @@ public class AlarmController {
         UserEntity findUser = userService.findByRequest(request);
         if(findUser != null){
             AlarmEntity findAlarm = alarmService.getAlarm(findUser.getId());
-            return ResponseEntity.status(HttpStatus.OK).body(findAlarm);
+            AlarmDTO alarmDTO = alarmService.convertDTO(findAlarm);
+            if(alarmDTO != null){
+                return ResponseEntity.status(HttpStatus.OK).body(alarmDTO);
+            }
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No Alarm Found");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> addAlarm(@RequestBody AlarmRequestDTO alarm, HttpServletRequest request){
+    public ResponseEntity<?> addAlarm(@RequestBody AlarmDTO alarm, HttpServletRequest request){
         UserEntity findUser = userService.findByRequest(request);
         if(findUser != null){
             alarmService.addAlarm(alarm, findUser);
@@ -51,7 +55,7 @@ public class AlarmController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateAlarm(@RequestBody AlarmRequestDTO alarm, HttpServletRequest request){
+    public ResponseEntity<?> updateAlarm(@RequestBody AlarmDTO alarm, HttpServletRequest request){
         UserEntity findUser = userService.findByRequest(request);
         if(findUser != null){
             alarmService.updateAlarm(alarm, findUser);

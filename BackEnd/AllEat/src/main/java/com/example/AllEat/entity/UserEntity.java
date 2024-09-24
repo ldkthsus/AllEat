@@ -4,17 +4,21 @@ import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.sql.Timestamp;
 
 @Entity
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Table(name = "user")
+@NoArgsConstructor
 public class UserEntity {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -81,9 +85,9 @@ public class UserEntity {
         this.profileUrl = profileUrl;
     }
 
-    public void updateInfo(UpdateRequestDTO updateRequest, String profileUrl){
-        if (updateRequest.getPassword1() != null){
-            this.password = updateRequest.getPassword1();
+    public void updateInfo(UpdateRequestDTO updateRequest, String profileUrl, String encodedPassword){
+        if (encodedPassword != null){
+            this.password = encodedPassword;
         }
         if (updateRequest.getUserAge() != null){
             this.userAge = updateRequest.getUserAge();
