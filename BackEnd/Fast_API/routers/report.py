@@ -45,17 +45,24 @@ async def get_day_summary(request: DayDiaryRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# 주간 총평 엔드포인트
 @router.post("/week")
 async def get_week_summary(request: WeekDiaryRequest):
     try:
+        # 주간 데이터 요청을 터미널에 출력
+        logger.info("Received WeekDiaryRequest data: %s", request.json())
+
+        # 레스토랑 타입을 문자열로 변환
+        restaurant_type_summary = ", ".join(
+            [f"{key}: {value}회" for key, value in request.most_common_restaurant_type.items()]
+        ) if request.most_common_restaurant_type else "정보 없음"
+
         # 고정된 프롬프트 정의
         base_prompt = f"""
         너는 유능한 영양학자이자 재무 분석관이야. 
         내가 제공할 주간 식단과 식비 데이터를 보고, 영양과 비용 효율성을 고려해 100자 이내로 간단한 총평을 작성해줘.
         이번 주의 목표 체중은 {request.goal_weight}kg이고, 목표 식비는 한 달에 {request.goal_cost}원이야. 현재 체중은 {request.recent_weight}kg이야.
         이번 주의 평균 섭취 탄수화물은 {request.average_carbohydrates}g, 단백질은 {request.average_proteins}g, 지방은 {request.average_fats}g, 평균 칼로리는 {request.average_calories}kcal이야.
-        총 사용한 식비는 {request.total_cost}원이었고, 외식 중 가장 많았던 유형은 '{request.most_common_restaurant_type}'이었어.
+        총 사용한 식비는 {request.total_cost}원이었고, 외식 중 가장 많았던 유형은 다음과 같아: {restaurant_type_summary}.
         말투는 ~요로 끝나게끔 해주고 친근한 말투로 부탁해.
         """
 
@@ -68,10 +75,14 @@ async def get_week_summary(request: WeekDiaryRequest):
             ],
         )
 
+        logger.info("GPT-4 Response: %s", response.choices[0].message['content'])  # GPT 응답을 터미널에 출력
+
         return {"response": response.choices[0].message['content']}
     
     except Exception as e:
+        logger.error(f"Error processing request: {str(e)}")  # 에러 발생 시 로그 출력
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/month")
 async def get_month_summary(request: MonthDiaryRequest):
