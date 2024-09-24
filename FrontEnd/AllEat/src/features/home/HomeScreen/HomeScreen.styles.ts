@@ -68,7 +68,7 @@ export const styles = StyleSheet.create({
     marginTop: 13,
   },
   kiki:{
-    position: 'absolute',
+    // position: 'absolute',
   },
   kikiShadow: { 
     position: 'absolute',
@@ -78,27 +78,30 @@ export const styles = StyleSheet.create({
   kikiBox: {
     position: 'relative',
     flexDirection: 'row',
-    // alignItems: 'center',
+    alignItems: 'center',
     display: 'flex',
     justifyContent: 'space-between',
+    flexWrap:'wrap',
     width: '100%', // 전체 너비를 사용
-    marginLeft: 90, // 캐릭터 왼쪽 여백
-    marginRight: 180,
+    // marginLeft: 90, // 캐릭터 왼쪽 여백
+    // marginRight: 180,
     marginTop: 30,
+    backgroundColor: 'pink',
   },
   charInfo: {
-    position: 'absolute',
+    // position: 'absolute',
     flexDirection: 'column',
     left: 0,  // 왼쪽에 고정
     top: 0,  // 필요한 경우 상단에 위치
-    marginLeft: 90,
+    marginLeft: 30,
   },
   // 게이지 새로 추가
   nutrientInfo: {
-    position: 'absolute',
+    // position: 'absolute',
     flexDirection: 'column',
     right: 0,
     top: 0,
+    marginRight: 30,
   },
   nutrientText: {
     fontSize: 16,
@@ -118,19 +121,29 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Medium',
   },
   gaugeBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
+    flexDirection: 'row',  // 가로로 배치
+    height: 20,  // 게이지 높이 설정
+    width: 130,
+    borderRadius: 0,  // 전체 게이지 바의 둥근 모서리
+    backgroundColor: '#EAF0FF',  // 배경색 (남는 부분)
+    overflow: 'hidden',  // 둥근 모서리에서 넘치는 부분 숨김
   },
   gaugeSegment: {
-    height: 20,
-    borderRadius: 10,
-    marginRight: 5, // 각 게이지 사이의 간격
+    height: '100%',  // 세그먼트가 전체 게이지 높이를 채우도록
   },
   nutrientIcon: {
-    // marginTop: 20,
-    marginRight: 10,
-    marginLeft: 100,
-  }
-
+    marginTop: 5,
+    marginRight: 5,
+  },
+// 원그래프
+progressContainer: {
+  flexDirection: 'row',
+  justifyContent: 'space-around',  // 원형 프로그레스 바를 나란히 배치
+  marginTop: 20,
+  width: '100%',
+},
+progressWrapper: {
+  alignItems: 'center',  // 프로그레스 바와 텍스트를 중앙에 배치
+  justifyContent: 'center',
+},
 });
