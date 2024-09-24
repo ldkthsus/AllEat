@@ -1,5 +1,5 @@
 import addMenu from '../assets/images/addMenu.png';
-import addMenuCamera from '../assets/images/addMenuCamera.png';
+import addMenuCamera from '../assets/images/addMenuCamera.png'
 import kiki from '../assets/images/kiki.svg';
 import kikiNoRecord from '../assets/images/kikiNoRecord.svg';
 import kikiOverCal from '../assets/images/kikiOverCal.svg';
@@ -17,6 +17,11 @@ import intro from '../assets/images/intro.svg';
 import breakfast from '../assets/images/breakfast.svg';
 import lunch from '../assets/images/lunch.svg';
 import dinner from '../assets/images/dinner.svg';
+import greyCookie from '../assets/images/greyCookies.svg';
+import payCardWhite from '../assets/images/payCardWhite.svg';
+import payCardWhitePNG from '../assets/images/payCardWhite.png';
+import rightArrow from '../assets/images/rightArrow.svg';
+
 const images = {
   intro,
   addMenu,
@@ -37,6 +42,10 @@ const images = {
   breakfast,
   lunch,
   dinner,
+  greyCookie,
+  payCardWhite,
+  payCardWhitePNG,
+  rightArrow
 };
 
 export default images;

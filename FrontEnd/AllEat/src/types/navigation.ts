@@ -5,5 +5,8 @@ export type RootStackParamList = {
   SignUp: undefined;
   Intro: undefined;
   Initial: undefined;
+  MyPage: undefined;
+  Agreement: undefined;
+  Paymoney: undefined;
   // 다른 화면도 추가할 수 있습니다.
 };

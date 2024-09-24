@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     marginTop: 8,
   },
+  password: {marginTop: 0},
   label: {
     fontSize: 16,
     color: '#3D3D3D', // 회색 텍스트 색상
@@ -29,7 +30,7 @@ export const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     fontSize: 16,
-    fontFamily: 'Pretendard-ExtraLight',
-    color: '#000', // 기본 텍스트 색상
+    fontFamily: 'Pretendard-Light',
+    color: '#3d3d3d', // 기본 텍스트 색상
   },
 });
