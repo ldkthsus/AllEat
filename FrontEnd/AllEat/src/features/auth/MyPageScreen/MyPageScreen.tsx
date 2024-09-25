@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -7,11 +7,14 @@ import {images} from '../../../constants';
 import {icons} from '../../../constants';
 import {styles} from './MyPageScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
-import {useDispatch} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
+import {useDispatch, useSelector} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
 import {logout} from '../../../redux/features/authSlice'; // 로그아웃 액션 임포트
-import {AppDispatch} from '../../../redux/store';
+import {AppDispatch, RootState} from '../../../redux/store';
 import UserInfo from '../components/UserInfo/UserInfo';
-
+import api from '../../../utils/api';
+import {fetchUserInfo} from '../../../redux/features/infoSlice';
+import FormModal from '../../../components/FormModal/FormModal';
+import AlarmModal from '../components/AlarmModal/AlarmModal';
 type MyPageScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPage'
@@ -19,6 +22,91 @@ type MyPageScreenNavigationProp = NativeStackNavigationProp<
 const MyPageScreen: React.FC = () => {
   const navigation = useNavigation<MyPageScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
+  const [weightModalVisible, setWeightModalVisible] = useState(false);
+  const [costModalVisible, setCostModalVisible] = useState(false);
+  const [alarmModalVisible, setAlarmModalVisible] = useState(false);
+
+  // 리덕스 스토어에서 사용자 정보 가져오기
+  const {
+    email,
+    user_name,
+    user_gender,
+    user_age,
+    weight,
+    goal_weight,
+    goal_cost,
+    breakfast_alarm,
+    lunch_alarm,
+    dinner_alarm,
+  } = useSelector((state: RootState) => state.info);
+
+  const handleWeightChange = async (
+    currentWeight: string,
+    goalWeight: string,
+  ) => {
+    // goal에 대한 POST 요청
+
+    console.log('Saving current weight:', currentWeight);
+    console.log('Saving goal weight:', goalWeight);
+    const goalResponse = await api.put('/AllEat/users/goals', {
+      goal_weight: parseFloat(goalWeight),
+      goal_cost: goal_cost,
+    });
+    console.log('Goal Response:', goalResponse.data);
+    // weight에 대한 POST 요청
+    const weightResponse = await api.put('/AllEat/weight', {
+      weight: parseFloat(currentWeight),
+    });
+    console.log('Weight Response:', weightResponse.data);
+    dispatch(fetchUserInfo());
+    setWeightModalVisible(false); // 모달을 닫음
+  };
+  const parseTimeStringToDate = (
+    timeString: string | null,
+  ): Date | undefined => {
+    if (!timeString) return undefined;
+
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(seconds || 0); // seconds가 없을 경우 0으로 설정
+
+    return date;
+  };
+  const handleCostChange = async (goalCost: string) => {
+    // goal에 대한 POST 요청
+
+    const goalResponse = await api.put('/AllEat/users/goals', {
+      goal_weight: goal_weight,
+      goal_cost: goalCost,
+    });
+    console.log('Goal Response:', goalResponse.data);
+
+    dispatch(fetchUserInfo());
+    setCostModalVisible(false); // 모달을 닫음
+  };
+  const handleAlarmSave = async (newAlarms: {
+    breakfast: String;
+    lunch: String;
+    dinner: String;
+  }) => {
+    const formattedTimes = {
+      breakfast_alarm: newAlarms.breakfast,
+      lunch_alarm: newAlarms.lunch,
+      dinner_alarm: newAlarms.dinner,
+    };
+
+    try {
+      await api.put('/AllEat/alarm', formattedTimes);
+      console.log('Alarm Response:', formattedTimes);
+      dispatch(fetchUserInfo());
+      setAlarmModalVisible(false); // 모달 닫기
+    } catch (error) {
+      console.error('알람 설정 중 오류 발생:', error);
+    }
+  };
   const handleLogout = () => {
     // 로그아웃 액션 디스패치
     dispatch(logout());
@@ -36,26 +124,31 @@ const MyPageScreen: React.FC = () => {
               <icons.settings height={24} width={24} />
             </TouchableOpacity>
           </View>
-          <UserInfo nickname="닉네임" email="example.com" age={24} gender="♂" />
+          <UserInfo
+            nickname={user_name}
+            email={email}
+            age={Number(user_age)}
+            gender={user_gender === 0 ? '♀' : '♂'}
+          />
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>
-                <icons.settingsWhite
+                <TouchableOpacity
                   style={styles.boxIcon}
-                  height={20}
-                  width={20}
-                />
+                  onPress={() => setWeightModalVisible(true)}>
+                  <icons.settingsWhite height={20} width={20} />
+                </TouchableOpacity>
                 <icons.scale height={20} width={20} />
                 <Text style={styles.boxText}>목표 체중 변경</Text>
               </View>
               <View style={styles.textBox}>
                 <View style={styles.text}>
                   <Text style={styles.textTitle}>현재 체중</Text>
-                  <Text style={styles.textDiscription}>75 kg</Text>
+                  <Text style={styles.textDiscription}>{weight} kg</Text>
                 </View>
                 <View style={styles.text}>
                   <Text style={styles.textTitle}>목표 체중</Text>
-                  <Text style={styles.textDiscription}>65 kg</Text>
+                  <Text style={styles.textDiscription}>{goal_weight} kg</Text>
                 </View>
               </View>
             </View>
@@ -63,18 +156,18 @@ const MyPageScreen: React.FC = () => {
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>
-                <icons.settingsWhite
+                <TouchableOpacity
                   style={styles.boxIcon}
-                  height={20}
-                  width={20}
-                />
+                  onPress={() => setCostModalVisible(true)}>
+                  <icons.settingsWhite height={20} width={20} />
+                </TouchableOpacity>
                 <icons.wallet height={20} width={20} />
                 <Text style={styles.boxText}>목표 식비 변경</Text>
               </View>
               <View style={styles.textBox}>
                 <View style={styles.text}>
                   <Text style={styles.textTitle}>목표 식비</Text>
-                  <Text style={styles.textDiscription}>₩600000</Text>
+                  <Text style={styles.textDiscription}>₩{goal_cost}</Text>
                 </View>
               </View>
             </View>
@@ -82,30 +175,83 @@ const MyPageScreen: React.FC = () => {
           <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>
-                <icons.settingsWhite
+                <TouchableOpacity
                   style={styles.boxIcon}
-                  height={20}
-                  width={20}
-                />
+                  onPress={() => setAlarmModalVisible(true)}>
+                  <icons.settingsWhite height={20} width={20} />
+                </TouchableOpacity>
                 <icons.clock height={20} width={20} />
                 <Text style={styles.boxText}>알람 시간 변경</Text>
               </View>
               <View style={styles.alarmBox}>
-                <View style={styles.alarm}>
-                  <images.breakfast height={24} width={24} />
-                  <Text style={styles.textDiscription}>08:00</Text>
-                </View>
-                <View style={styles.alarm}>
-                  <images.lunch height={24} width={24} />
-                  <Text style={styles.textDiscription}>12:00</Text>
-                </View>
-                <View style={styles.alarm}>
-                  <images.dinner height={24} width={24} />
-                  <Text style={styles.textDiscription}>18:00</Text>
-                </View>
+                {!breakfast_alarm && !lunch_alarm && !dinner_alarm && (
+                  <Text style={styles.noAlarm}>
+                    설정한 시간에 맞춰 알림을 보내드려요!
+                  </Text>
+                )}
+                {breakfast_alarm && (
+                  <View style={styles.alarm}>
+                    <images.breakfast height={24} width={24} />
+                    <Text style={styles.textDiscription}>
+                      {breakfast_alarm.split('', 5)}
+                    </Text>
+                  </View>
+                )}
+                {lunch_alarm && (
+                  <View style={styles.alarm}>
+                    <images.lunch height={24} width={24} />
+                    <Text style={styles.textDiscription}>
+                      {lunch_alarm.split('', 5)}
+                    </Text>
+                  </View>
+                )}
+                {dinner_alarm && (
+                  <View style={styles.alarm}>
+                    <images.dinner height={24} width={24} />
+                    <Text style={styles.textDiscription}>
+                      {dinner_alarm.split('', 5)}
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
           </View>
+          <FormModal
+            visible={weightModalVisible}
+            title="현재 체중 입력"
+            initialValue={String(weight)}
+            anotherTitle="목표 체중 입력"
+            anotherInitialValue={String(goal_weight)}
+            onClose={() => setWeightModalVisible(false)}
+            onSave={handleWeightChange}
+            isWeight={true}
+            keyboardType="numeric"
+          />
+          <FormModal
+            visible={costModalVisible}
+            title="목표식비입력"
+            initialValue={String(goal_cost)}
+            onClose={() => setCostModalVisible(false)}
+            onSave={handleCostChange}
+            isWeight={false}
+            keyboardType="numeric"
+          />
+          <AlarmModal
+            visible={alarmModalVisible}
+            initialAlarms={{
+              ...(breakfast_alarm
+                ? {breakfast: parseTimeStringToDate(breakfast_alarm)}
+                : {}),
+              ...(lunch_alarm
+                ? {lunch: parseTimeStringToDate(lunch_alarm)}
+                : {}),
+              ...(dinner_alarm
+                ? {dinner: parseTimeStringToDate(dinner_alarm)}
+                : {}),
+            }}
+            onClose={() => setAlarmModalVisible(false)}
+            onSave={handleAlarmSave}
+          />
           <CustomButton
             title="로그아웃"
             handlePress={handleLogout}

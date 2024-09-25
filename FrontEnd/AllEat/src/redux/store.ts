@@ -13,13 +13,14 @@ const persistConfig = {
 
 // authReducer를 persistReducer로 감쌉니다.
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const persistedInfoReducer = persistReducer(persistConfig, infoReducer);
 
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer, // 영구적으로 저장되는 리듀서
     paymoney: paymoneyReducer, // paymony 리듀서 등록
-    info: infoReducer,
+    info: persistedInfoReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

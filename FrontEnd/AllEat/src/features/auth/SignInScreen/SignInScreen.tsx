@@ -44,12 +44,11 @@ const SignIn: React.FC = () => {
 
   const submit = async () => {
     setIsSubmitting(true);
-
     const loginData = {
       email: form.email,
       password: form.password,
     };
-
+    console.log(loginData);
     try {
       const resultAction = await dispatch(loginUser(loginData));
       unwrapResult(resultAction); // 성공 여부만 확인
