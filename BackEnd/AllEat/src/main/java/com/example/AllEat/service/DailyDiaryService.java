@@ -29,7 +29,7 @@ public class DailyDiaryService {
     public DailyDiaryResponseDTO getDailyDiary(HttpServletRequest request, List<AddMenuRequestDTO> addMenuRequests) {
         UserEntity findUser = userService.findByRequest(request);
         if (findUser != null) {
-            DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now()).orElseThrow(()-> new IllegalArgumentException("not found"));
+            DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now()).orElse(null);
             Integer mealCalories = 0;
             if (findDailyDiary == null) {
                 DailyDiaryEntity dailyDiaryEntity = DailyDiaryEntity.builder()

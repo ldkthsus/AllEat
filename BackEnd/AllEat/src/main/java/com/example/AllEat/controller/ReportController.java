@@ -4,6 +4,7 @@ import com.example.AllEat.service.WeekReportService;
 import com.example.AllEat.service.MonthReportService;
 import com.example.AllEat.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,9 @@ public class ReportController {
         this.monthReportService = monthReportService;
     }
 
+    @Value("${fast.api.url}")
+    private String fastApiUrl;
+
     @PostMapping("/day-report")
     public ResponseEntity<?> getDayReport(
             @RequestBody Map<String, String> requestBody,
@@ -43,7 +47,9 @@ public class ReportController {
         Object reportData = reportService.collectDayReport(day, request);
 
         // FastAPI 전송
-        ResponseEntity<String> response = sendToFastApi(reportData, request, "http://localhost:8000/fast-api/report/day");
+
+
+        ResponseEntity<String> response = sendToFastApi(reportData, request, fastApiUrl+"/fast-api/report/day");
 
         List<Map<String, Object>> dailyFoodInfo = reportService.collectDayFoodInfo(day, request);
 
