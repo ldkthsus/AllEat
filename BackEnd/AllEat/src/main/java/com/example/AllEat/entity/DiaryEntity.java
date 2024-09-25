@@ -33,7 +33,8 @@ public class DiaryEntity {
     public enum DiaryTime {
         BREAKFAST,
         LUNCH,
-        DINNER
+        DINNER,
+        SNACK
     }
 
     @OneToMany(mappedBy = "diary",orphanRemoval = true, fetch = FetchType.LAZY)
