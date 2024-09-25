@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     height: 60,
   },
   myPageTitleText: {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: 'Pretendard-Bold',
     color: '#3d3d3d',
   },

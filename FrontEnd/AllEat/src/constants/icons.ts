@@ -21,7 +21,7 @@ import scale from '../assets/icons/scale.svg';
 import wallet from '../assets/icons/wallet.svg';
 import clock from '../assets/icons/clock.svg';
 import bookmark from '../assets/icons/bookmark.svg';
-import bookmarkDisabled from '../assets/icons/bookmarkDisabled.png';
+import bookmarkDisabled from '../assets/icons/bookmarkDisabled.svg';
 import settingsWhite from '../assets/icons/settingsWhite.svg';
 import emptyCheck from '../assets/icons/emptyCheck.svg';
 import tan from '../assets/icons/tan.svg';
@@ -29,6 +29,7 @@ import dan from '../assets/icons/dan.svg';
 import ji from '../assets/icons/ji.svg';
 import sync from '../assets/icons/sync.svg';
 import sync_bold from '../assets/icons/sync_bold.svg';
+import exit from '../assets/icons/exit.svg';
 
 const icons = {
   settings,
@@ -61,6 +62,7 @@ const icons = {
   dan,
   ji,
   sync,
-  sync_bold
+  sync_bold,
+  exit,
 };
 export default icons;

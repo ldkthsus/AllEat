@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     height: 60,
   },
   myPageTitleText: {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: 'Pretendard-Bold',
     color: '#3d3d3d',
   },
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
   boxText: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
   boxIcon: {position: 'absolute', right: 20},
   titleBox: {
-    gap: 5,
+    gap: 10,
     padding: 10,
     width: '100%',
     flexDirection: 'row',
@@ -65,7 +65,13 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     padding: 10,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+  },
+  noAlarm: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    textAlign: 'left',
   },
   text: {flexDirection: 'row', width: '50%', gap: 5},
   alarm: {flexDirection: 'row', width: '33%', gap: 5},
@@ -94,11 +100,6 @@ export const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
-    borderRadius: 5,
-    marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',

@@ -13,9 +13,9 @@ import ActivityLevelSelection from '../components/ActivityLevelSelection/Activit
 import api from '../../../utils/api';
 import UserInfo from '../components/UserInfo/UserInfo';
 import {AppDispatch} from '../../../redux/store';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
-
+import {RootState} from '../../../redux/store';
 type MyPageUpdateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPageUpdate'
@@ -23,16 +23,16 @@ type MyPageUpdateScreenNavigationProp = NativeStackNavigationProp<
 const MyPageUpdateScreen: React.FC = () => {
   const navigation = useNavigation<MyPageUpdateScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
+  const info = useSelector((state: RootState) => state.info);
   const [form, setForm] = useState({
-    user_name: '',
-    user_age: '',
-    user_height: '',
-    user_gender: 0 as 0 | 1, // 0 또는 1만 허용
-    activity_amount: 1 as 0 | 1 | 2, // 0, 1, 2만 허용
+    user_name: info.user_name,
+    user_age: info.user_age,
+    user_height: info.user_height,
+    user_gender: info.user_gender as 0 | 1, // 0 또는 1만 허용
+    activity_amount: info.activity_amount as 0 | 1 | 2, // 0, 1, 2만 허용
     password1: '',
     password2: '',
   });
-
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append('data', {
@@ -80,7 +80,12 @@ const MyPageUpdateScreen: React.FC = () => {
           <icons.arrowBackLeft height={24} width={24} />
         </TouchableOpacity>
       </View>
-      <UserInfo nickname="닉네임" email="example.com" age={24} gender="♂" />
+      <UserInfo
+        nickname={form.user_name}
+        email={info.email}
+        age={Number(form.user_age)}
+        gender={form.user_gender === 0 ? '♀' : '♂'}
+      />
       <View style={styles.body}>
         <FormField
           title="닉네임"
