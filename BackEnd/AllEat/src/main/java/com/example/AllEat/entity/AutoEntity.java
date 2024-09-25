@@ -16,8 +16,8 @@ public class AutoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "auto_id")
-    private Integer autoId;
+    @Column(name = "id")
+    private Integer id;
 
     @Column(name = "amount")
     private Integer amount;
