@@ -10,8 +10,12 @@ COPY requirements.txt .
 RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     pkg-config \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
-    
+
 # pip 업그레이드
 RUN pip install --upgrade pip
 
