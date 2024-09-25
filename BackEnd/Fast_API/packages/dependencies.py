@@ -8,7 +8,9 @@ load_dotenv()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 jwt_key = os.environ.get("JWT_KEY")
+print(jwt_key)
 jwt_algorithm = os.environ.get("JWT_ALGORITHM")
+print(jwt_algorithm)
 
 def decode_jwt(token: str):
     try:
