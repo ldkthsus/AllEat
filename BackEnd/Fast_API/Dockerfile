@@ -13,8 +13,6 @@ RUN pip install --upgrade pip
 
 # 필요한 Python 패키지 설치
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip uninstall openai
-RUN pip install openai==0.28`
 
 # 전체 프로젝트 파일을 작업 디렉토리로 복사
 COPY . .
