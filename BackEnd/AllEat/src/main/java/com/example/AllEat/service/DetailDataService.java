@@ -1,6 +1,6 @@
 package com.example.AllEat.service;
 
-import com.example.AllEat.dto.DetailDataDTO;
+import com.example.AllEat.dto.data.DetailDataDTO;
 import com.example.AllEat.entity.DiaryMappingEntity;
 import com.example.AllEat.repository.DiaryMappingRepository;
 import org.springframework.beans.factory.annotation.Autowired;

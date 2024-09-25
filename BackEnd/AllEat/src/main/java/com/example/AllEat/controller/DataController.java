@@ -3,7 +3,7 @@ package com.example.AllEat.controller;
 import com.example.AllEat.service.MainDataService;
 import com.example.AllEat.service.DetailDataService;
 import com.example.AllEat.dto.menu.MainDataDTO;
-import com.example.AllEat.dto.DetailDataDTO; // DetailDataDTO 임포트 추가
+import com.example.AllEat.dto.data.DetailDataDTO; // DetailDataDTO 임포트 추가
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
