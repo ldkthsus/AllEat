@@ -160,7 +160,7 @@ public class WeekReportService {
 
         // FastAPI로 데이터 전송
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(fastApiRequest, headers);
-        String fastApiUrl = "http://localhost:8000/fast-api/report/week"; // FastAPI URL
+        String fastApiUrl = "/fast-api/report/week"; // FastAPI URL
         ResponseEntity<Map> responseEntity = restTemplate.exchange(fastApiUrl, HttpMethod.POST, entity, Map.class);
 
         return responseEntity.getBody();
