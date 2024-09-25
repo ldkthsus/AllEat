@@ -43,7 +43,7 @@ public class ReportController {
         Object reportData = reportService.collectDayReport(day, request);
 
         // FastAPI 전송
-        ResponseEntity<String> response = sendToFastApi(reportData, request, "http://localhost:8000/fast-api/report/day");
+        ResponseEntity<String> response = sendToFastApi(reportData, request, "https://j11b104.p.ssafy.io/fast-api/fast-api/report/day");
 
         List<Map<String, Object>> dailyFoodInfo = reportService.collectDayFoodInfo(day, request);
 
