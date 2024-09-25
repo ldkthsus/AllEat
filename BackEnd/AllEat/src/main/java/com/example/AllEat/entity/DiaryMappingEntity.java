@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 @Entity
 @Getter
 @NoArgsConstructor
@@ -23,11 +22,11 @@ public class DiaryMappingEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
-    @JsonManagedReference
-//    @JsonBackReference
+    @JsonBackReference // 자식 측에 해당하는 어노테이션
     private DiaryEntity diary;
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
+    @JsonBackReference // 자식 측에 해당하는 어노테이션
     private MenuEntity menu;
 }

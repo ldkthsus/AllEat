@@ -220,7 +220,7 @@ public class WeekReportService {
 
         // 프론트엔드에 반환할 데이터 구성
         Map<String, Object> finalReport = new HashMap<>();
-        finalReport.put("response", fastApiResponse != null ? fastApiResponse.get("response") : null);
+        finalReport.put("gptResponse", fastApiResponse != null ? fastApiResponse.get("response") : null);
         finalReport.put("kcal_average", kcalAvg);
         finalReport.put("menu_kcal", menuKcal);
         finalReport.put("protein_avg", proteinAvg);
