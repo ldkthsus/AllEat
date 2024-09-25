@@ -9,10 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/AllEat/record")
@@ -30,6 +27,22 @@ public class AutoController {
                 AutoEntity autoEntity = autoService.addUserAuto(findUser, menuId);
                 AutoResponseDTO autoResponse = autoService.convertDTO(autoEntity);
                 return ResponseEntity.status(HttpStatus.OK).body(autoResponse);
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/auto/{menuId}")
+    public ResponseEntity<?> deleteAuto(HttpServletRequest request, @PathVariable(required = true) Integer menuId) {
+        try {
+            UserEntity findUser = userService.findByRequest(request);
+            if (findUser != null) {
+                autoService.deleteAuto(findUser, menuId);
+                return ResponseEntity.status(HttpStatus.OK).build();
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

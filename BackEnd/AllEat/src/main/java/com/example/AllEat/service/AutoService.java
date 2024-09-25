@@ -8,6 +8,7 @@ import com.example.AllEat.repository.AutoRepository;
 import com.example.AllEat.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +36,11 @@ public class AutoService {
         AutoResponseDTO autoResponseDTO = new AutoResponseDTO();
         autoResponseDTO.FromEntity(autoEntity);
         return autoResponseDTO;
+    }
+
+    @Transactional
+    public void deleteAuto(UserEntity requestUser, Integer menuId){
+        AutoEntity autoEntity = autoRepository.findByUser_idAndId(requestUser.getId(), menuId);
+        autoRepository.delete(autoEntity);
     }
 }
