@@ -14,8 +14,7 @@ def decode_jwt(token: str):
     try:
         # 토큰을 bytes로 인코딩
         print("=======================================")
-        print(token)
-        print(jwt_key)
+        print(jwt_algorithm)
         print("========================================")
         payload = jwt.decode(token, jwt_key, algorithms=[jwt_algorithm])
         user_id: str = payload.get("userid")
