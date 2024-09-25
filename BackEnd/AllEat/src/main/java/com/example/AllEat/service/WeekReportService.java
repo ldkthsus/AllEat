@@ -7,6 +7,7 @@ import com.example.AllEat.repository.GoalRepository;
 import com.example.AllEat.repository.UserRepository;
 import com.example.AllEat.repository.WeightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.HttpEntity;
@@ -36,6 +37,10 @@ public class WeekReportService {
     private JwtUtil jwtUtil;
 
     private final RestTemplate restTemplate = new RestTemplate();
+
+
+    @Value("${fast.api.url}")
+    private String fastApi;
 
     public Map<String, Object> collectWeekReport(String day, HttpServletRequest request) {
         // JWT 토큰 및 사용자 식별
@@ -160,7 +165,7 @@ public class WeekReportService {
 
         // FastAPI로 데이터 전송
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(fastApiRequest, headers);
-        String fastApiUrl = "/fast-api/report/week"; // FastAPI URL
+        String fastApiUrl = fastApi+"/fast-api/report/week"; // FastAPI URL
         ResponseEntity<Map> responseEntity = restTemplate.exchange(fastApiUrl, HttpMethod.POST, entity, Map.class);
 
         return responseEntity.getBody();
