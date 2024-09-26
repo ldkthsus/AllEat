@@ -26,6 +26,9 @@ import settingsWhite from '../assets/icons/settingsWhite.svg';
 import emptyCheck from '../assets/icons/emptyCheck.svg';
 import sync from '../assets/icons/sync.svg';
 import sync_bold from '../assets/icons/sync_bold.svg';
+import arrowTop from '../assets/icons/arrowTop.svg';
+import arrowBottom from '../assets/icons/arrowBottom.svg';
+import warning from '../assets/icons/warning.svg';
 
 const icons = {
   settings,
@@ -55,6 +58,9 @@ const icons = {
   bookmarkDisabled,
   settingsWhite,
   sync,
-  sync_bold
+  sync_bold,
+  arrowTop,
+  arrowBottom,
+  warning,
 };
 export default icons;
