@@ -14,6 +14,7 @@ import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store'; // Redux 스토어 타입
+import DiaryCreateScreen from '../features/home/DiaryCreateScreen/DiaryCreateScreen';
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -27,7 +28,9 @@ const AppNavigator = () => {
   // 특정 화면에서는 AppBar를 숨기고 싶은 경우
   const shouldShowAppBar =
     currentRouteName &&
-    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement',].includes(currentRouteName);
+    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement'].includes(
+      currentRouteName,
+    );
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   ); // Redux에서 로그인 상태 확인
@@ -55,6 +58,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DiaryCreate"
+          component={DiaryCreateScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

@@ -69,7 +69,7 @@ export const loginUser = createAsyncThunk(
       const token = response.headers.authorization.split(' ')[1]; // 토큰 추출
       return {token}; // 토큰 반환
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
       return rejectWithValue(error.response?.data?.message || '로그인 실패');
     }
   },
