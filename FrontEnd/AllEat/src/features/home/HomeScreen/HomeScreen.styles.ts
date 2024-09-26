@@ -84,7 +84,7 @@ export const styles = StyleSheet.create({
     // marginLeft: 90, // 캐릭터 왼쪽 여백
     // marginRight: 180,
     marginTop: 30,
-    backgroundColor: 'pink',
+    // backgroundColor: 'pink',
   },
   charInfo: {
     // position: 'absolute',
@@ -122,7 +122,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',  // 가로로 배치
     height: 20,  // 게이지 높이 설정
     width: 130,
-    borderRadius: 0,  // 전체 게이지 바의 둥근 모서리
+    borderRadius: 7,  // 전체 게이지 바의 둥근 모서리
     backgroundColor: '#EAF0FF',  // 배경색 (남는 부분)
     overflow: 'hidden',  // 둥근 모서리에서 넘치는 부분 숨김
   },
@@ -137,8 +137,9 @@ export const styles = StyleSheet.create({
 progressContainer: {
   flexDirection: 'row',
   justifyContent: 'space-around',  // 원형 프로그레스 바를 나란히 배치
-  marginTop: 20,
+  marginTop: 72,
   width: '100%',
+  backgroundColor: 'pink',
 },
 progressWrapper: {
   alignItems: 'center',  // 프로그레스 바와 텍스트를 중앙에 배치

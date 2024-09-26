@@ -1,4 +1,3 @@
-// CircularProgress.styles.ts
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -11,12 +10,13 @@ export const styles = StyleSheet.create({
     position: 'absolute',
   },
   currentText: {
-    fontSize: 30,
+    fontSize: 20,
     color: '#769BFF',
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-SemiBold',
   },
   totalText: {
-    fontSize: 20,
+    fontSize: 15,
     color: 'black',
+    fontFamily: 'Pretendard-SemiBold',
   },
 });
