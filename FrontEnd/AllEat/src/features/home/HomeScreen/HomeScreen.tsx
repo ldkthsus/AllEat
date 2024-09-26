@@ -147,7 +147,8 @@ const HomeScreen: React.FC = () => {
               <View style={[styles.gaugeSegment, { width: '38%', backgroundColor: '#A0BFFF', borderTopRightRadius: 7, borderBottomRightRadius: 7 }]} />
             </View>
           </View>
-          <View style={styles.progressContainer}>
+        </View>
+        <View style={styles.progressContainer}>
             <View style={styles.progressWrapper}>
               <CircularProgress progress={0.36} total={16000} current={5800} />
             </View>
@@ -155,7 +156,6 @@ const HomeScreen: React.FC = () => {
               <CircularProgress progress={0.22} total={1520} current={330} />
             </View>
           </View>
-        </View>
       </View>
     </View>
   );

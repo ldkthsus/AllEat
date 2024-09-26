@@ -61,6 +61,7 @@ const icons = {
   dan,
   ji,
   sync,
-  sync_bold
+  sync_bold,
+
 };
 export default icons;
