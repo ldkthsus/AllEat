@@ -9,5 +9,9 @@ import java.util.List;
 
 @Repository
 public interface DiaryRepository extends JpaRepository<DiaryEntity, Integer> {
+
     List<DiaryEntity> findByDailyDiary_Date(LocalDate date);
+
+    DiaryEntity findByDailyDiary_idAndDiaryTime(Integer dailtDiaryId, DiaryEntity.DiaryTime diaryTime);
+
 }

@@ -4,12 +4,10 @@ import com.example.AllEat.entity.DailyDiaryEntity;
 import com.example.AllEat.entity.DiaryEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,7 +26,7 @@ public class DailyDiaryResponseDTO {
     private Integer dailyCalories;
 
     @JsonProperty("diary_list")
-    private List<DiaryEntity> diaryEntityList;
+    private List<DiaryConvertDTO> diarys;
 
     @JsonProperty("user_id")
     private Integer userId;
@@ -58,7 +56,10 @@ public class DailyDiaryResponseDTO {
         this.dailyDiaryId = dailyDiaryEntity.getId();
         this.date = dailyDiaryEntity.getDate();
         this.dailyCalories = dailyDiaryEntity.getDailyCalories();
-        this.diaryEntityList = dailyDiaryEntity.getDiaryEntities();
+        this.diarys = new ArrayList<>();
+        for (DiaryEntity diary : dailyDiaryEntity.getDiaryEntities()) {
+            this.diarys.add(new DiaryConvertDTO(diary));
+        }
         this.userId = userEntity.getId();
         this.email = userEntity.getEmail();
         this.userName = userEntity.getUserName();
@@ -67,5 +68,20 @@ public class DailyDiaryResponseDTO {
         this.userGender = userEntity.getUserGender();
         this.userAge = userEntity.getUserAge();
         this.activityAmount = userEntity.getActivityAmount();
+    }
+
+    @Getter
+    public static class DiaryConvertDTO{
+        private Integer diaryId;
+        private DiaryEntity.DiaryTime diaryTime;
+        private Integer mealCalories;
+        private Integer dailyPrice;
+
+        public DiaryConvertDTO(DiaryEntity diary) {
+            this.diaryId = diary.getId();
+            this.diaryTime = diary.getDiaryTime();
+            this.mealCalories = diary.getMealCalories();
+            this.dailyPrice = diary.getDailyPrice();
+        }
     }
 }

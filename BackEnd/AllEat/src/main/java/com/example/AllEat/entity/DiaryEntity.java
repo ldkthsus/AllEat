@@ -50,7 +50,9 @@ public class DiaryEntity {
     private Integer dailyPrice;
 
     public void updateCalories(Integer calories) {
+
         this.mealCalories = calories;
+        this.dailyPrice = price;
     }
 
     @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
