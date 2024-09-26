@@ -152,7 +152,8 @@ const HomeScreen: React.FC = () => {
               />
             </View>
           </View>
-          <View style={styles.progressContainer}>
+        </View>
+        <View style={styles.progressContainer}>
             <View style={styles.progressWrapper}>
               <CircularProgress progress={0.36} total={16000} current={5800} />
             </View>
@@ -160,7 +161,6 @@ const HomeScreen: React.FC = () => {
               <CircularProgress progress={0.22} total={1520} current={330} />
             </View>
           </View>
-        </View>
       </View>
       <TouchableOpacity
         onPress={() =>

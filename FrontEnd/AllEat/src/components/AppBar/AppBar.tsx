@@ -20,7 +20,7 @@ const AppBar: React.FC = () => {
 
       <Pressable
         style={styles.icon}
-        onPress={() => navigation.navigate('Paymoney')}>
+        onPress={() => navigation.navigate('Report')}>
         <icons.pay height={30} width={30} />
         <Text style={styles.text}>페이머니</Text>
       </Pressable>

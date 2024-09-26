@@ -31,6 +31,9 @@ import dan from '../assets/icons/dan.svg';
 import ji from '../assets/icons/ji.svg';
 import sync from '../assets/icons/sync.svg';
 import sync_bold from '../assets/icons/sync_bold.svg';
+import arrowTop from '../assets/icons/arrowTop.svg';
+import arrowBottom from '../assets/icons/arrowBottom.svg';
+import warning from '../assets/icons/warning.svg';
 import exit from '../assets/icons/exit.svg';
 import addMenu from '../assets/icons/addMenu.svg';
 import minusWhite from '../assets/icons/minusWhite.svg';
@@ -76,5 +79,6 @@ const icons = {
   minusWhite,
   plusWhite,
   plusWhiteReverse,
+  arrowTop,arrowBottom,warning
 };
 export default icons;
