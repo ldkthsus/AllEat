@@ -17,9 +17,7 @@ RUN apt-get update && apt-get install -y \
     libjpeg-dev \
     libxml2-dev \
     libxslt1-dev \
-    libgl1 \  # OpenGL 라이브러리 추가
-    curl \
-    git \
+    libgl1 \  
     && rm -rf /var/lib/apt/lists/*
 
 # pip 업그레이드
