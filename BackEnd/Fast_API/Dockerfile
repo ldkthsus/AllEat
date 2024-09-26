@@ -14,6 +14,12 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     libffi-dev \
     python3-dev \
+    libjpeg-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libgl1 \  # OpenGL 라이브러리 추가
+    curl \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # pip 업그레이드
