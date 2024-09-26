@@ -82,6 +82,7 @@ public class MenuController {
     @PostMapping("/menu")
     public ResponseEntity<?> addMenu(@RequestBody List<AddMenuRequestDTO> addMenuRequests, HttpServletRequest request) {
         DailyDiaryResponseDTO getDailyDiary = dailyDiaryServie.getDailyDiary(request, addMenuRequests);
+        System.out.println("여기 수정해야 함");
         return ResponseEntity.status(HttpStatus.OK).body(getDailyDiary);
     }
 
