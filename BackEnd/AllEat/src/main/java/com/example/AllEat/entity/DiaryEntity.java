@@ -49,7 +49,7 @@ public class DiaryEntity {
     @Column(name = "daily_price")
     private Integer dailyPrice;
 
-    public void updateCalories(Integer calories) {
+    public void updateDetails(Integer calories, Integer price) {
 
         this.mealCalories = calories;
         this.dailyPrice = price;
