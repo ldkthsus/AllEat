@@ -79,6 +79,8 @@ const icons = {
   minusWhite,
   plusWhite,
   plusWhiteReverse,
-  arrowTop,arrowBottom,warning
+  arrowTop,
+  arrowBottom,
+  warning,
 };
 export default icons;

@@ -1,13 +1,23 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+  Image,
+} from 'react-native';
 import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
 import {icons} from '../../../constants';
+import {images} from '../../../constants';
 import {styles} from './DiaryCreateScreen.styles';
 import CustomButton from '../../../components/CustomButton';
 import DiaryCard from '../components/DiaryCard/DiaryCard';
 import MenuCard from '../components/MenuCard/MenuCard';
+import FormField from '../../../components/FormField/FormField';
+
 type DiaryCreateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'DiaryCreate'
@@ -17,12 +27,29 @@ type DiaryCreateRouteProp = RouteProp<RootStackParamList, 'DiaryCreate'>;
 const DiaryCreateScreen: React.FC = () => {
   const navigation = useNavigation<DiaryCreateScreenNavigationProp>();
   const route = useRoute<DiaryCreateRouteProp>();
-  const {date, meals} = route.params; // 이제 date와 meals가 제대로 타입을 인식함
+  const {date, meals} = route.params;
+
   const [isModalVisible, setModalVisible] = useState(false); // 모달 상태
+  const [modalType, setModalType] = useState('main'); // 기본 모달 상태
 
   // 모달 열기 및 닫기
   const openModal = () => setModalVisible(true);
-  const closeModal = () => setModalVisible(false);
+  const closeModal = () => {
+    setModalType('main'); // 모달 닫힐 때 기본 모달로 전환
+    setModalVisible(false);
+  };
+  const [form, setForm] = useState({
+    restaurant_name: '',
+    restaurant_type: '',
+    menu_name: '',
+    menu_calories: 450,
+    menu_carbohydrate: 70,
+    menu_protein: 10,
+    menu_fat: 20,
+    menu_type: 1,
+    menu_price: 0,
+    menu_value: 1,
+  });
   const [mealList, setMealList] = useState([
     {restaurant: '집밥', menu: '삶은계란', price: 0, kcal: 78, people: 1},
   ]);
@@ -40,6 +67,7 @@ const DiaryCreateScreen: React.FC = () => {
       menus: [{menu: '고사리소바', price: 8900, kcal: 300, isFavorate: false}],
     },
   ]);
+
   // 인원 증가 함수
   const increasePeople = (index: number) => {
     setMealList(prevMealList =>
@@ -64,6 +92,7 @@ const DiaryCreateScreen: React.FC = () => {
   const deleteMeal = (index: number) => {
     setMealList(prevMealList => prevMealList.filter((_, i) => i !== index));
   };
+
   // 식당 순회: 이전
   const goToPreviousRestaurant = () => {
     setRestaurantIndex(prevIndex =>
@@ -83,7 +112,7 @@ const DiaryCreateScreen: React.FC = () => {
     const updatedRestaurants = [...restaurants];
     updatedRestaurants[restaurantIndex].menus[menuIdx].isFavorate =
       !updatedRestaurants[restaurantIndex].menus[menuIdx].isFavorate;
-    setRestaurantIndex(restaurantIndex); // 트리거 상태 업데이트
+    setRestaurantIndex(restaurantIndex);
     setRestaurants(updatedRestaurants);
   };
 
@@ -97,10 +126,13 @@ const DiaryCreateScreen: React.FC = () => {
         menu: selectedMenu.menu,
         price: selectedMenu.price,
         kcal: selectedMenu.kcal,
-        people: 1, // 초기 인원 1로 설정
+        people: 1,
       },
     ]);
   };
+
+  // 모달 내용 변경 (직접 등록)
+  const openCustomMenuModal = () => setModalType('custom');
 
   return (
     <View style={styles.diaryBody}>
@@ -198,6 +230,8 @@ const DiaryCreateScreen: React.FC = () => {
           textStyles="text-white font-pbold "
         />
       </View>
+
+      {/* 모달 */}
       <Modal
         visible={isModalVisible}
         animationType="slide"
@@ -205,18 +239,86 @@ const DiaryCreateScreen: React.FC = () => {
         onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <CustomButton
-              title="추가"
-              handlePress={closeModal}
-              containerStyles="w-[80%] h-[60px]"
-              textStyles="text-white"
-            />
-            <CustomButton
-              title="취소"
-              handlePress={closeModal}
-              containerStyles="w-[80%] h-[60px] bg-gray"
-              textStyles="text-white"
-            />
+            {modalType === 'main' ? (
+              // 기본 모달
+              <>
+                <View style={styles.modalTitle}>
+                  <Text style={styles.modalTitleText}>메뉴 추가</Text>
+                  <TouchableOpacity
+                    style={styles.modalIcon}
+                    onPress={closeModal}>
+                    <icons.exit height={24} width={24} />
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <Text>검색창</Text>
+                </View>
+                <View style={styles.addMenu}>
+                  <TouchableOpacity style={styles.addMenuContainer}>
+                    <Image
+                      source={images.addMenuCamera}
+                      style={styles.addMenuImage}
+                    />
+                    <Text style={styles.addMenuContainerText}>
+                      사진으로 등록
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.addMenuContainer}
+                    onPress={openCustomMenuModal}>
+                    <Image
+                      source={images.addMenu}
+                      style={styles.addMenuImage}
+                    />
+                    <Text style={styles.addMenuContainerText}>직접 등록</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            ) : (
+              // 직접 등록 모달
+              <>
+                <View style={styles.modalTitle}>
+                  <Text style={styles.modalTitleText}>메뉴 등록</Text>
+                  <TouchableOpacity
+                    style={styles.modalIcon}
+                    onPress={closeModal}>
+                    <icons.exit height={24} width={24} />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.menuFormContainer}>
+                  <Text>직접 등록할 메뉴 정보를 입력하세요</Text>
+                  <FormField
+                    title="이름"
+                    value={form.menu_name}
+                    handleChangeText={text =>
+                      setForm({...form, menu_name: text})
+                    }
+                    placeholder="식당 이름"
+                  />
+                  <FormField
+                    title="가게 이름"
+                    value={form.restaurant_name}
+                    handleChangeText={text =>
+                      setForm({...form, restaurant_name: text})
+                    }
+                    otherStyles={styles.field}
+                    placeholder="메뉴 이름"
+                  />
+                  <FormField
+                    title="가격"
+                    value={String(form.menu_price)}
+                    unit="원"
+                    handleChangeText={text =>
+                      setForm({...form, menu_price: Number(text)})
+                    }
+                    otherStyles={styles.field}
+                    placeholder="0"
+                    isNumeric={true}
+                    isDecimal={false}
+                  />
+                </View>
+              </>
+            )}
           </View>
         </View>
       </Modal>
