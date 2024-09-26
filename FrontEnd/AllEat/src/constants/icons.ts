@@ -15,6 +15,8 @@ import minus from '../assets/icons/minus.svg';
 import notiBadge from '../assets/icons/notiBadge.svg';
 import arrowBackRight from '../assets/icons/arrowBackRight.svg';
 import arrowBackLeft from '../assets/icons/arrowBackLeft.svg';
+import arrowBackRightWhite from '../assets/icons/arrowBackRightWhite.svg';
+import arrowBackLeftWhite from '../assets/icons/arrowBackLeftWhite.svg';
 import re_check from '../assets/icons/re_check.svg';
 import settings from '../assets/icons/settings.svg';
 import scale from '../assets/icons/scale.svg';
@@ -29,7 +31,14 @@ import dan from '../assets/icons/dan.svg';
 import ji from '../assets/icons/ji.svg';
 import sync from '../assets/icons/sync.svg';
 import sync_bold from '../assets/icons/sync_bold.svg';
+import arrowTop from '../assets/icons/arrowTop.svg';
+import arrowBottom from '../assets/icons/arrowBottom.svg';
+import warning from '../assets/icons/warning.svg';
 import exit from '../assets/icons/exit.svg';
+import addMenu from '../assets/icons/addMenu.svg';
+import minusWhite from '../assets/icons/minusWhite.svg';
+import plusWhite from '../assets/icons/plusWhite.svg';
+import plusWhiteReverse from '../assets/icons/plusWhiteReverse.svg';
 
 const icons = {
   settings,
@@ -50,7 +59,9 @@ const icons = {
   minus,
   notiBadge,
   arrowBackRight,
+  arrowBackRightWhite,
   arrowBackLeft,
+  arrowBackLeftWhite,
   re_check,
   scale,
   wallet,
@@ -64,5 +75,12 @@ const icons = {
   sync,
   sync_bold,
   exit,
+  addMenu,
+  minusWhite,
+  plusWhite,
+  plusWhiteReverse,
+  arrowTop,
+  arrowBottom,
+  warning,
 };
 export default icons;

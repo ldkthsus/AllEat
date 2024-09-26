@@ -1,6 +1,7 @@
 // src/types/navigationTypes.ts
 export type RootStackParamList = {
   Home: undefined;
+  DiaryCreate: {date: string; meals: string};
   SignIn: undefined;
   SignUp: undefined;
   Intro: undefined;
@@ -9,6 +10,7 @@ export type RootStackParamList = {
   MyPageUpdate: undefined;
   Agreement: undefined;
   Paymoney: undefined;
+  Report: undefined;
   PaymoneyDetail: undefined;
   // 다른 화면도 추가할 수 있습니다.
 };
