@@ -154,23 +154,14 @@ const HomeScreen: React.FC = () => {
           </View>
         </View>
         <View style={styles.progressContainer}>
-            <View style={styles.progressWrapper}>
-              <CircularProgress progress={0.36} total={16000} current={5800} />
-            </View>
-            <View style={styles.progressWrapper}>
-              <CircularProgress progress={0.22} total={1520} current={330} />
-            </View>
+          <View style={styles.progressWrapper}>
+            <CircularProgress progress={0.36} total={16000} current={5800} />
           </View>
+          <View style={styles.progressWrapper}>
+            <CircularProgress progress={0.22} total={1520} current={330} />
+          </View>
+        </View>
       </View>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('DiaryCreate', {
-            date: formatDate(currentDate),
-            meals: '아침',
-          })
-        }>
-        <Text style={{color: 'black', marginTop: 100}}>아침 등록</Text>
-      </TouchableOpacity>
     </View>
   );
 };
