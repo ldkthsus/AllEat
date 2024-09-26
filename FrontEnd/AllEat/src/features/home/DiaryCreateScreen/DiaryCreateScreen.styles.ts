@@ -94,14 +94,15 @@ export const styles = StyleSheet.create({
   },
   modalContent: {
     width: '94%',
-    padding: 20,
+    paddingVertical: 16,
+    paddingBottom: 28,
+    paddingHorizontal: 16,
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
-    gap: 5,
+    // gap: 5,
     display: 'flex',
-
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     justifyContent: 'space-around',
   },
   modalTitle: {
@@ -109,11 +110,11 @@ export const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   modalTitleText: {
-    fontSize: 24,
-    // marginBottom: 20,
+    fontSize: 18,
+
     color: '#3d3d3d',
     fontFamily: 'Pretendard-Bold',
   },
@@ -139,4 +140,20 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
+  homeMade: {
+    flexDirection: 'row',
+    gap: 5,
+    alignItems: 'center',
+    width: '100%',
+    height: 40,
+  },
+  nutrientFormBox: {width: '44%'},
+  nutrientForm: {height: 36, marginBottom: 3, fontSize: 14, paddingBottom: 5},
+  nutrientFormTitle: {
+    fontSize: 14,
+    color: '#3d3d3d',
+    fontFamily: 'Pretendard-Bold',
+  },
+  nutrientFormContainer: {flexDirection: 'row', gap: 5},
+  nutrientFormCard: {gap: 3},
 });
