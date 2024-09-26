@@ -10,6 +10,7 @@ import HomeScreen from '../features/home/HomeScreen/HomeScreen';
 import Agreement from '../features/paymoney/AgreementScreen/AgreementScreen';
 import Paymoney from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
 import PaymoneyDetail from '../features/paymoney/PaymoneyScreen/PaymoneyDetailScreen';
+import Report from '../features/report/ReportScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -84,8 +85,8 @@ const AppNavigator = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="PaymoneyDetail"
-          component={PaymoneyDetail}
+          name="Report"
+          component={Report}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
