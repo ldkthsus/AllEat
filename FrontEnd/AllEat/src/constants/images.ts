@@ -23,6 +23,7 @@ import payCardWhitePNG from '../assets/images/payCardWhite.png';
 import rightArrow from '../assets/images/rightArrow.svg';
 import Subtract from '../assets/images/Subtract.svg';
 import Exclude from '../assets/images/Exclude.svg';
+import excludeWhite from '../assets/images/excludeWhite.svg';
 
 
 const images = {
@@ -51,6 +52,7 @@ const images = {
   rightArrow,
   Subtract,
   Exclude,
+  excludeWhite
 };
 
 export default images;

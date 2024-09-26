@@ -1,8 +1,10 @@
 // DailyMealReport.tsx
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { icons } from '../../../constants';
 import { styles } from './DailyMealReport.styles';
+import NutrientPieChart from '../../../components/NutrientPieChart/NutrientPieChart';
 
 interface NutrientDetail {
   menuName: string;
@@ -30,6 +32,22 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
   // goalKcal 대비 섭취한 칼로리 비율 계산
   const caloriePercentage = (totalCalories / goalKcal) * 100;
 
+  // 총 영양소 합계
+  const totalNutrients = totalCarbohydrate + totalProtein + totalFat;
+
+  // 각 영양소의 비율 계산
+  const carbPercentage = (totalCarbohydrate / totalNutrients) * 100;
+  const proteinPercentage = (totalProtein / totalNutrients) * 100;
+  const fatPercentage = (totalFat / totalNutrients) * 100;
+
+  const radius = 50; // 원의 반지름
+  const circumference = 2 * Math.PI * radius; // 원의 둘레
+
+  // 각각의 offset 계산
+  const carbOffset = ((100 - carbPercentage) / 100) * circumference;
+  const proteinOffset = ((100 - proteinPercentage) / 100) * circumference;
+  const fatOffset = ((100 - fatPercentage) / 100) * circumference;
+  
   return (
     <View style={styles.dailyMealReportContainer}>
       <Text style={styles.dailyMealReportTitle}>
@@ -55,13 +73,33 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
       </View>
       <View style={styles.nutrientContainer}>
         <Text style={styles.nutrientTitle}>
-          오늘의 영양 정보
+          영양 정보
         </Text>
-        
+        <View style={styles.kcalGraphConatiner}>
+          <NutrientPieChart
+            carbPercentage={carbPercentage}
+            proteinPercentage={proteinPercentage}
+            fatPercentage={fatPercentage}
+          />
+          <View style={styles.kcalGrpahDetailContainer}>
+            <View style={styles.kcalGraphDetailBox}>
+              <icons.tan width={18} height={18} />
+              <Text style={styles.kcalGraphDetailText}>탄수화물 {totalCarbohydrate}g</Text>
+            </View>
+            <View style={styles.kcalGraphDetailBox}>
+              <icons.dan width={18} height={18} />
+              <Text style={styles.kcalGraphDetailText}>단백질 {totalProtein}g</Text>
+            </View>            
+            <View style={styles.kcalGraphDetailBox}>
+              <icons.ji width={18} height={18} />
+              <Text style={styles.kcalGraphDetailText}>탄수화물 {totalFat}g</Text>
+            </View>
+          </View>
+        </View>
         {/* 탄수화물 정보 */}
         <TouchableOpacity onPress={() => setCarbVisible(!carbVisible)}>
           <View style={styles.nutrientTitleContainer}>
-            <icons.passwordCheck style={styles.nutrientIcon} width={18} height={18}/>
+            <icons.tan style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>탄수화물</Text>
             <Text style={styles.nutrientNum}>{totalCarbohydrate}g</Text>
             {carbVisible ? 
@@ -83,7 +121,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
         {/* 단백질 정보 */}
         <TouchableOpacity onPress={() => setProteinVisible(!proteinVisible)}>
           <View style={styles.nutrientTitleContainer}>
-            <icons.passwordCheck style={styles.nutrientIcon} width={18} height={18}/>
+            <icons.dan style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>단백질</Text>
             <Text style={styles.nutrientNum}>{totalProtein}g</Text>
             {proteinVisible ? 
@@ -105,7 +143,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
         {/* 지방 정보 */}
         <TouchableOpacity onPress={() => setFatVisible(!fatVisible)}>
           <View style={styles.nutrientTitleContainer}>
-            <icons.passwordCheck style={styles.nutrientIcon} width={18} height={18}/>
+            <icons.ji style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>지방</Text>
             <Text style={styles.nutrientNum}>{totalFat}g</Text>
             {fatVisible ? 
