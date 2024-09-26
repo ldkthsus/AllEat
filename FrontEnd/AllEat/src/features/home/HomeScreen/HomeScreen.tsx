@@ -150,10 +150,16 @@ const HomeScreen: React.FC = () => {
         </View>
         <View style={styles.progressContainer}>
             <View style={styles.progressWrapper}>
-              <CircularProgress progress={0.36} total={16000} current={5800} />
+              <CircularProgress progress={0.5} total={16000} current={5800} progressColor="#769BFF" />
+              <images.Subtract style={styles.overlayImage}
+              height={120}
+              width={120} />
             </View>
             <View style={styles.progressWrapper}>
-              <CircularProgress progress={0.22} total={1520} current={330} />
+              <CircularProgress progress={0.22} total={1520} current={330} progressColor="#93AAE7" />
+              <images.Subtract style={styles.overlayImage}
+              height={120}
+              width={120} />
             </View>
           </View>
       </View>

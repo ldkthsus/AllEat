@@ -136,13 +136,19 @@ export const styles = StyleSheet.create({
 // 원그래프
 progressContainer: {
   flexDirection: 'row',
-  justifyContent: 'space-around',  // 원형 프로그레스 바를 나란히 배치
+  justifyContent: 'space-evenly',  // 원형 프로그레스 바를 나란히 배치
   marginTop: 72,
   width: '100%',
-  backgroundColor: 'pink',
+  // backgroundColor: 'black',
 },
 progressWrapper: {
   alignItems: 'center',  // 프로그레스 바와 텍스트를 중앙에 배치
   justifyContent: 'center',
+},
+overlayImage: {
+  position: 'absolute',
+  width: 12, // 원형 그래프 크기와 맞춤
+  height: 12,
+  zIndex: 2,  // 이미지가 원형 그래프 위
 },
 });

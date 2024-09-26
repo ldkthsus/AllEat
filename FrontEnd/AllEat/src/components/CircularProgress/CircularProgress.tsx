@@ -9,6 +9,7 @@ interface CircularProgressProps {
   progress: number; // 0 to 1 사이의 값
   total: number; // 총 목표 값 (예: 16000원)
   current: number; // 현재 값 (예: 5800원)
+  progressColor?: string; // 프로그레스 바 색상
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
@@ -17,6 +18,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   progress = 0.36,
   total,
   current,
+  progressColor = '#769BFF',//기본 색상
 }) => {
   const radius = (size - strokeWidth) / 2;
   const center = size / 2;
@@ -47,7 +49,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
         {/* 진행된 부분 (피자 형태) */}
         <Path
           d={pathData}
-          fill="#769BFF" // 진행된 부분 색
+          fill={progressColor} // 진행된 부분 색
         />
       </Svg>
 
