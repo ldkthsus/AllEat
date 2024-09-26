@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpMethod;
-
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class MonthReportService {
@@ -38,6 +38,10 @@ public class MonthReportService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+
+    @Value("${fast.api.url}")
+    private String fastApi;
 
     public Map<String, Object> collectMonthReport(String yearMonth, HttpServletRequest request) {
         // JWT 토큰에서 사용자 식별
@@ -171,7 +175,7 @@ public class MonthReportService {
 
         // FastAPI로 데이터 전송
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(fastApiRequest, headers);
-        String fastApiUrl = "http://localhost:8000/fast-api/report/month"; // FastAPI URL
+        String fastApiUrl = fastApi + "/fast-api/report/month"; // FastAPI URL
         ResponseEntity<Map> responseEntity = restTemplate.exchange(fastApiUrl, HttpMethod.POST, entity, Map.class);
 
         return responseEntity.getBody();
