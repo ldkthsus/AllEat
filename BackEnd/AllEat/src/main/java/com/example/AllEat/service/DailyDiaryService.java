@@ -29,16 +29,16 @@ public class DailyDiaryService {
     public DailyDiaryResponseDTO getDailyDiary(HttpServletRequest request, List<AddMenuRequestDTO> addMenuRequests) {
         UserEntity findUser = userService.findByRequest(request);
         if (findUser != null) {
-            DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now()).orElseThrow(()-> new IllegalArgumentException("not found"));
+            DailyDiaryEntity findDailyDiary ;
+            findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), LocalDate.now());
             Integer mealCalories = 0;
             if (findDailyDiary == null) {
-                DailyDiaryEntity dailyDiaryEntity = DailyDiaryEntity.builder()
+                findDailyDiary = DailyDiaryEntity.builder()
                         .date(LocalDate.now())
                         .dailyCalories(mealCalories)
                         .user(findUser)
                         .build();
-                dailyDiaryRepository.save(dailyDiaryEntity);
-                return updateDailyDiary(dailyDiaryEntity, addMenuRequests, mealCalories, findUser);
+                dailyDiaryRepository.save(findDailyDiary);
             }
             return updateDailyDiary(findDailyDiary, addMenuRequests, mealCalories, findUser);
 
@@ -46,25 +46,32 @@ public class DailyDiaryService {
         return null;
     }
     public DailyDiaryResponseDTO updateDailyDiary(DailyDiaryEntity requestDailyDiary, List<AddMenuRequestDTO> addMenuRequests, Integer mealCalories, UserEntity requestUser) {
-        DiaryEntity diaryEntity = DiaryEntity.builder()
-                .diaryTime(DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
-                .mealCalories(mealCalories)
-                .dailyDiary(requestDailyDiary)
-                .build();
-        diaryRepository.save(diaryEntity);
+        DiaryEntity findDiary ;
+        findDiary = diaryRepository.findByDailyDiary_idAndDiaryTime(requestDailyDiary.getId(), DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()));
+        Integer dailyPrice = 0;
+        if (findDiary == null) {
+            findDiary = DiaryEntity.builder()
+                    .diaryTime(DiaryTime.valueOf(addMenuRequests.get(0).getDiaryTime()))
+                    .mealCalories(mealCalories)
+                    .dailyDiary(requestDailyDiary)
+                    .dailyPrice(dailyPrice)
+                    .build();
+            diaryRepository.save(findDiary);
+        }
 
         for (AddMenuRequestDTO menuIdRequest : addMenuRequests) {
             MenuEntity findMenu = menuRepository.findById(menuIdRequest.getMenuId()).orElseThrow(() -> new IllegalArgumentException("menu not found"));
             mealCalories += findMenu.getMenuCalories();
+            dailyPrice += findMenu.getMenuPrice();
             DiaryMappingEntity diaryMappingEntity = DiaryMappingEntity.builder()
-                    .diary(diaryEntity)
+                    .diary(findDiary)
                     .menu(findMenu)
                     .build();
 
             diaryMappingRepository.save(diaryMappingEntity);
         }
-        diaryEntity.updateCalories(mealCalories);
-        diaryRepository.save(diaryEntity);
+        findDiary.updateDetails(mealCalories, dailyPrice);
+        diaryRepository.save(findDiary);
 
         requestDailyDiary.updateCalories(mealCalories);
         dailyDiaryRepository.save(requestDailyDiary);
@@ -78,16 +85,16 @@ public class DailyDiaryService {
     public DailyDiaryResponseDTO modifiedDailyDiary(UpdateMenuRequestDTO updateMenuRequestDTO, HttpServletRequest request) {
         UserEntity findUser = userService.findByRequest(request);
         if (findUser != null) {
-            DailyDiaryEntity findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), updateMenuRequestDTO.getDate()).orElseThrow(()-> new IllegalArgumentException("not found"));
+            DailyDiaryEntity findDailyDiary ;
+            findDailyDiary = dailyDiaryRepository.findByUser_idAndDate(findUser.getId(), updateMenuRequestDTO.getDate());
             Integer dailyCalories = 0;
             if (findDailyDiary == null) {
-                DailyDiaryEntity dailyDiaryEntity = DailyDiaryEntity.builder()
+                findDailyDiary= DailyDiaryEntity.builder()
                         .date(updateMenuRequestDTO.getDate())
                         .dailyCalories(dailyCalories)
                         .user(findUser)
                         .build();
-                dailyDiaryRepository.save(dailyDiaryEntity);
-                return modifiedDailyDiaryDetails(dailyDiaryEntity, updateMenuRequestDTO, dailyCalories, findUser);
+                dailyDiaryRepository.save(findDailyDiary);
             }
 
             return modifiedDailyDiaryDetails(findDailyDiary, updateMenuRequestDTO, dailyCalories, findUser);
@@ -96,26 +103,33 @@ public class DailyDiaryService {
     }
 
     public DailyDiaryResponseDTO modifiedDailyDiaryDetails(DailyDiaryEntity requestDailyDiary, UpdateMenuRequestDTO requestUpdateDTO, Integer dailyCalories, UserEntity requestUser) {
-        DiaryEntity diaryEntity = DiaryEntity.builder()
-                .diaryTime(DiaryTime.valueOf(requestUpdateDTO.getAddMenuRequestDTOList().get(0).getDiaryTime()))
-                .mealCalories(dailyCalories)
-                .dailyDiary(requestDailyDiary)
-                .build();
-        diaryRepository.save(diaryEntity);
+        DiaryEntity findDiary ;
+        findDiary = diaryRepository.findByDailyDiary_idAndDiaryTime(requestDailyDiary.getId(), DiaryTime.valueOf(requestUpdateDTO.getAddMenuRequestDTOList().get(0).getDiaryTime()));
+        Integer dailyPrice = 0;
+        if (findDiary == null) {
+            findDiary = DiaryEntity.builder()
+                    .diaryTime(DiaryTime.valueOf(requestUpdateDTO.getAddMenuRequestDTOList().get(0).getDiaryTime()))
+                    .mealCalories(dailyCalories)
+                    .dailyDiary(requestDailyDiary)
+                    .dailyPrice(dailyPrice)
+                    .build();
+            diaryRepository.save(findDiary);
+        }
 
         for (AddMenuRequestDTO menuIdRequest : requestUpdateDTO.getAddMenuRequestDTOList()) {
             MenuEntity findMenu = menuRepository.findById(menuIdRequest.getMenuId()).orElseThrow(() -> new IllegalArgumentException("menu not found"));
             dailyCalories += findMenu.getMenuCalories();
+            dailyPrice += findMenu.getMenuPrice();
             DiaryMappingEntity diaryMappingEntity = DiaryMappingEntity.builder()
-                    .diary(diaryEntity)
+                    .diary(findDiary)
                     .menu(findMenu)
                     .build();
 
             diaryMappingRepository.save(diaryMappingEntity);
         }
 
-        diaryEntity.updateCalories(dailyCalories);
-        diaryRepository.save(diaryEntity);
+        findDiary.updateDetails(dailyCalories, dailyPrice);
+        diaryRepository.save(findDiary);
 
         requestDailyDiary.updateCalories(dailyCalories);
         dailyDiaryRepository.save(requestDailyDiary);

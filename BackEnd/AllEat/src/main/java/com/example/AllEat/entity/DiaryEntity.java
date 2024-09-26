@@ -33,7 +33,8 @@ public class DiaryEntity {
     public enum DiaryTime {
         BREAKFAST,
         LUNCH,
-        DINNER
+        DINNER,
+        SNACK
     }
 
     @OneToMany(mappedBy = "diary",orphanRemoval = true, fetch = FetchType.LAZY)
@@ -51,8 +52,9 @@ public class DiaryEntity {
     private Integer dailyPrice;
 
 
-    public void updateCalories(Integer calories) {
+    public void updateDetails(Integer calories, Integer price) {
         this.mealCalories = calories;
+        this.dailyPrice = price;
     }
 
     @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
