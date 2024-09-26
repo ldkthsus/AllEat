@@ -9,7 +9,12 @@ export const styles = StyleSheet.create({
     padding: 24,
   },
   nickname: {fontSize: 24, fontFamily: 'Pretendard-Bold', color: '#3d3d3d'},
-  email: {fontSize: 16, fontFamily: 'Pretendard-Light', color: '#3d3d3d'},
+  email: {
+    fontSize: 16,
+    fontFamily: 'Pretendard-Light',
+    color: '#3d3d3d',
+    marginBottom: 5,
+  },
   ageAndGender: {display: 'flex', flexDirection: 'row', alignItems: 'center'},
   age: {fontSize: 16, fontFamily: 'Pretendard-Bold', color: '#3d3d3d'},
   gender: {

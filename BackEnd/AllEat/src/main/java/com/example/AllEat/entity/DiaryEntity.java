@@ -26,7 +26,7 @@ public class DiaryEntity {
 
     @Enumerated(EnumType.STRING)
     private DiaryTime diaryTime;
-    
+
     @Column(name = "meal_calories")
     private Integer mealCalories;
 
@@ -37,27 +37,25 @@ public class DiaryEntity {
         SNACK
     }
 
-    @OneToMany(mappedBy = "diary",orphanRemoval = true, fetch = FetchType.LAZY)
-//    @JsonManagedReference
-    @JsonBackReference
+    @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference // 부모 측에 해당하는 어노테이션
     private List<DiaryMappingEntity> diaryMapping;
 
     @ManyToOne
     @JoinColumn(name = "daily_diary_id")
-//    @JsonManagedReference
-    @JsonBackReference
+    @JsonBackReference // 자식 측에 해당하는 어노테이션
     private DailyDiaryEntity dailyDiary;
 
     @Column(name = "daily_price")
     private Integer dailyPrice;
 
+    public void updateCalories(Integer calories) {
 
-    public void updateDetails(Integer calories, Integer price) {
         this.mealCalories = calories;
         this.dailyPrice = price;
     }
 
     @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MealPayEntity> mealpay;
-
 }
+

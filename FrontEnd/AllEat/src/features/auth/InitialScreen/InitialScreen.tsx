@@ -8,11 +8,14 @@ import {styles} from './InitialScreen.styles'; // 분리된 스타일을 임포�
 import CustomButton from '../../../components/CustomButton';
 import FormField from '../../../components/FormField/FormField';
 import {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
 import GenderSelection from '../components/GenderSelection/GenderSelection';
 import ActivityLevelSelection from '../components/ActivityLevelSelection/ActivityLevelSelection';
 import api from '../../../utils/api';
+import {AppDispatch} from '../../../redux/store';
+import {fetchUserInfo} from '../../../redux/features/infoSlice';
 
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -20,6 +23,7 @@ type InitialScreenNavigationProp = NativeStackNavigationProp<
 >;
 const InitialScreen: React.FC = () => {
   const navigation = useNavigation<InitialScreenNavigationProp>();
+
   const [weight, setWeight] = useState({
     weight: '',
   });
@@ -46,7 +50,7 @@ const InitialScreen: React.FC = () => {
   const [isBreakfastEnabled, setIsBreakfastEnabled] = useState(false);
   const [isLunchEnabled, setIsLunchEnabled] = useState(false);
   const [isDinnerEnabled, setIsDinnerEnabled] = useState(false);
-
+  const dispatch = useDispatch<AppDispatch>();
   const toggleAlarm = (type: 'breakfast' | 'lunch' | 'dinner') => {
     if (type === 'breakfast') {
       setIsBreakfastEnabled(!isBreakfastEnabled);
@@ -99,6 +103,13 @@ const InitialScreen: React.FC = () => {
       }),
       type: 'application/json',
     });
+    console.log({
+      user_age: Number(form.user_age),
+      user_gender: form.user_gender,
+      user_height: parseFloat(form.user_height),
+      activity_amount: form.activity_amount,
+      user_name: form.user_name,
+    });
     console.log(formData);
     console.log(weight);
     console.log(goal);
@@ -132,6 +143,7 @@ const InitialScreen: React.FC = () => {
       // alarm에 대한 POST 요청
       const alarmResponse = await api.post('/AllEat/alarm', alarmTime);
       console.log('Weight Response:', alarmResponse.data);
+      dispatch(fetchUserInfo());
       // 모든 요청이 성공하면 약관페이지로 이동
       navigation.navigate('Agreement');
     } catch (error) {

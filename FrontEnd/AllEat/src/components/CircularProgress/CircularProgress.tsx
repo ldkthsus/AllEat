@@ -1,0 +1,60 @@
+import React from 'react';
+import { View, Text } from 'react-native';
+import Svg, { Path, Circle } from 'react-native-svg';
+import { styles } from './CircularProgress.styles';
+
+interface CircularProgressProps {
+  size?: number;
+  strokeWidth?: number;
+  progress: number; // 0 to 1 사이의 값
+  total: number; // 총 목표 값 (예: 16000원)
+  current: number; // 현재 값 (예: 5800원)
+}
+
+const CircularProgress: React.FC<CircularProgressProps> = ({
+  size = 120,
+  strokeWidth = 10,
+  progress = 0.36,
+  total,
+  current,
+}) => {
+  const radius = (size - strokeWidth) / 2;
+  const center = size / 2;
+  const angle = progress * 2 * Math.PI;
+
+  const x = center + radius * Math.sin(angle);
+  const y = center - radius * Math.cos(angle);
+
+  const largeArcFlag = progress > 0.5 ? 1 : 0;
+
+  const pathData = `
+    M ${center} ${center - radius}
+    A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x} ${y}
+    L ${center} ${center}
+    Z
+  `;
+
+  return (
+    <View style={styles.container}>
+      <Svg width={size} height={size} style={styles.svgContainer}>
+        {/* 안이 채워진 배경 원 */}
+        <Circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="#E0E0E0" // 채워진 배경 색
+        />
+        {/* 진행된 부분 (피자 형태) */}
+        <Path
+          d={pathData}
+          fill="#769BFF" // 진행된 부분 색
+        />
+      </Svg>
+
+      <Text style={styles.currentText}>{current}₩</Text>
+      <Text style={styles.totalText}>/{total}₩</Text>
+    </View>
+  );
+};
+
+export default CircularProgress;

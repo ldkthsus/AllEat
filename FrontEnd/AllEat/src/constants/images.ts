@@ -21,6 +21,9 @@ import greyCookie from '../assets/images/greyCookies.svg';
 import payCardWhite from '../assets/images/payCardWhite.svg';
 import payCardWhitePNG from '../assets/images/payCardWhite.png';
 import rightArrow from '../assets/images/rightArrow.svg';
+import Subtract from '../assets/images/Subtract.svg';
+import Exclude from '../assets/images/Exclude.svg';
+
 
 const images = {
   intro,
@@ -45,7 +48,9 @@ const images = {
   greyCookie,
   payCardWhite,
   payCardWhitePNG,
-  rightArrow
+  rightArrow,
+  Subtract,
+  Exclude,
 };
 
 export default images;

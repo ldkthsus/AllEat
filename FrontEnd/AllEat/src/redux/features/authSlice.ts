@@ -30,6 +30,7 @@ export const signupUser = createAsyncThunk(
   async (signupData: AuthData, {rejectWithValue}) => {
     try {
       // 회원가입 API 요청
+      console.log('회원가입 요청 : ', signupData);
       await axios.post(`${BACK_URL}/AllEat/users/join`, signupData);
 
       console.log('회원가입 성공!');
@@ -68,6 +69,7 @@ export const loginUser = createAsyncThunk(
       const token = response.headers.authorization.split(' ')[1]; // 토큰 추출
       return {token}; // 토큰 반환
     } catch (error: any) {
+      console.error(error);
       return rejectWithValue(error.response?.data?.message || '로그인 실패');
     }
   },
