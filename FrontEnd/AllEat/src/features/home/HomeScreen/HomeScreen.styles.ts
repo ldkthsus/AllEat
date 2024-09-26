@@ -6,10 +6,9 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     height: '8.3%',
-    flexDirection: 'row',  // 좌우로 아이콘을 배치
-    alignItems: 'center',  // 아이콘을 세로로 중앙 정렬
+    flexDirection: 'row', // 좌우로 아이콘을 배치
+    alignItems: 'center', // 아이콘을 세로로 중앙 정렬
     justifyContent: 'space-between', // 좌우에 아이콘을 배치
-
   },
   notificationIcon: {
     position: 'absolute',
@@ -56,7 +55,6 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Pretendard-Light',
     marginTop: 10,
-
   },
   eatpayValue: {
     fontSize: 15,
@@ -70,7 +68,7 @@ export const styles = StyleSheet.create({
   kiki:{
     // position: 'absolute',
   },
-  kikiShadow: { 
+  kikiShadow: {
     position: 'absolute',
     marginTop: 75,
     marginLeft: 18,

@@ -13,10 +13,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    height: '8%',
+    height: 60,
   },
   myPageTitleText: {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: 'Pretendard-Bold',
     color: '#3d3d3d',
   },
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
   boxText: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
   boxIcon: {position: 'absolute', right: 20},
   titleBox: {
-    gap: 5,
+    gap: 10,
     padding: 10,
     width: '100%',
     flexDirection: 'row',
@@ -65,7 +65,13 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     padding: 10,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+  },
+  noAlarm: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    textAlign: 'left',
   },
   text: {flexDirection: 'row', width: '50%', gap: 5},
   alarm: {flexDirection: 'row', width: '33%', gap: 5},
@@ -74,5 +80,30 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 20,
+  },
+  input: {
+    width: '100%',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
   },
 });
