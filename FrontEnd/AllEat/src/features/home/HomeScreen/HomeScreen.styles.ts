@@ -2,13 +2,20 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   topbar: {
-    position: 'relative',
+    position: 'absolute', // 고정된 상단 바
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 1000,
     backgroundColor: 'white',
-    width: '100%',
-    height: '8.3%',
-    flexDirection: 'row', // 좌우로 아이콘을 배치
-    alignItems: 'center', // 아이콘을 세로로 중앙 정렬
-    justifyContent: 'space-between', // 좌우에 아이콘을 배치
+    height: 70, // 높이를 조정
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16, // 좌우 패딩 조정
+  },
+  scrollContainer: {
+    marginTop: 70, // 상단 바 크기만큼 마진 추가
   },
   notificationIcon: {
     position: 'absolute',
@@ -44,9 +51,9 @@ export const styles = StyleSheet.create({
   mainbox: {
     flex: 1,
     width: '100%',
-    height: '20.3%',
     backgroundColor: '#EAF0FF',
     alignItems: 'center',
+    paddingBottom: 48,
   },
   allText: {
     flexDirection: 'row',
@@ -137,7 +144,7 @@ export const styles = StyleSheet.create({
 progressContainer: {
   flexDirection: 'row',
   justifyContent: 'space-evenly',  // 원형 프로그레스 바를 나란히 배치
-  marginTop: 72,
+  marginTop: 65,
   width: '100%',
   // backgroundColor: 'black',
 },
@@ -151,4 +158,18 @@ overlayImage: {
   height: 12,
   zIndex: 2,  // 이미지가 원형 그래프 위
 },
+whiteBox: {
+  backgroundColor: 'white',
+  color: 'white',
+  // justifyContent: 'flex-start',
+  flexDirection: 'row',
+},
+reportBtn: {
+  flexDirection: 'row',
+  marginLeft: '3%',
+},
+reportBtnText: {
+  fontFamily: 'Pretendard-Bold',
+  fontSize: 19,
+}
 });
