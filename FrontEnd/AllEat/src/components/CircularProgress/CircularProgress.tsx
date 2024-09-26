@@ -10,6 +10,9 @@ interface CircularProgressProps {
   total: number; // 총 목표 값 (예: 16000원)
   current: number; // 현재 값 (예: 5800원)
   progressColor?: string; // 프로그레스 바 색상
+  currentTextColor?: string; // 현재 텍스트 색상
+  totalTextColor?: string; // 총 텍스트 색상
+  unit?: string; // 단위 (₩, kcal 등)
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
@@ -19,6 +22,9 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   total,
   current,
   progressColor = '#769BFF',//기본 색상
+  currentTextColor = '#769BFF', // 기본 현재 텍스트 색상
+  totalTextColor = 'black', // 기본 총 텍스트 색상
+  unit = '₩', // 기본 단위는 '₩'로 설정
 }) => {
   const radius = (size - strokeWidth) / 2;
   const center = size / 2;
@@ -37,7 +43,7 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   `;
 
   return (
-    <View style={styles.container}>
+    <View style={styles.circleContainer}>
       <Svg width={size} height={size} style={styles.svgContainer}>
         {/* 안이 채워진 배경 원 */}
         <Circle
@@ -52,9 +58,13 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           fill={progressColor} // 진행된 부분 색
         />
       </Svg>
-
-      <Text style={styles.currentText}>{current}₩</Text>
-      <Text style={styles.totalText}>/{total}₩</Text>
+      <Text style={[styles.currentText, { color: currentTextColor }]}>
+        {current}{unit}
+      </Text>
+      {/* 총 값 텍스트 */}
+      <Text style={[styles.totalText, { color: totalTextColor }]}>
+        /{total}{unit}
+      </Text>
     </View>
   );
 };
