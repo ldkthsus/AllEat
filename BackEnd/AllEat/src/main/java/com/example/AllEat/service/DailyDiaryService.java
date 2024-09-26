@@ -41,6 +41,7 @@ public class DailyDiaryService {
                 dailyDiaryRepository.save(findDailyDiary);
             }
             return updateDailyDiary(findDailyDiary, addMenuRequests, mealCalories, findUser);
+
         }
         return null;
     }
@@ -95,6 +96,7 @@ public class DailyDiaryService {
                         .build();
                 dailyDiaryRepository.save(findDailyDiary);
             }
+
             return modifiedDailyDiaryDetails(findDailyDiary, updateMenuRequestDTO, dailyCalories, findUser);
         }
         return null;
