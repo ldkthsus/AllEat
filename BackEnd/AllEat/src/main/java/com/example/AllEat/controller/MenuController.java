@@ -6,6 +6,7 @@ import com.example.AllEat.dto.menu.AddMenuRequestDTO;
 import com.example.AllEat.dto.menu.UpdateMenuRequestDTO;
 import com.example.AllEat.entity.MenuEntity;
 import com.example.AllEat.service.DailyDiaryService;
+import com.example.AllEat.service.FoodAddService;
 import com.example.AllEat.service.MenuService;
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ public class MenuController {
     private final MenuService menuService;
     private final UserService userService;
     private final DailyDiaryService dailyDiaryServie;
+    private final FoodAddService foodAddService;
 
     // 메뉴와 레스토랑 추가
     @PostMapping("/add-menu")
@@ -89,4 +91,11 @@ public class MenuController {
         return ResponseEntity.status(HttpStatus.OK).body(modifiedDailyDiary);
 
     }
+
+    @PostMapping("/add-cal")
+    public ResponseEntity<?> addFoodInfo(HttpServletRequest request){
+        foodAddService.addFood();
+        return ResponseEntity.status(HttpStatus.CREATED).body("successfully added");
+    }
+
 }
