@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from middlewares import jwt_filter
 from routers import report  # report 라우터를 import
+from routers import imagepercieve
 
 # .env 파일 로드
 load_dotenv()
@@ -28,6 +29,7 @@ app.middleware("http")(jwt_filter)
 
 # report 관련 라우터 등록
 app.include_router(report.router, prefix="/fast-api/report")
+app.include_router(imagepercieve.router, prefix="/fast-api/image")
 
 # FastAPI 서버 실행
 if __name__ == "__main__":

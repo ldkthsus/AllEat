@@ -1,6 +1,10 @@
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import date
+from sqlalchemy import Column, TEXT, INT, BIGINT, FLOAT
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 class DayDiaryRequest(BaseModel):
     total_carbohydrates: Optional[float] = None
@@ -37,3 +41,15 @@ class MonthDiaryRequest(BaseModel):
     average_calories: Optional[float] = None
     total_cost: Optional[int] = None
     most_common_restaurant_type: Optional[str] = None
+
+class FoodInfo(Base):
+    __tablename__ = "food_info"
+
+    id = Column(BIGINT, nullable=False, autoincrement=True, primary_key=True)
+    menu_name = Column(TEXT, nullable=False)
+    menu_weight = Column(FLOAT, nullable=False)
+    menu_calories = Column(FLOAT, nullable=False)
+    menu_carbohydrate = Column(FLOAT, nullable=False)
+    menu_protein = Column(FLOAT, nullable=False)
+    menu_fat = Column(FLOAT, nullable=False)
+    
