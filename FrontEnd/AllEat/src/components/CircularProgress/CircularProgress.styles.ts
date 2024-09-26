@@ -13,10 +13,12 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: '#769BFF',
     fontFamily: 'Pretendard-SemiBold',
+    zIndex: 1000,
   },
   totalText: {
     fontSize: 15,
     color: 'black',
     fontFamily: 'Pretendard-SemiBold',
+    zIndex: 1000,
   },
 });
