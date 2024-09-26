@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
+  circleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -16,9 +16,9 @@ export const styles = StyleSheet.create({
     zIndex: 1000,
   },
   totalText: {
-    fontSize: 15,
+    fontSize: 14,
     color: 'black',
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: 'Pretendard-Light',
     zIndex: 1000,
   },
 });
