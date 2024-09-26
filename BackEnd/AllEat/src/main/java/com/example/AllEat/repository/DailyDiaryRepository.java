@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface DailyDiaryRepository extends JpaRepository<DailyDiaryEntity, Integer> {
 
-    Optional<DailyDiaryEntity> findByUser_idAndDate(Integer userId, LocalDate localDate);
+  DailyDiaryEntity findByUser_idAndDate(Integer userId, LocalDate localDate);
     // UserEntity와 LocalDate를 기반으로 검색
     DailyDiaryEntity findByUserAndDate(UserEntity user, LocalDate date);
 
