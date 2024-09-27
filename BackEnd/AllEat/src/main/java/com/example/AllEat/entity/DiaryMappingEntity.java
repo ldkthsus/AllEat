@@ -21,6 +21,9 @@ public class DiaryMappingEntity {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "person_count")
+    private Integer personCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
     @JsonManagedReference

@@ -1,6 +1,7 @@
 package com.example.AllEat.service;
 
 import com.example.AllEat.dto.menu.MenuCreateDTO;
+import com.example.AllEat.dto.menu.MenuPossibleDTO;
 import com.example.AllEat.entity.MenuEntity;
 import com.example.AllEat.entity.RestaurantsEntity;
 import com.example.AllEat.entity.UserEntity;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class MenuService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
     private final RestaurantsRepository restaurantsRepository;
+    private final UserService userService;
 
     // JWT 토큰을 이용해 사용자 식별
     public UserEntity findUserByRequest(HttpServletRequest request) {
@@ -135,9 +138,13 @@ public class MenuService {
         RestaurantsEntity restaurant = restaurantsService.findRestaurantById(restaurantId);
         return menuRepository.findByRestaurants(restaurant);
     }
+//
+//    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
+//        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
+//        return findMenu;
+//    }
 
-    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
-        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
-        return findMenu;
-    }
+//    public List<MenuPossibleDTO> getUserPossibleMenu(UserEntity requestUser,LocalDate date) {
+//
+//    }
 }
