@@ -5,15 +5,14 @@ FROM python:3.9.13-slim
 WORKDIR /app
 
 # requirements.txt 파일을 작업 디렉토리로 복사
-COPY requirementsImg.txt .
+COPY requirements.txt .
 
 # pip 업그레이드
 RUN pip install --upgrade pip
 
 
 # 필요한 Python 패키지 설치
-RUN pip install --no-cache-dir -r requirementsImg.txt
-
+RUN pip install --no-cache-dir -r requirements.txt
 
 # 전체 프로젝트 파일을 작업 디렉토리로 복사
 COPY . .

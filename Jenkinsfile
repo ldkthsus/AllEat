@@ -22,9 +22,9 @@ pipeline {
                         sh 'docker build -t alleat/alleat-image .'
                     }
                     // Build Fast_API Docker image
-                    // dir('BackEnd/AllEat') {
-                    //     sh 'docker build -t happyjellyfish/fastapi .'
-                    // }
+                    dir('BackEnd/Fast_API') {
+                        sh 'docker build -t alleat/fastapi-image .'
+                    }
                 }
             }
         }
