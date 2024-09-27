@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   },
   scrollContainer: {
     marginTop: 70, // 상단 바 크기만큼 마진 추가
+    flex: 1,
   },
   notificationIcon: {
     position: 'absolute',
@@ -171,5 +172,16 @@ reportBtn: {
 reportBtnText: {
   fontFamily: 'Pretendard-Bold',
   fontSize: 19,
+},
+recordBox: {
+  justifyContent: 'space-evenly',
+  flexDirection: 'row',
+  backgroundColor: 'white',
+  marginBottom:50,
+},
+leftRecord: {
+  backgroundColor: 'white',
+},
+rightRecord: {
 }
 });
