@@ -73,7 +73,7 @@ export const styles = StyleSheet.create({
   re_checkIcon: {
     marginTop: 13,
   },
-  kiki:{
+  kiki: {
     // position: 'absolute',
   },
   kikiShadow: {
@@ -87,7 +87,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'space-between',
-    flexWrap:'wrap',
+    flexWrap: 'wrap',
     width: '100%', // 전체 너비를 사용
     // marginLeft: 90, // 캐릭터 왼쪽 여백
     // marginRight: 180,
@@ -97,8 +97,8 @@ export const styles = StyleSheet.create({
   charInfo: {
     // position: 'absolute',
     flexDirection: 'column',
-    left: 0,  // 왼쪽에 고정
-    top: 0,  // 필요한 경우 상단에 위치
+    left: 0, // 왼쪽에 고정
+    top: 0, // 필요한 경우 상단에 위치
     marginLeft: 30,
   },
   // 게이지 새로 추가
@@ -127,61 +127,66 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Medium',
   },
   gaugeBox: {
-    flexDirection: 'row',  // 가로로 배치
-    height: 20,  // 게이지 높이 설정
+    flexDirection: 'row', // 가로로 배치
+    height: 20, // 게이지 높이 설정
     width: 130,
-    borderRadius: 7,  // 전체 게이지 바의 둥근 모서리
-    backgroundColor: '#EAF0FF',  // 배경색 (남는 부분)
-    overflow: 'hidden',  // 둥근 모서리에서 넘치는 부분 숨김
+    borderRadius: 7, // 전체 게이지 바의 둥근 모서리
+    backgroundColor: '#EAF0FF', // 배경색 (남는 부분)
+    overflow: 'hidden', // 둥근 모서리에서 넘치는 부분 숨김
   },
   gaugeSegment: {
-    height: '100%',  // 세그먼트가 전체 게이지 높이를 채우도록
+    height: '100%', // 세그먼트가 전체 게이지 높이를 채우도록
   },
   nutrientIcon: {
     marginTop: 5,
     marginRight: 5,
   },
-// 원그래프
-progressContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-evenly',  // 원형 프로그레스 바를 나란히 배치
-  marginTop: 65,
-  width: '100%',
-  // backgroundColor: 'black',
-},
-progressWrapper: {
-  alignItems: 'center',  // 프로그레스 바와 텍스트를 중앙에 배치
-  justifyContent: 'center',
-},
-overlayImage: {
-  position: 'absolute',
-  width: 12, // 원형 그래프 크기와 맞춤
-  height: 12,
-  zIndex: 2,  // 이미지가 원형 그래프 위
-},
-whiteBox: {
-  backgroundColor: 'white',
-  color: 'white',
-  // justifyContent: 'flex-start',
-  flexDirection: 'row',
-},
-reportBtn: {
-  flexDirection: 'row',
-  marginLeft: '3%',
-},
-reportBtnText: {
-  fontFamily: 'Pretendard-Bold',
-  fontSize: 19,
-},
-recordBox: {
-  justifyContent: 'space-evenly',
-  flexDirection: 'row',
-  backgroundColor: 'white',
-  marginBottom:50,
-},
-leftRecord: {
-  backgroundColor: 'white',
-},
-rightRecord: {
-}
+  // 원그래프
+  progressContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly', // 원형 프로그레스 바를 나란히 배치
+    marginTop: 65,
+    width: '100%',
+    // backgroundColor: 'black',
+  },
+  progressWrapper: {
+    alignItems: 'center', // 프로그레스 바와 텍스트를 중앙에 배치
+    justifyContent: 'center',
+  },
+  overlayImage: {
+    position: 'absolute',
+    width: 12, // 원형 그래프 크기와 맞춤
+    height: 12,
+    zIndex: 2, // 이미지가 원형 그래프 위
+  },
+  whiteBox: {
+    backgroundColor: 'white',
+    color: 'white',
+    // justifyContent: 'flex-start',
+    flexDirection: 'row',
+  },
+  reportBtn: {
+    flexDirection: 'row',
+    marginLeft: '3%',
+  },
+  reportBtnText: {
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 19,
+  },
+  recordBox: {
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    marginBottom: 50,
+  },
+  leftRecord: {
+    backgroundColor: 'white',
+  },
+  rightRecord: {},
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
 });

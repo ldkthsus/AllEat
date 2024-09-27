@@ -1,31 +1,31 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   recordContainer: {
     width: 150,
     height: 150,
-    position: 'relative',  // 텍스트와 아이콘을 배치할 수 있도록 설정
+    position: 'relative', // 텍스트와 아이콘을 배치할 수 있도록 설정
   },
   overlay: {
     position: 'absolute',
-    top: 0,
+    top: -20,
     left: 0,
     right: 0,
     bottom: 0,
     justifyContent: 'center',
-    paddingHorizontal: 10, 
+    paddingHorizontal: 10,
   },
   priceText: {
     position: 'absolute',
-    top: 5,
+    top: 46,
     right: 10,
     color: '#FFF',
     fontSize: 12,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-SemiBold',
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontFamily: 'Pretendard-Bold',
     color: '#FFF',
     marginTop: 40,
   },
@@ -33,12 +33,13 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: '#FFF',
     marginTop: 5,
+    fontFamily: 'Pretendard-SemiBold',
   },
   iconWrapper: {
     position: 'absolute',
-    top: 10,
+    top: 56,
     right: 10,
-    backgroundColor: '#FFF',
+    // backgroundColor: '#FFF',
     borderRadius: 20,
     padding: 5,
   },
