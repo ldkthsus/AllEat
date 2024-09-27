@@ -27,9 +27,9 @@ const NutrientPieChart: React.FC<NutrientPieChartProps> = ({
 
   // 원의 전체 각도 중 각 부분의 끝 각도를 누적
   const angles = [
-    { startAngle: 0, endAngle: carbAngle, color: '#D3DFFF', label: '탄수화물', percentage: carbPercentage.toFixed(1) },
+    { startAngle: 0, endAngle: carbAngle, color: '#B0C5FF', label: '탄수화물', percentage: carbPercentage.toFixed(1) },
     { startAngle: carbAngle, endAngle: carbAngle + proteinAngle, color: '#769BFF', label: '단백질', percentage: proteinPercentage.toFixed(1) },
-    { startAngle: carbAngle + proteinAngle, endAngle: carbAngle + proteinAngle + fatAngle, color: '#B0C5FF', label: '지방', percentage: fatPercentage.toFixed(1) },
+    { startAngle: carbAngle + proteinAngle, endAngle: carbAngle + proteinAngle + fatAngle, color: '#D3DFFF', label: '지방', percentage: fatPercentage.toFixed(1) },
   ];
 
   // 각 영역의 Path를 생성하는 함수
@@ -95,7 +95,6 @@ const styles = StyleSheet.create({
   excludeWhite: {
     position: 'absolute',
   },
-
 });
 
 export default NutrientPieChart;

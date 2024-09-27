@@ -76,7 +76,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
               <View style={styles.mealTitleContainer}>
                 <icons.passwordCheck style={styles.mealIcon} width={18} height={18}/>
                 <Text style={styles.feeMenuText}>{item.menu_name}</Text>
-                <Text style={styles.feePriceText}>₩{item.cost}</Text>
+                <Text style={styles.feePriceText}>{item.calories}kcal</Text>
               </View>
               
             </View>

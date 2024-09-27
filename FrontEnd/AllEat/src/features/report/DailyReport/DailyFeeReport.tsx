@@ -56,7 +56,7 @@ const DailyFeeReport: React.FC<DailyFeeReportProps> = ({ goalFee, totalPrice, fo
       </View>
       <View style={styles.feeContainer}>
         <Text style={styles.feeTitle}>
-          식비 내역
+          식비 정보
         </Text>
         <View>
             {(isExpanded ? foodDetails : foodDetails.slice(0, 3)).map((item, index) => (

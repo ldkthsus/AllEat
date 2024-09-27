@@ -50,7 +50,7 @@ const WeeklyFeeReport: React.FC<WeeklyFeeReportProps> = ({ goalFee, costAvg, cos
   return (
     <View style={styles.dailyFeeReportContainer}>
       <Text style={styles.dailyFeeReportTitle}>
-        한주 평균 {costAvg}원을 소비했어요!
+        한 주 평균 {costAvg}원을 소비했어요!
       </Text>
       <View style={styles.feeBarContainer}>
         {costAvg > goalFee && (
@@ -76,7 +76,7 @@ const WeeklyFeeReport: React.FC<WeeklyFeeReportProps> = ({ goalFee, costAvg, cos
       </View>
       <View style={styles.feeContainer}>
         <Text style={styles.feeTitle}>
-          식비 내역
+          식비 정보
         </Text>
         <View style={styles.feeDetailContainer}>
             {(isExpanded ? costRanking : costRanking.slice(0, 3)).map((item, index) => (
