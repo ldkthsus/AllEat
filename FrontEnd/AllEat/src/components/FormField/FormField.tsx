@@ -6,8 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import React, {useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+import React from 'react';
 import {icons} from '../../constants';
 import {styles} from './FormField.styles'; // 스타일 파일 임포트
 
@@ -18,9 +17,11 @@ interface FormFieldProps extends TextInputProps {
   handleChangeText: (text: string) => void;
   unit?: string;
   otherStyles?: StyleProp<ViewStyle>; // Optional Tailwind-style classes
+  otherInputStyles?: StyleProp<ViewStyle>; // Optional Tailwind-style classes
   isNumeric?: boolean; // 숫자 입력 필드 여부
   isDecimal?: boolean; // 소수점 입력 허용 여부
   isEqual?: boolean;
+  abled?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -30,9 +31,11 @@ const FormField: React.FC<FormFieldProps> = ({
   placeholder,
   handleChangeText,
   otherStyles, // 추가된 스타일
+  otherInputStyles,
   isNumeric = false, // 숫자 입력 필드 여부를 기본값 false로 설정
   isDecimal = false, // 소수점 입력 허용 여부를 기본값 false로 설정
   isEqual = false,
+  abled = true,
   ...props
 }) => {
   const handleTextChange = (text: string) => {
@@ -56,15 +59,21 @@ const FormField: React.FC<FormFieldProps> = ({
   return (
     <View style={[styles.container, !title && styles.password, otherStyles]}>
       {title && <Text style={styles.label}>{title}</Text>}
-      <View style={styles.inputContainer}>
+      <View
+        style={[
+          abled ? styles.inputContainer : styles.inputContainerDisabled,
+          otherInputStyles,
+        ]}>
         <TextInput
-          style={styles.textInput}
-          value={value}
+          style={[styles.textInput, otherInputStyles]}
+          value={abled ? value : isNumeric ? '0' : '집밥'}
           placeholder={placeholder}
           placeholderTextColor="lightgray"
           onChangeText={handleTextChange}
           keyboardType={isNumeric ? 'numeric' : 'default'} // 숫자 입력을 위한 keyboardType 설정
           secureTextEntry={title === 'Password'}
+          editable={abled}
+          selectTextOnFocus={abled}
           {...props}
         />
 

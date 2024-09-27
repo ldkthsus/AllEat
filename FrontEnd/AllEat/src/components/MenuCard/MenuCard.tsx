@@ -1,7 +1,7 @@
 // components/MenuCard.tsx
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {icons} from '../../../../constants';
+import {icons} from '../../constants';
 import {styles} from './MenuCard.styles';
 
 type MenuCardProps = {

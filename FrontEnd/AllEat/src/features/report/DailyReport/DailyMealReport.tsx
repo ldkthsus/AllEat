@@ -40,13 +40,6 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
   const proteinPercentage = (totalProtein / totalNutrients) * 100;
   const fatPercentage = (totalFat / totalNutrients) * 100;
 
-  const radius = 50; // 원의 반지름
-  const circumference = 2 * Math.PI * radius; // 원의 둘레
-
-  // 각각의 offset 계산
-  const carbOffset = ((100 - carbPercentage) / 100) * circumference;
-  const proteinOffset = ((100 - proteinPercentage) / 100) * circumference;
-  const fatOffset = ((100 - fatPercentage) / 100) * circumference;
   
   return (
     <View style={styles.dailyMealReportContainer}>
@@ -92,7 +85,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
             </View>            
             <View style={styles.kcalGraphDetailBox}>
               <icons.ji width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>탄수화물 {totalFat}g</Text>
+              <Text style={styles.kcalGraphDetailText}>지방 {totalFat}g</Text>
             </View>
           </View>
         </View>

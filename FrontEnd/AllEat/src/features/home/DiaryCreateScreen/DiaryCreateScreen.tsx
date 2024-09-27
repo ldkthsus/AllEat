@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -15,14 +15,27 @@ import {images} from '../../../constants';
 import {styles} from './DiaryCreateScreen.styles';
 import CustomButton from '../../../components/CustomButton';
 import DiaryCard from '../components/DiaryCard/DiaryCard';
-import MenuCard from '../components/MenuCard/MenuCard';
+import MenuCard from '../../../components/MenuCard/MenuCard';
 import FormField from '../../../components/FormField/FormField';
-
+import NutrientPieChart from '../../../components/NutrientPieChart/NutrientPieChart';
 type DiaryCreateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'DiaryCreate'
 >;
 type DiaryCreateRouteProp = RouteProp<RootStackParamList, 'DiaryCreate'>;
+const calculateNutrients = (
+  value: number,
+  carbPercentage: number,
+  proteinPercentage: number,
+  fatPercentage: number,
+) => {
+  const newCarbohydrate = (carbPercentage / 100) * value;
+  const newProtein = (proteinPercentage / 100) * value;
+  const newFat = (fatPercentage / 100) * value;
+  const newCalories = newFat * 9 + newCarbohydrate * 3 + newProtein * 3;
+
+  return {newCarbohydrate, newProtein, newFat, newCalories};
+};
 
 const DiaryCreateScreen: React.FC = () => {
   const navigation = useNavigation<DiaryCreateScreenNavigationProp>();
@@ -50,6 +63,80 @@ const DiaryCreateScreen: React.FC = () => {
     menu_price: 0,
     menu_value: 1,
   });
+  // totalNutrients 상태 추가
+  const [totalNutrients, setTotalNutrients] = useState(
+    form.menu_carbohydrate + form.menu_protein + form.menu_fat,
+  );
+
+  // 탄단지 비율
+  const [carbPercentage, setCardPercentage] = useState(
+    (form.menu_carbohydrate / totalNutrients) * 100,
+  );
+  const [proteinPercentage, setProteinPercentage] = useState(
+    (form.menu_protein / totalNutrients) * 100,
+  );
+  const [fatPercentage, setFatPercentage] = useState(
+    (form.menu_fat / totalNutrients) * 100,
+  );
+
+  // form의 탄수화물, 단백질, 지방이 변경될 때 totalNutrients 값 업데이트
+  useEffect(() => {
+    const newTotalNutrients =
+      form.menu_carbohydrate + form.menu_protein + form.menu_fat;
+    setTotalNutrients(newTotalNutrients);
+    setCardPercentage(
+      Math.round((form.menu_carbohydrate / newTotalNutrients) * 100),
+    );
+    setProteinPercentage(
+      Math.round((form.menu_protein / newTotalNutrients) * 100),
+    );
+    setFatPercentage(Math.round((form.menu_fat / newTotalNutrients) * 100));
+  }, [form.menu_carbohydrate, form.menu_protein, form.menu_fat]);
+
+  // 용량을 변경할 때 탄단지 및 칼로리 업데이트
+  useEffect(() => {
+    const {newCarbohydrate, newProtein, newFat, newCalories} =
+      calculateNutrients(
+        totalNutrients,
+        carbPercentage,
+        proteinPercentage,
+        fatPercentage,
+      );
+
+    // 값이 변경될 때만 setForm을 호출하여 무한 루프 방지
+    if (
+      totalNutrients !== 0 &&
+      (form.menu_carbohydrate !== newCarbohydrate ||
+        form.menu_protein !== newProtein ||
+        form.menu_fat !== newFat ||
+        form.menu_calories !== newCalories)
+    ) {
+      setForm({
+        ...form,
+        menu_carbohydrate: newCarbohydrate,
+        menu_protein: newProtein,
+        menu_fat: newFat,
+        menu_calories: newCalories,
+      });
+    }
+  }, [totalNutrients]); // 용량 변경 시에만 실행되도록 의존성 배열 설정
+
+  const addMealToList = () => {
+    setMealList(prevMealList => [
+      ...prevMealList,
+      {
+        restaurant: form.restaurant_name || '집밥', // 식당 이름 없으면 기본값
+        menu: form.menu_name,
+        price: form.menu_price,
+        kcal: form.menu_calories,
+        people: 1,
+      },
+    ]);
+    closeModal(); // 모달 닫기
+  };
+  // 모달 내용 변경 (직접 등록)
+  const openCustomMenuModal = () => setModalType('custom');
+  const [isHomeMade, setIsHomeMade] = useState(false);
   const [mealList, setMealList] = useState([
     {restaurant: '집밥', menu: '삶은계란', price: 0, kcal: 78, people: 1},
   ]);
@@ -115,6 +202,9 @@ const DiaryCreateScreen: React.FC = () => {
     setRestaurantIndex(restaurantIndex);
     setRestaurants(updatedRestaurants);
   };
+  const toggleHomeMade = () => {
+    setIsHomeMade(!isHomeMade);
+  };
 
   // 메뉴 추가 함수
   const addMeal = (menuIdx: number) => {
@@ -130,9 +220,6 @@ const DiaryCreateScreen: React.FC = () => {
       },
     ]);
   };
-
-  // 모달 내용 변경 (직접 등록)
-  const openCustomMenuModal = () => setModalType('custom');
 
   return (
     <View style={styles.diaryBody}>
@@ -286,7 +373,6 @@ const DiaryCreateScreen: React.FC = () => {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.menuFormContainer}>
-                  <Text>직접 등록할 메뉴 정보를 입력하세요</Text>
                   <FormField
                     title="이름"
                     value={form.menu_name}
@@ -303,6 +389,7 @@ const DiaryCreateScreen: React.FC = () => {
                     }
                     otherStyles={styles.field}
                     placeholder="메뉴 이름"
+                    abled={!isHomeMade}
                   />
                   <FormField
                     title="가격"
@@ -315,8 +402,103 @@ const DiaryCreateScreen: React.FC = () => {
                     placeholder="0"
                     isNumeric={true}
                     isDecimal={false}
+                    abled={!isHomeMade}
+                  />
+                  <View style={styles.homeMade}>
+                    <TouchableOpacity onPress={toggleHomeMade}>
+                      {!isHomeMade ? (
+                        <icons.emptyCheck width={24} height={24} />
+                      ) : (
+                        <icons.passwordCheck width={24} height={24} />
+                      )}
+                    </TouchableOpacity>
+                    <Text>집밥이에요!</Text>
+                  </View>
+                  <NutrientPieChart
+                    carbPercentage={carbPercentage}
+                    proteinPercentage={proteinPercentage}
+                    fatPercentage={fatPercentage}
+                  />
+                  <View style={styles.nutrientFormBox}>
+                    <View style={styles.nutrientFormCard}>
+                      <View style={styles.nutrientFormContainer}>
+                        <icons.dan width={20} height={20} />
+                        <Text style={styles.nutrientFormTitle}>단백질</Text>
+                      </View>
+                      <FormField
+                        value={String(Math.round(form.menu_protein))}
+                        unit="g"
+                        handleChangeText={text =>
+                          setForm({...form, menu_protein: Number(text)})
+                        }
+                        otherInputStyles={styles.nutrientForm}
+                        placeholder="0"
+                        isNumeric={true}
+                        isDecimal={false}
+                      />
+                    </View>
+                    <View style={styles.nutrientFormCard}>
+                      <View style={styles.nutrientFormContainer}>
+                        <icons.tan width={20} height={20} />
+                        <Text style={styles.nutrientFormTitle}>탄수화물</Text>
+                      </View>
+                      <FormField
+                        value={String(Math.round(form.menu_carbohydrate))}
+                        unit="g"
+                        handleChangeText={text =>
+                          setForm({...form, menu_carbohydrate: Number(text)})
+                        }
+                        otherInputStyles={styles.nutrientForm}
+                        placeholder="0"
+                        isNumeric={true}
+                        isDecimal={false}
+                      />
+                    </View>
+                    <View style={styles.nutrientFormCard}>
+                      <View style={styles.nutrientFormContainer}>
+                        <icons.ji width={20} height={20} />
+                        <Text style={styles.nutrientFormTitle}>지방</Text>
+                      </View>
+                      <FormField
+                        value={String(Math.round(form.menu_fat))}
+                        unit="g"
+                        handleChangeText={text =>
+                          setForm({...form, menu_fat: Number(text)})
+                        }
+                        otherInputStyles={styles.nutrientForm}
+                        placeholder="0"
+                        isNumeric={true}
+                        isDecimal={false}
+                      />
+                    </View>
+                  </View>
+                  <FormField
+                    title="칼로리"
+                    value={String(Math.round(form.menu_calories))}
+                    unit="kcal"
+                    handleChangeText={text =>
+                      setForm({...form, menu_calories: Number(text)})
+                    }
+                    placeholder="0"
+                    isNumeric={true}
+                    isDecimal={false}
+                  />
+                  <FormField
+                    title="용량"
+                    value={String(Math.round(totalNutrients))}
+                    unit="g"
+                    handleChangeText={text => setTotalNutrients(Number(text))}
+                    placeholder="0"
+                    isNumeric={true}
+                    isDecimal={false}
                   />
                 </View>
+                <CustomButton
+                  title="등록"
+                  handlePress={addMealToList}
+                  containerStyles="w-[100%] h-[50px] mt-3"
+                  textStyles="text-white font-psemibold "
+                />
               </>
             )}
           </View>
