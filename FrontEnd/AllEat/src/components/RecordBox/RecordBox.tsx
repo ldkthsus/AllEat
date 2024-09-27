@@ -1,26 +1,52 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { styles } from './RecordBox.styles';
-import { images, icons } from '../../constants';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {styles} from './RecordBox.styles';
+import {images, icons} from '../../constants';
 
 type RecordBoxProps = {
-  title: string;  // 예: '아침'
-  kcal: string;   // 예: '330.2kcal'
-  price: string;  // 예: '5000₩'
+  title: string; // 예: '아침'
+  kcal: string; // 예: '330.2kcal'
+  price: string; // 예: '5000₩'
+  onPress: () => void;
+  isRecorded: boolean;
 };
 
-const RecordBox: React.FC<RecordBoxProps> = ({ title, kcal, price }) => {
+const RecordBox: React.FC<RecordBoxProps> = ({
+  title,
+  kcal,
+  price,
+  onPress,
+  isRecorded,
+}) => {
   return (
     <View style={styles.recordContainer}>
-      <images.recordBox height={150} width={150} />
-      <View style={styles.overlay}>
-        <Text style={styles.priceText}>{price}</Text>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.kcal}>{kcal}</Text>
-        <View style={styles.iconWrapper}>
-          <icons.plusWhite height={20} width={20} />
+      {isRecorded ? (
+        <TouchableOpacity onPress={onPress}>
+          <images.recordBox height={150} width={150} />
+          <View style={styles.overlay}>
+            <Text style={styles.priceText}>{price}</Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.kcal}>{kcal}</Text>
+          </View>
+
+          <View style={styles.iconWrapper}>
+            <icons.checkWhite height={24} width={24} />
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <View>
+          <images.recordBox height={150} width={150} />
+          <View style={styles.overlay}>
+            <Text style={styles.priceText}>{price}</Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.kcal}>{}</Text>
+          </View>
+
+          <TouchableOpacity style={styles.iconWrapper} onPress={onPress}>
+            <icons.plusWhite height={24} width={24} />
+          </TouchableOpacity>
         </View>
-      </View>
+      )}
     </View>
   );
 };

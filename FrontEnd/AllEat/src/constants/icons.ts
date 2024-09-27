@@ -39,7 +39,7 @@ import addMenu from '../assets/icons/addMenu.svg';
 import minusWhite from '../assets/icons/minusWhite.svg';
 import plusWhite from '../assets/icons/plusWhite.svg';
 import plusWhiteReverse from '../assets/icons/plusWhiteReverse.svg';
-
+import checkWhite from '../assets/icons/checkWhite.svg';
 const icons = {
   settings,
   home,
@@ -82,5 +82,6 @@ const icons = {
   arrowTop,
   arrowBottom,
   warning,
+  checkWhite,
 };
 export default icons;

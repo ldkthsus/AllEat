@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../types/navigation';
-import { icons } from '../../../constants';
-import { images } from '../../../constants';
-import { styles } from './HomeScreen.styles';
-import { format, addDays, subDays } from 'date-fns'; // 날짜 형식을 위해 date-fns 사용
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../../types/navigation';
+import {icons} from '../../../constants';
+import {images} from '../../../constants';
+import {styles} from './HomeScreen.styles';
+import {format, addDays, subDays} from 'date-fns'; // 날짜 형식을 위해 date-fns 사용
 import CircularProgress from '../../../components/CircularProgress/CircularProgress';
 import RecordBox from '../../../components/RecordBox/RecordBox';
+import RecordDetailModal from '../components/RecordDetailModal/RecordDetailModal';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -58,11 +59,40 @@ const HomeScreen: React.FC = () => {
 
   // REPORT 버튼 클릭 시 다른 페이지로 이동하는 함수
   const handleReportNavigate = () => {
-    navigation.navigate('ReportScreen'); // 'ReportScreen'은 이동할 페이지의 이름입니다.
+    navigation.navigate('Report'); // 'ReportScreen'은 이동할 페이지의 이름입니다.
+  };
+  // 모달 가시성 및 선택된 기록 관리
+  const [isRecordDetailVisible, setIsRecordDetailVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<{
+    title: string;
+    kcal: string;
+    price: string;
+  } | null>(null);
+
+  // RecordBox 클릭 시 처리 함수
+  const handleRecordBoxPress = (isRecorded: boolean, title: string) => {
+    if (isRecorded) {
+      // 이미 기록된 경우 모달 표시
+      setSelectedRecord({
+        title,
+        kcal: '330.2kcal', // 실제 데이터로 변경 필요
+        price: '5800₩', // 실제 데이터로 변경 필요
+      });
+      setIsRecordDetailVisible(true);
+    } else {
+      // 기록되지 않은 경우 DiaryCreate 페이지로 이동
+      navigation.navigate('DiaryCreate', {date: '오늘', meals: title});
+    }
+  };
+
+  // 모달 닫기 함수
+  const closeModal = () => {
+    setIsRecordDetailVisible(false);
+    setSelectedRecord(null);
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       {/* 고정된 상단 바 */}
       <View style={styles.topbar}>
         <TouchableOpacity onPress={handlePreviousDay}>
@@ -119,33 +149,21 @@ const HomeScreen: React.FC = () => {
 
             <View style={styles.nutrientInfo}>
               <View style={styles.allText}>
-                <icons.tan
-                  style={styles.nutrientIcon}
-                  height={15}
-                  width={15}
-                />
+                <icons.tan style={styles.nutrientIcon} height={15} width={15} />
                 <Text style={styles.nutrientText}>
                   탄수화물 <Text style={styles.nutrientCarb}>76.3g</Text>
                 </Text>
               </View>
 
               <View style={styles.allText}>
-                <icons.dan
-                  style={styles.nutrientIcon}
-                  height={15}
-                  width={15}
-                />
+                <icons.dan style={styles.nutrientIcon} height={15} width={15} />
                 <Text style={styles.nutrientText}>
                   단백질 <Text style={styles.nutrientCarb}>43.7g</Text>
                 </Text>
               </View>
 
               <View style={styles.allText}>
-                <icons.ji
-                  style={styles.nutrientIcon}
-                  height={15}
-                  width={15}
-                />
+                <icons.ji style={styles.nutrientIcon} height={15} width={15} />
                 <Text style={styles.nutrientText}>
                   지방 <Text style={styles.nutrientCarb}>69.1g</Text>
                 </Text>
@@ -166,7 +184,7 @@ const HomeScreen: React.FC = () => {
                 <View
                   style={[
                     styles.gaugeSegment,
-                    { width: '22%', backgroundColor: '#4D7CFE' },
+                    {width: '22%', backgroundColor: '#4D7CFE'},
                   ]}
                 />
                 <View
@@ -223,22 +241,61 @@ const HomeScreen: React.FC = () => {
 
         <View style={styles.whiteBox}>
           {/* REPORT 버튼에 네비게이션 연결 */}
-          <TouchableOpacity style={styles.reportBtn} onPress={handleReportNavigate}>
+          <TouchableOpacity
+            style={styles.reportBtn}
+            onPress={handleReportNavigate}>
             <icons.arrowBackRight />
             <Text style={styles.reportBtnText}>REPORT</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.recordBox}>
-          <images.recordBox height={150} width={150} style={styles.leftRecord} />
-          <images.recordBox height={150} width={150} style={styles.rightRecord} />
+          <images.recordBox
+            height={150}
+            width={150}
+            style={styles.leftRecord}
+          />
+          <images.recordBox
+            height={150}
+            width={150}
+            style={styles.rightRecord}
+          />
         </View>
 
         <View style={styles.recordBox}>
-          <RecordBox title="아침" kcal="330.2kcal" price="5800₩" />
-          <RecordBox title="점심" kcal="400kcal" price="0₩" />
+          <RecordBox
+            title="아침"
+            kcal="330.2kcal"
+            price="5800₩"
+            isRecorded={false}
+            onPress={() => handleRecordBoxPress(false, '아침')}
+          />
+          <RecordBox
+            title="점심"
+            kcal="400kcal"
+            price="0₩"
+            isRecorded={true}
+            onPress={() => handleRecordBoxPress(true, '점심')}
+          />
         </View>
       </ScrollView>
+      {/* RecordDetail 모달 */}
+      {selectedRecord && (
+        <Modal
+          visible={isRecordDetailVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={closeModal}>
+          <View style={styles.modalContainer}>
+            <RecordDetailModal
+              title={selectedRecord.title}
+              kcal={selectedRecord.kcal}
+              price={selectedRecord.price}
+              onClose={closeModal}
+            />
+          </View>
+        </Modal>
+      )}
     </View>
   );
 };
