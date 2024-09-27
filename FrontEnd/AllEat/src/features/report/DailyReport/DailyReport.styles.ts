@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   date: {
     color: 'black',
     fontFamily: 'Pretendard-Bold',
-    fontSize: 20
+    fontSize: 19
   },
   ReportContainer: {
     backgroundColor: 'white',
@@ -27,5 +27,5 @@ export const styles = StyleSheet.create({
   },
   costContainer: {
 
-  }
+  },
 });

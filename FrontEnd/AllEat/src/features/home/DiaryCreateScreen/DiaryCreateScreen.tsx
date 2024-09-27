@@ -15,7 +15,7 @@ import {images} from '../../../constants';
 import {styles} from './DiaryCreateScreen.styles';
 import CustomButton from '../../../components/CustomButton';
 import DiaryCard from '../components/DiaryCard/DiaryCard';
-import MenuCard from '../components/MenuCard/MenuCard';
+import MenuCard from '../../../components/MenuCard/MenuCard';
 import FormField from '../../../components/FormField/FormField';
 import NutrientPieChart from '../../../components/NutrientPieChart/NutrientPieChart';
 type DiaryCreateScreenNavigationProp = NativeStackNavigationProp<

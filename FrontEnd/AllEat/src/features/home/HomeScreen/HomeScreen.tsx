@@ -8,6 +8,7 @@ import { images } from '../../../constants';
 import { styles } from './HomeScreen.styles';
 import { format, addDays, subDays } from 'date-fns'; // 날짜 형식을 위해 date-fns 사용
 import CircularProgress from '../../../components/CircularProgress/CircularProgress';
+import RecordBox from '../../../components/RecordBox/RecordBox';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -53,6 +54,11 @@ const HomeScreen: React.FC = () => {
   // 다음 날짜로 이동
   const handleNextDay = () => {
     setCurrentDate(addDays(currentDate, 1)); // 하루를 더함
+  };
+
+  // REPORT 버튼 클릭 시 다른 페이지로 이동하는 함수
+  const handleReportNavigate = () => {
+    navigation.navigate('ReportScreen'); // 'ReportScreen'은 이동할 페이지의 이름입니다.
   };
 
   return (
@@ -214,10 +220,23 @@ const HomeScreen: React.FC = () => {
             </View>
           </View>
         </View>
+
         <View style={styles.whiteBox}>
-          <View style={styles.reportBtn}>
-            <icons.arrowBackRight /><Text style={styles.reportBtnText}>REPORT</Text>
-          </View>
+          {/* REPORT 버튼에 네비게이션 연결 */}
+          <TouchableOpacity style={styles.reportBtn} onPress={handleReportNavigate}>
+            <icons.arrowBackRight />
+            <Text style={styles.reportBtnText}>REPORT</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.recordBox}>
+          <images.recordBox height={150} width={150} style={styles.leftRecord} />
+          <images.recordBox height={150} width={150} style={styles.rightRecord} />
+        </View>
+
+        <View style={styles.recordBox}>
+          <RecordBox title="아침" kcal="330.2kcal" price="5800₩" />
+          <RecordBox title="점심" kcal="400kcal" price="0₩" />
         </View>
       </ScrollView>
     </View>
