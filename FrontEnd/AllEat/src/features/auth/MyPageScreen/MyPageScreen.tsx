@@ -19,6 +19,16 @@ type MyPageScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPage'
 >;
+const isToday = (dateString: string): boolean => {
+  const date = new Date(dateString);
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+};
 const MyPageScreen: React.FC = () => {
   const navigation = useNavigation<MyPageScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
@@ -32,9 +42,10 @@ const MyPageScreen: React.FC = () => {
     user_name,
     user_gender,
     user_age,
-    weight,
+    weights,
     goal_weight,
     goal_cost,
+    goal_kcal,
     breakfast_alarm,
     lunch_alarm,
     dinner_alarm,
@@ -54,10 +65,19 @@ const MyPageScreen: React.FC = () => {
     });
     console.log('Goal Response:', goalResponse.data);
     // weight에 대한 POST 요청
-    const weightResponse = await api.put('/AllEat/weight', {
-      weight: parseFloat(currentWeight),
-    });
-    console.log('Weight Response:', weightResponse.data);
+    if (weights && weights.length > 0 && isToday(weights[0].createdAt)) {
+      // 오늘의 체중이 있으면 PUT 요청
+      const weightResponse = await api.put('/AllEat/weight', {
+        weight: parseFloat(currentWeight),
+      });
+      console.log('Weight (PUT) Response:', weightResponse.data);
+    } else {
+      // 오늘의 체중이 없거나 weights가 비었으면 POST 요청
+      const weightResponse = await api.post('/AllEat/weight', {
+        weight: parseFloat(currentWeight),
+      });
+      console.log('Weight (POST) Response:', weightResponse.data);
+    }
     dispatch(fetchUserInfo());
     setWeightModalVisible(false); // 모달을 닫음
   };
@@ -139,12 +159,14 @@ const MyPageScreen: React.FC = () => {
                   <icons.settingsWhite height={20} width={20} />
                 </TouchableOpacity>
                 <icons.scale height={20} width={20} />
-                <Text style={styles.boxText}>목표 체중 변경</Text>
+                <Text style={styles.boxText}>목표 체중 변경{goal_kcal}</Text>
               </View>
               <View style={styles.textBox}>
                 <View style={styles.text}>
                   <Text style={styles.textTitle}>현재 체중</Text>
-                  <Text style={styles.textDiscription}>{weight} kg</Text>
+                  <Text style={styles.textDiscription}>
+                    {weights && weights.length > 0 && weights[0].weight} kg
+                  </Text>
                 </View>
                 <View style={styles.text}>
                   <Text style={styles.textTitle}>목표 체중</Text>
@@ -219,7 +241,9 @@ const MyPageScreen: React.FC = () => {
           <FormModal
             visible={weightModalVisible}
             title="현재 체중 입력"
-            initialValue={String(weight)}
+            initialValue={String(
+              weights && weights.length > 0 && weights[0].weight,
+            )}
             anotherTitle="목표 체중 입력"
             anotherInitialValue={String(goal_weight)}
             onClose={() => setWeightModalVisible(false)}
