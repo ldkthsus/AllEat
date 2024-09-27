@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   recordContainer: {
     width: 150,
-    height: 150,
+    height: 110,
     position: 'relative', // 텍스트와 아이콘을 배치할 수 있도록 설정
   },
   overlay: {
