@@ -24,6 +24,7 @@ import rightArrow from '../assets/images/rightArrow.svg';
 import Subtract from '../assets/images/Subtract.svg';
 import Exclude from '../assets/images/Exclude.svg';
 import excludeWhite from '../assets/images/excludeWhite.svg';
+import recordBox from '../assets/images/recordBox.svg';
 
 
 const images = {
@@ -52,7 +53,8 @@ const images = {
   rightArrow,
   Subtract,
   Exclude,
-  excludeWhite
+  excludeWhite,
+  recordBox,
 };
 
 export default images;
