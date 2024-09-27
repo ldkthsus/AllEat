@@ -58,7 +58,7 @@ const HomeScreen: React.FC = () => {
 
   // REPORT 버튼 클릭 시 다른 페이지로 이동하는 함수
   const handleReportNavigate = () => {
-    navigation.navigate('ReportScreen'); // 'ReportScreen'은 이동할 페이지의 이름입니다.
+    navigation.navigate('Report'); // 'ReportScreen'은 이동할 페이지의 이름입니다.
   };
 
   return (
