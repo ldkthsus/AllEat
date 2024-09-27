@@ -35,7 +35,7 @@ public class DailyDiaryEntity {
 //    @JsonBackReference
     private List<DiaryEntity> diaryEntities;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 

@@ -20,6 +20,9 @@ public class DiaryMappingEntity {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "person_count")
+    private Integer personCount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "diary_id")
     @JsonBackReference // 자식 측에 해당하는 어노테이션

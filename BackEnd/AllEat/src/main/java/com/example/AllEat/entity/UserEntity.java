@@ -18,7 +18,6 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class UserEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -112,6 +111,9 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<AutoEntity> autos;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private List<DailyDiaryEntity> dailyDiaries;
 
 
 }
