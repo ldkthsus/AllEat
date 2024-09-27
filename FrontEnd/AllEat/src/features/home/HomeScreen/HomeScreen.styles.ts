@@ -162,6 +162,7 @@ export const styles = StyleSheet.create({
   whiteBox: {
     backgroundColor: 'white',
     color: 'white',
+    paddingTop: 10,
     // justifyContent: 'flex-start',
     flexDirection: 'row',
   },
@@ -176,8 +177,9 @@ export const styles = StyleSheet.create({
   recordBox: {
     justifyContent: 'space-evenly',
     flexDirection: 'row',
+    flexWrap: 'wrap',
     backgroundColor: 'white',
-    marginBottom: 50,
+    paddingBottom: 100,
   },
   leftRecord: {
     backgroundColor: 'white',

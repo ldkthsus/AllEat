@@ -79,11 +79,24 @@ const HomeScreen: React.FC = () => {
         price: '5800₩', // 실제 데이터로 변경 필요
       });
       setIsRecordDetailVisible(true);
-    } else {
+    } else if (isRecordDetailVisible) {
       // 기록되지 않은 경우 DiaryCreate 페이지로 이동
-      navigation.navigate('DiaryCreate', {date: '오늘', meals: title});
+      setIsRecordDetailVisible(false);
+      navigation.navigate('DiaryCreate', {
+        date: formatDate(currentDate),
+        meals: title,
+      });
+    } else {
+      navigation.navigate('DiaryCreate', {
+        date: formatDate(currentDate),
+        meals: title,
+      });
     }
   };
+  const [breakfastEnabled, setBreakfastEnabled] = useState(false);
+  const [lunchEnabled, setLunchEnabled] = useState(false);
+  const [dinnerEnabled, setDinnerEnabled] = useState(false);
+  const [snackEnabled, setSnackEnabled] = useState(false);
 
   // 모달 닫기 함수
   const closeModal = () => {
@@ -250,32 +263,33 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <View style={styles.recordBox}>
-          <images.recordBox
-            height={150}
-            width={150}
-            style={styles.leftRecord}
-          />
-          <images.recordBox
-            height={150}
-            width={150}
-            style={styles.rightRecord}
-          />
-        </View>
-
-        <View style={styles.recordBox}>
           <RecordBox
             title="아침"
             kcal="330.2kcal"
             price="5800₩"
-            isRecorded={false}
-            onPress={() => handleRecordBoxPress(false, '아침')}
+            isRecorded={breakfastEnabled}
+            onPress={() => handleRecordBoxPress(breakfastEnabled, '아침')}
           />
           <RecordBox
             title="점심"
             kcal="400kcal"
             price="0₩"
-            isRecorded={true}
-            onPress={() => handleRecordBoxPress(true, '점심')}
+            isRecorded={lunchEnabled}
+            onPress={() => handleRecordBoxPress(lunchEnabled, '점심')}
+          />
+          <RecordBox
+            title="저녁"
+            kcal="400kcal"
+            price="0₩"
+            isRecorded={dinnerEnabled}
+            onPress={() => handleRecordBoxPress(dinnerEnabled, '저녁')}
+          />
+          <RecordBox
+            title="간식"
+            kcal="400kcal"
+            price="0₩"
+            isRecorded={snackEnabled}
+            onPress={() => handleRecordBoxPress(snackEnabled, '간식')}
           />
         </View>
       </ScrollView>
@@ -289,9 +303,11 @@ const HomeScreen: React.FC = () => {
           <View style={styles.modalContainer}>
             <RecordDetailModal
               title={selectedRecord.title}
+              date={formatDate(currentDate)}
               kcal={selectedRecord.kcal}
               price={selectedRecord.price}
               onClose={closeModal}
+              onPress={() => handleRecordBoxPress(false, selectedRecord.title)}
             />
           </View>
         </Modal>
