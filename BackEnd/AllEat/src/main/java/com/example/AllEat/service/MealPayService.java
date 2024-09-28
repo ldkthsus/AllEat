@@ -27,20 +27,20 @@ public class MealPayService {
         DiaryEntity findDiary = diaryRepository.findById(mealPayRequest.getDiaryId()).orElseThrow(()-> new IllegalArgumentException("한 끼 식단을 찾을 수 없습니다. "));
 
         // monthly mealpay 업데이트
-        YearMonth payTransactionMonth = YearMonth.from(findPayTransaction.getTransactionDate().toLocalDateTime().toLocalDate());
-        MonthlyMealPayEntity findMonth = monthlyMealPayRepository.findByUserAndDate(user, payTransactionMonth).get(0);
-        if (findMonth != null){
-            findMonth.setAmount(findMonth.getAmount() - mealPayRequest.getAmount());
-            monthlyMealPayRepository.save(findMonth);
-
-        }else{
-            MonthlyMealPayEntity monthlyMealPayEntity = new MonthlyMealPayEntity();
-            monthlyMealPayEntity.setUser(user);
-            monthlyMealPayEntity.setAmount(mealPayRequest.getAmount());
-            monthlyMealPayEntity.setDate(payTransactionMonth);
-            monthlyMealPayRepository.save(monthlyMealPayEntity);
-
-        }
+//        YearMonth payTransactionMonth = YearMonth.from(findPayTransaction.getTransactionDate().toLocalDateTime().toLocalDate());
+//        MonthlyMealPayEntity findMonth = monthlyMealPayRepository.findByUserAndDate(user, payTransactionMonth).get(0);
+//        if (findMonth != null){
+//            findMonth.setAmount(findMonth.getAmount() - mealPayRequest.getAmount());
+//            monthlyMealPayRepository.save(findMonth);
+//
+//        }else{
+//            MonthlyMealPayEntity monthlyMealPayEntity = new MonthlyMealPayEntity();
+//            monthlyMealPayEntity.setUser(user);
+//            monthlyMealPayEntity.setAmount(mealPayRequest.getAmount());
+//            monthlyMealPayEntity.setDate(payTransactionMonth);
+//            monthlyMealPayRepository.save(monthlyMealPayEntity);
+//
+//        }
 
         MealPayEntity findMealPay = mealPayRepository.findByPayTransaction_id(findPayTransaction.getId());
         if(findMealPay == null){

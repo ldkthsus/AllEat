@@ -118,7 +118,9 @@ public class WeekReportService {
         double proteinAvg = totalProteins / diaryCount;
         double fatAvg = totalFats / diaryCount;
         double kcalAvg = totalCalories / diaryCount;
-
+        // 일 수 계산 (해당 월의 일 수)
+        int daysInMonth = endDate.lengthOfMonth();
+        double costAvg = totalCost / daysInMonth;
         // 레스토랑 타입별 카운트
         Map<String, Integer> restaurantTypeCount = new HashMap<>();
         menuEntries.forEach(entry -> {
@@ -136,6 +138,7 @@ public class WeekReportService {
         finalReport.put("fat_avg", fatAvg);
         finalReport.put("kcal_average", kcalAvg);
         finalReport.put("total_cost", totalCost);
+        finalReport.put("cost_avg", costAvg);
         finalReport.put("cost_where", getCostWhere(restaurantTypeCount));
 
         // 메뉴 영양소 랭킹
