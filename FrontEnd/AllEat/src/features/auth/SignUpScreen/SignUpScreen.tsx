@@ -7,9 +7,10 @@ import CustomButton from '../../../components/CustomButton';
 import {styles} from './SignUpScreen.styles';
 import {RootStackParamList} from '../../../types/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {KakaoOAuthToken, login as kakaoLogin, getProfile as getKakaoProfile} from '@react-native-seoul/kakao-login'; // 추가
 import {icons} from '../../../constants';
 import {useDispatch, useSelector} from 'react-redux';
-import {signupUser} from '../../../redux/features/authSlice';
+import {signupUser, loginUser} from '../../../redux/features/authSlice';
 import {RootState} from '../../../redux/store';
 import {AppDispatch} from '../../../redux/store';
 
@@ -30,6 +31,21 @@ const SignUp: React.FC = () => {
     password: '',
     confirmPassword: '', // 패스워드 확인용 필드
   });
+
+// 카카오 로그인 핸들러
+const handleKakaoSignIn = async () => {
+  try {
+    const token: KakaoOAuthToken = await kakaoLogin(); // 카카오 로그인 실행 후 토큰 받아오기
+    console.log('카카오 로그인 토큰:', token);
+
+    // 서버로 토큰을 보내 인증 처리하기 위해 redux 상태 업데이트 또는 API 요청
+    dispatch(loginUser({token: token.accessToken})); // loginUser에 토큰을 전달
+  } catch (error) {
+    console.error('카카오 로그인 실패:', error);
+    Alert.alert('로그인 실패', '카카오 로그인 중 오류가 발생했습니다.');
+  }
+};
+
 
   // isAuthenticated 상태 변화 감지 후 초기 화면으로 이동
   useEffect(() => {
@@ -85,14 +101,10 @@ const SignUp: React.FC = () => {
           />
           <Text style={styles.socialButtonText}>구글로 계속하기</Text>
         </View>
-        <View style={styles.socialButtonKakao}>
-          <icons.socialKakao
-            style={styles.socialButton}
-            width={24}
-            height={24}
-          />
+        <Pressable style={styles.socialButtonKakao} onPress={handleKakaoSignIn}>
+          <icons.socialKakao style={styles.socialButton} width={24} height={24} />
           <Text style={styles.socialButtonText}>카카오로 계속하기</Text>
-        </View>
+        </Pressable>
       </View>
 
       <View style={styles.orContainer}>

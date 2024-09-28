@@ -28,4 +28,9 @@ export const styles = StyleSheet.create({
   costContainer: {
 
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

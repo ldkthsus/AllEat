@@ -81,7 +81,11 @@ const AppNavigator = () => {
           component={Paymoney}
           options={{headerShown: false}}
         />
-
+        <Stack.Screen
+          name="PaymoneyDetail"
+          component={PaymoneyDetail}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="MyPage"
           component={MyPageScreen}

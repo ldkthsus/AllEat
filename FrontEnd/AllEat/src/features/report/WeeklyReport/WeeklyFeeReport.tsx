@@ -112,18 +112,24 @@ const WeeklyFeeReport: React.FC<WeeklyFeeReportProps> = ({ goalFee, costAvg, cos
             fatPercentage={deliveryPercentage}
           />
           <View style={styles.kcalGrpahDetailContainer}>
-            <View style={styles.kcalGraphDetailBox}>
-              <icons.tan width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>집밥 {costWhere[0].count}회</Text>
-            </View>
-            <View style={styles.kcalGraphDetailBox}>
-              <icons.dan width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>외식 {costWhere[1].count}회</Text>
-            </View>            
-            <View style={styles.kcalGraphDetailBox}>
-              <icons.ji width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>배달 {costWhere[2].count}회</Text>
-            </View>
+          <View style={styles.kcalGraphDetailBox}>
+          <icons.tan width={18} height={18} />
+          <Text style={styles.kcalGraphDetailText}>
+            집밥 {homeCount}회
+          </Text>
+        </View>
+        <View style={styles.kcalGraphDetailBox}>
+          <icons.dan width={18} height={18} />
+          <Text style={styles.kcalGraphDetailText}>
+            외식 {restaurantCount}회
+          </Text>
+        </View>            
+        <View style={styles.kcalGraphDetailBox}>
+          <icons.ji width={18} height={18} />
+          <Text style={styles.kcalGraphDetailText}>
+            배달 {deliveryCount}회
+          </Text>
+        </View>
           </View>
         </View>
         <View style={styles.linkButtonContainer}>

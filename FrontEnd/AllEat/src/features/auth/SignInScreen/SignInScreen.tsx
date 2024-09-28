@@ -7,6 +7,7 @@ import CustomButton from '../../../components/CustomButton';
 import {styles} from './SignInScreen.styles';
 import {RootStackParamList} from '../../../types/navigation';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {KakaoOAuthToken, login as kakaoLogin, getProfile as getKakaoProfile} from '@react-native-seoul/kakao-login'; // 카카오 로그인 관련 패키지
 import {icons} from '../../../constants';
 import {useDispatch, useSelector} from 'react-redux';
 import {loginUser} from '../../../redux/features/authSlice';
@@ -41,6 +42,43 @@ const SignIn: React.FC = () => {
       navigation.replace('Home'); // 로그인 성공 후 Home으로 이동
     }
   }, [isAuthenticated, token, navigation]);
+
+// 카카오 로그인 처리 함수
+const handleKakaoSignIn = async () => {
+  try {
+    console.log("카카오 로그인 시도");
+
+    // 카카오 로그인 시도
+    const token: KakaoOAuthToken = await kakaoLogin();
+    console.log('카카오 로그인 토큰:', token);
+
+    if (!token) {
+      console.error('카카오 로그인 토큰이 존재하지 않습니다.');
+      return;
+    }
+
+    // 카카오 사용자 정보 가져오기
+    const profile = await getKakaoProfile();
+    console.log('카카오 사용자 정보:', profile);
+
+    if (!profile) {
+      console.error('카카오 프로필 정보를 가져오지 못했습니다.');
+      return;
+    }
+
+    // 서버로 토큰을 보내 인증 처리하기 위해 redux 상태 업데이트 또는 API 요청
+    await dispatch(
+      loginUser({
+        email: profile.email, // 백엔드에 전달할 수 있도록 필요한 필드로 수정하세요
+        password: '', // 소셜 로그인에는 password 필드가 필요하지 않을 수 있습니다.
+        token: token.accessToken, // 인증 토큰 전달
+      }),
+    );
+  } catch (error) {
+    console.error('카카오 로그인 실패:', error);
+    Alert.alert('로그인 실패', '카카오 로그인 중 오류가 발생했습니다.');
+  }
+};
 
   const submit = async () => {
     setIsSubmitting(true);
@@ -85,14 +123,14 @@ const SignIn: React.FC = () => {
           />
           <Text style={styles.socialButtonText}>구글로 계속하기</Text>
         </View>
-        <View style={styles.socialButtonKakao}>
+        <Pressable style={styles.socialButtonKakao} onPress={handleKakaoSignIn}>
           <icons.socialKakao
             style={styles.socialButton}
             width={24}
             height={24}
           />
           <Text style={styles.socialButtonText}>카카오로 계속하기</Text>
-        </View>
+        </Pressable>
       </View>
 
       <View style={styles.orContainer}>
