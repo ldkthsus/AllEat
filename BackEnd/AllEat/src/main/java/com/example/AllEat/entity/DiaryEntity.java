@@ -25,6 +25,10 @@ public class DiaryEntity {
     @Column(name = "id")
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     @Enumerated(EnumType.STRING)
     private DiaryTime diaryTime;
     

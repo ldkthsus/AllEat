@@ -69,18 +69,72 @@ public class DailyDiaryService {
             useDiary = findDiary;
         }
 
-        for (MenuRequestDTO menuIdRequest : requestMenuDTO.getMenus()) {
-            MenuEntity findMenu = menuRepository.findById(menuIdRequest.getMenuId()).orElseThrow(() -> new IllegalArgumentException("menu not found"));
-            mealCalories += findMenu.getMenuCalories();
-            dailyPrice += findMenu.getMenuPrice();
-            System.out.println("mapping 생성 중인 diary : " + useDiary.getId());
-            DiaryMappingEntity diaryMappingEntity = DiaryMappingEntity.builder()
-                    .diary(useDiary)
-                    .menu(findMenu)
-                    .personCount(menuIdRequest.getPersonCount())
-                    .build();
+        public DiaryResponseDTO modifyDailyDiary(HttpServletRequest request, UpdateMenuRequestDTO requestMenu) {
+            UserEntity findUser = userService.findByRequest(request);
+            if (findUser != null) {
+                DiaryEntity findDiary = diaryRepository.findById(requestMenu.getDiaryId()).orElseThrow(() -> new IllegalArgumentException("diary not found"));
+                if (findDiary != null) {
+                    List<DiaryMappingEntity> diaryMappingList = diaryMappingRepository.findByDiary_Id(findDiary.getId());
+                    if (diaryMappingList != null) {
+                        Boolean existDiaryMapping[] = new Boolean[diaryMappingList.size()];
+                        Boolean newDiaryMapping[] = new Boolean[requestMenu.getMenus().size()];
+                        int existIndex = 0;
+                        for (DiaryMappingEntity diaryMapping : diaryMappingList) {
+                            int newIndex = 0;
+                            for (MenuRequestDTO menuRequest : requestMenu.getMenus()) {
+                                if (diaryMapping.getMenu().getId() == menuRequest.getMenuId()) {
+                                    if (diaryMapping.getPersonCount() == menuRequest.getPersonCount()) {
+                                        existDiaryMapping[existIndex] = true;
+                                        newDiaryMapping[newIndex] = true;
+                                        System.out.println("같으면 유지");
+                                    } else {
+                                        if(newDiaryMapping[newIndex]) {
+                                            continue;
+                                        }
+                                        DiaryMappingEntity newMapping = DiaryMappingEntity.builder()
+                                                .diary(findDiary)
+                                                .personCount(menuRequest.getPersonCount())
+                                                .menu(diaryMapping.getMenu())
+                                                .build();
+                                        diaryMappingRepository.save(newMapping);
+                                        existDiaryMapping[existIndex] = true;
+                                        newDiaryMapping[newIndex] = true;
+                                        System.out.println("이름만 같고 사람 명 수는 달라요" + diaryMapping.getMenu().getId());
+                                    }
+                                }
+                                newIndex++;
+                            }
+                            existIndex++;
+                        }
+                        for (int i = 0; i < existDiaryMapping.length; i++) {
+                            if (!existDiaryMapping[i]) {
+                                diaryMappingRepository.delete(diaryMappingList.get(i));
+                            }
+                        }
 
-            diaryMappingRepository.save(diaryMappingEntity);
+                        for (int i = 0; i < newDiaryMapping.length; i++) {
+                            if (!newDiaryMapping[i]) {
+                                MenuEntity findMenu = menuRepository.findById(requestMenu.getMenus().get(i).getMenuId()).orElseThrow(() -> new IllegalArgumentException("menu not found"));
+                                DiaryMappingEntity newMapping = DiaryMappingEntity.builder()
+                                        .menu(findMenu)
+                                        .diary(findDiary)
+                                        .personCount(requestMenu.getMenus().get(i).getPersonCount())
+                                        .build();
+
+                                diaryMappingRepository.save(newMapping);
+                                System.out.println("완젼 새로운 메뉴 추가요 : " + findMenu.getId() );
+                            }
+                        }
+                        List<DiaryMappingEntity> finalDiaryMappingList = diaryMappingRepository.findByDiary_Id(findDiary.getId());
+                        DiaryResponseDTO diaryResponse = new DiaryResponseDTO();
+                        diaryResponse.fromEntity(findDiary, finalDiaryMappingList);
+                        return diaryResponse;
+                    }
+                    return null;
+                }
+                return null;
+            }
+            return null;
         }
         useDiary.updateDetails(mealCalories, dailyPrice);
         diaryRepository.save(useDiary);

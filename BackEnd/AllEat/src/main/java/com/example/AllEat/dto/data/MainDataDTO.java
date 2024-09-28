@@ -16,19 +16,19 @@ import java.util.List;
 public class MainDataDTO {
 
     @JsonProperty("day_kcal")
-    private int dayKcal;
+    private Integer dayKcal;
 
     @JsonProperty("day_carb")
-    private int dayCarb;
+    private Integer dayCarb;
 
     @JsonProperty("day_protein")
-    private int dayProtein;
+    private Integer dayProtein;
 
     @JsonProperty("day_fat")
-    private int dayFat;
+    private Integer dayFat;
 
     @JsonProperty("day_cost")
-    private int dayCost;
+    private Integer dayCost;
 
     @JsonProperty("day_diaries")
     private List<DiaryDetail> dayDiaries = new ArrayList<>();
