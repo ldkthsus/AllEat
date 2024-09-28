@@ -29,6 +29,7 @@ public class MenuService {
     private final UserService userService;
     private final PayTransactionRepository payTransactionRepository;
     private final FavoriteRepository favoriteRepository;
+    private final DiaryRepository diaryRepository;
 
     // JWT 토큰을 이용해 사용자 식별
     public UserEntity findUserByRequest(HttpServletRequest request) {
@@ -173,5 +174,9 @@ public class MenuService {
 
         }
         return possibleMenu;
+    }
+    public void deleteDiary(Integer diaryId){
+        DiaryEntity findDiary = diaryRepository.findById(diaryId).orElseThrow(()-> new IllegalArgumentException("diary not found"));
+        diaryRepository.delete(findDiary);
     }
 }
