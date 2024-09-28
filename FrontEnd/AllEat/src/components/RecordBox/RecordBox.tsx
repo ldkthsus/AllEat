@@ -14,7 +14,7 @@ type RecordBoxProps = {
 const RecordBox: React.FC<RecordBoxProps> = ({
   title,
   kcal,
-  price,
+  price = 0,
   onPress,
   isRecorded,
 }) => {
@@ -24,9 +24,9 @@ const RecordBox: React.FC<RecordBoxProps> = ({
         <TouchableOpacity onPress={onPress}>
           <images.recordBox height={150} width={150} />
           <View style={styles.overlay}>
-            <Text style={styles.priceText}>{price}</Text>
+            <Text style={styles.priceText}>{price}₩</Text>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.kcal}>{kcal}</Text>
+            <Text style={styles.kcal}>{kcal}kcal</Text>
           </View>
 
           <View style={styles.iconWrapper}>
@@ -37,7 +37,7 @@ const RecordBox: React.FC<RecordBoxProps> = ({
         <View>
           <images.recordBox height={150} width={150} />
           <View style={styles.overlay}>
-            <Text style={styles.priceText}>{price}</Text>
+            <Text style={styles.priceText}>{0}₩</Text>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.kcal}>{}</Text>
           </View>
