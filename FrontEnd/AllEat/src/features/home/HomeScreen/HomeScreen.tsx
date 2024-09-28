@@ -195,7 +195,16 @@ const HomeScreen: React.FC = () => {
                 height={90}
                 width={90}
               />
-              <images.kiki style={styles.kiki} height={120} width={120} />
+              {dayData?.day_diaries.length === 0 ? (
+                // day_diaries가 빈 배열일 때
+                <images.kikiNoRecord style={styles.kiki} height={120} width={120} />
+              ) : dayData?.day_kcal && goal_kcal && dayData.day_kcal > goal_kcal ? (
+                // day_kcal가 goal_kcal보다 클 때
+                <images.kikiOverCal style={styles.kiki} height={120} width={120} />
+              ) : (
+                // 그 외의 경우 기본 kiki 이미지
+                <images.kiki style={styles.kiki} height={120} width={120} />
+              )}
             </View>
 
             <View style={styles.nutrientInfo}>
