@@ -32,4 +32,5 @@ public class DiaryMappingEntity {
     @JoinColumn(name = "menu_id")
     @JsonBackReference // 자식 측에 해당하는 어노테이션
     private MenuEntity menu;
+
 }
