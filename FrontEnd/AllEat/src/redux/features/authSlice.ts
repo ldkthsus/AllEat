@@ -45,6 +45,21 @@ export const signupUser = createAsyncThunk(
 
       // 헤더에서 JWT 토큰 추출
       const token = loginResponse.headers.authorization.split(' ')[1]; // Bearer 토큰 형식에서 'Bearer '를 제외한 실제 토큰만 추출
+      // 사용자 이메일을 restaurants_name으로 설정하고 추가 API 요청
+      const addStoreResponse = await axios.post(
+        `${BACK_URL}/AllEat/record/add-store`,
+        {
+          restaurants_name: signupData.email, // useremail을 restaurants_name으로
+          restaurants_type: 'HOME',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 로그인에서 얻은 JWT 토큰을 헤더에 추가
+          },
+        },
+      );
+
+      console.log('가게 추가 성공!', addStoreResponse);
       return {token}; // 토큰 반환
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '회원가입 실패');

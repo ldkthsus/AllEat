@@ -67,12 +67,14 @@ const HomeScreen: React.FC = () => {
       // 기록되지 않은 경우 DiaryCreate 페이지로 이동
       setIsRecordDetailVisible(false);
       navigation.navigate('DiaryCreate', {
-        date: currentDate,
+        diaryId: selectedRecord?.id,
+        date: format(currentDate, 'yyyy-MM-dd'),
         meals: title,
       });
     } else {
       navigation.navigate('DiaryCreate', {
-        date: currentDate,
+        diaryId: selectedRecord?.id,
+        date: format(currentDate, 'yyyy-MM-dd'),
         meals: title,
       });
     }
