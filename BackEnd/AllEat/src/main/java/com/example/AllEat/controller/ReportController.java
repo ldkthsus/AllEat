@@ -43,21 +43,10 @@ public class ReportController {
             return ResponseEntity.badRequest().body("The 'day' parameter is missing or empty.");
         }
 
-        // 데이터 수집
-        Object reportData = reportService.collectDayReport(day, request);
+        // 데이터 수집 및 반환
+        List<Map<String, Object>> dailyFoodInfo = reportService.handleDayReportRequest(day, request);
 
-        // FastAPI 전송
-
-
-        ResponseEntity<String> response = sendToFastApi(reportData, request, fastApiUrl+"/fast-api/report/day");
-
-        List<Map<String, Object>> dailyFoodInfo = reportService.collectDayFoodInfo(day, request);
-
-        Map<String, Object> fullResponse = new HashMap<>();
-        fullResponse.put("gptResponse", response.getBody());
-        fullResponse.put("foodDetails", dailyFoodInfo);
-
-        return ResponseEntity.ok(fullResponse);
+        return ResponseEntity.ok(Map.of("foodDetails", dailyFoodInfo));
     }
 
     @PostMapping("/week-report")
@@ -65,42 +54,29 @@ public class ReportController {
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
-        // JSON 데이터에서 'day' 값 추출
         String day = requestBody.get("day");
         if (day == null || day.isEmpty()) {
             return ResponseEntity.badRequest().body("The 'day' parameter is missing or empty.");
         }
 
-        // 데이터 수집 수행 (collectWeekReport 호출)
-        Map<String, Object> collectedData = weekReportService.collectWeekReport(day, request);
-
-        // FastAPI로 데이터 전송만 수행하고 응답받기
-        Map<String, Object> fastApiResponse = weekReportService.sendWeekReportToFastApi(collectedData, request);
-
-        // 프론트엔드에 반환할 데이터를 구성
-        Map<String, Object> finalReport = weekReportService.prepareFrontendResponse(fastApiResponse, collectedData);
-
-        return ResponseEntity.ok(finalReport);
+        // 데이터 수집 및 반환
+        Map<String, Object> weeklyReportData = weekReportService.collectWeekReport(day, request);
+        return ResponseEntity.ok(weeklyReportData);
     }
+
 
     @PostMapping("/month-report")
     public ResponseEntity<?> getMonthReport(
             @RequestBody Map<String, String> requestBody,
             HttpServletRequest request) {
 
-        // year_month 값을 추출
         String yearMonth = requestBody.get("year_month");
         if (yearMonth == null || yearMonth.isEmpty()) {
             return ResponseEntity.badRequest().body("The 'year_month' parameter is missing or empty.");
         }
 
-        // 데이터 수집 수행 (collectMonthReport 호출)
         Map<String, Object> collectedData = monthReportService.collectMonthReport(yearMonth, request);
-
-        // FastAPI로 데이터 전송만 수행하고 응답받기
         Map<String, Object> fastApiResponse = monthReportService.sendMonthReportToFastApi(collectedData, request);
-
-        // 프론트엔드에 반환할 데이터를 구성
         Map<String, Object> finalReport = monthReportService.prepareFrontendResponse(fastApiResponse, collectedData);
 
         return ResponseEntity.ok(finalReport);
@@ -110,7 +86,6 @@ public class ReportController {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
-        // Authorization 헤더를 추가
         String authorization = request.getHeader("Authorization");
         if (authorization == null || authorization.isEmpty()) {
             throw new RuntimeException("Unauthorized - Missing Authorization header");
