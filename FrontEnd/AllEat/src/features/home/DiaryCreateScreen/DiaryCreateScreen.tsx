@@ -4,7 +4,7 @@ import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
 import {icons} from '../../../constants';
-
+import {formatDate} from '../../../utils/dateUtils';
 import {styles} from './DiaryCreateScreen.styles';
 import CustomButton from '../../../components/CustomButton';
 import DiaryCard from '../components/DiaryCard/DiaryCard';
@@ -234,7 +234,7 @@ const DiaryCreateScreen: React.FC = () => {
         </TouchableOpacity>
 
         <Text style={styles.title}>
-          {date} {meals}
+          {formatDate(date)} {meals}
         </Text>
 
         <TouchableOpacity>
@@ -243,7 +243,7 @@ const DiaryCreateScreen: React.FC = () => {
       </View>
       <View style={styles.main}>
         <Text style={styles.mainTitle}>
-          {date} {meals}으로 먹은 음식을 기록해보세요!
+          {formatDate(date)} {meals}으로 먹은 음식을 기록해보세요!
         </Text>
         <View style={styles.mainRecord}>
           <ScrollView>

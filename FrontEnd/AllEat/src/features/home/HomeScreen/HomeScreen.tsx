@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -10,6 +10,8 @@ import {format, addDays, subDays} from 'date-fns'; // 날짜 형식을 위해 da
 import CircularProgress from '../../../components/CircularProgress/CircularProgress';
 import RecordBox from '../../../components/RecordBox/RecordBox';
 import RecordDetailModal from '../components/RecordDetailModal/RecordDetailModal';
+import {formatDate} from '../../../utils/dateUtils'; // formatDate 유틸리티 함수 가져오기
+import api from '../../../utils/api';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -21,31 +23,6 @@ const HomeScreen: React.FC = () => {
 
   // 현재 날짜를 저장하는 상태
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  // 날짜를 포맷팅하는 함수 (오늘, yyyy/MM/dd 형식)
-  const formatDate = (date: Date) => {
-    const today = new Date();
-    if (
-      today.getDate() === date.getDate() &&
-      today.getMonth() === date.getMonth() &&
-      today.getFullYear() === date.getFullYear()
-    ) {
-      return '오늘'; // 오늘이면 "오늘"로 표시
-    } else if (
-      today.getDate() - 1 === date.getDate() &&
-      today.getMonth() === date.getMonth() &&
-      today.getFullYear() === date.getFullYear()
-    ) {
-      return '어제';
-    } else if (
-      today.getDate() + 1 === date.getDate() &&
-      today.getMonth() === date.getMonth() &&
-      today.getFullYear() === date.getFullYear()
-    ) {
-      return '내일';
-    }
-    return format(date, 'MM/dd'); // 그 외에는 날짜를 yyyy/MM/dd 형식으로 표시
-  };
 
   // 이전 날짜로 이동
   const handlePreviousDay = () => {
@@ -64,6 +41,7 @@ const HomeScreen: React.FC = () => {
   // 모달 가시성 및 선택된 기록 관리
   const [isRecordDetailVisible, setIsRecordDetailVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<{
+    id: number;
     title: string;
     kcal: string;
     price: string;
@@ -73,30 +51,58 @@ const HomeScreen: React.FC = () => {
   const handleRecordBoxPress = (isRecorded: boolean, title: string) => {
     if (isRecorded) {
       // 이미 기록된 경우 모달 표시
+      const record = dayData?.day_diaries.find(
+        diary => diary.diary_time === title.toUpperCase(),
+      );
       setSelectedRecord({
+        id: record ? record.diary_id : 0,
         title,
-        kcal: '330.2kcal', // 실제 데이터로 변경 필요
-        price: '5800₩', // 실제 데이터로 변경 필요
+        kcal: record ? `${record.diary_kcal}kcal` : '0kcal',
+        price: record ? `${record.diary_cost}₩` : '0₩',
       });
       setIsRecordDetailVisible(true);
     } else if (isRecordDetailVisible) {
       // 기록되지 않은 경우 DiaryCreate 페이지로 이동
       setIsRecordDetailVisible(false);
       navigation.navigate('DiaryCreate', {
-        date: formatDate(currentDate),
+        date: currentDate,
         meals: title,
       });
     } else {
       navigation.navigate('DiaryCreate', {
-        date: formatDate(currentDate),
+        date: currentDate,
         meals: title,
       });
     }
   };
-  const [breakfastEnabled, setBreakfastEnabled] = useState(false);
-  const [lunchEnabled, setLunchEnabled] = useState(false);
-  const [dinnerEnabled, setDinnerEnabled] = useState(false);
-  const [snackEnabled, setSnackEnabled] = useState(false);
+
+  // 기록된 데이터 상태
+  const [dayData, setDayData] = useState<{
+    day_kcal: number | null;
+    day_carb: number | null;
+    day_protein: number | null;
+    day_fat: number | null;
+    day_cost: number | null;
+    day_diaries: Array<{
+      diary_id: number;
+      diary_time: string;
+      diary_kcal: number;
+      diary_cost: number;
+    }>;
+  } | null>(null);
+  // 날짜가 변경될 때마다 API로 데이터 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
+        const response = await api.get(`/AllEat/get/main/${formattedDate}`);
+        setDayData(response.data); // 가져온 데이터를 상태에 저장
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
+  }, [currentDate]); // currentDate가 변경될 때마다 데이터 다시 가져오기
 
   // 모달 닫기 함수
   const closeModal = () => {
@@ -265,31 +271,115 @@ const HomeScreen: React.FC = () => {
         <View style={styles.recordBox}>
           <RecordBox
             title="아침"
-            kcal="330.2kcal"
-            price="5800₩"
-            isRecorded={breakfastEnabled}
-            onPress={() => handleRecordBoxPress(breakfastEnabled, '아침')}
+            kcal={
+              String(
+                dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'BREAKFAST',
+                )?.diary_kcal,
+              ) || '0'
+            }
+            price={
+              String(
+                dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'BREAKFAST',
+                )?.diary_cost,
+              ) || '0'
+            }
+            isRecorded={
+              !!dayData?.day_diaries.find(
+                diary => diary.diary_time === 'BREAKFAST',
+              )
+            }
+            onPress={() =>
+              handleRecordBoxPress(
+                !!dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'BREAKFAST',
+                ),
+                'BREAKFAST',
+              )
+            }
           />
           <RecordBox
             title="점심"
-            kcal="400kcal"
-            price="0₩"
-            isRecorded={lunchEnabled}
-            onPress={() => handleRecordBoxPress(lunchEnabled, '점심')}
+            kcal={
+              String(
+                dayData?.day_diaries.find(diary => diary.diary_time === 'LUNCH')
+                  ?.diary_kcal,
+              ) || '0'
+            }
+            price={
+              String(
+                dayData?.day_diaries.find(diary => diary.diary_time === 'LUNCH')
+                  ?.diary_cost,
+              ) || '0'
+            }
+            isRecorded={
+              !!dayData?.day_diaries.find(diary => diary.diary_time === 'LUNCH')
+            }
+            onPress={() =>
+              handleRecordBoxPress(
+                !!dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'LUNCH',
+                ),
+                'LUNCH',
+              )
+            }
           />
           <RecordBox
             title="저녁"
-            kcal="400kcal"
-            price="0₩"
-            isRecorded={dinnerEnabled}
-            onPress={() => handleRecordBoxPress(dinnerEnabled, '저녁')}
+            kcal={
+              String(
+                dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'DINNER',
+                )?.diary_kcal,
+              ) || '0'
+            }
+            price={
+              String(
+                dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'DINNER',
+                )?.diary_cost,
+              ) || '0'
+            }
+            isRecorded={
+              !!dayData?.day_diaries.find(
+                diary => diary.diary_time === 'DINNER',
+              )
+            }
+            onPress={() =>
+              handleRecordBoxPress(
+                !!dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'DINNER',
+                ),
+                'DINNER',
+              )
+            }
           />
           <RecordBox
             title="간식"
-            kcal="400kcal"
-            price="0₩"
-            isRecorded={snackEnabled}
-            onPress={() => handleRecordBoxPress(snackEnabled, '간식')}
+            kcal={
+              String(
+                dayData?.day_diaries.find(diary => diary.diary_time === 'SNACK')
+                  ?.diary_kcal,
+              ) || '0'
+            }
+            price={
+              String(
+                dayData?.day_diaries.find(diary => diary.diary_time === 'SNACK')
+                  ?.diary_cost,
+              ) || '0'
+            }
+            isRecorded={
+              !!dayData?.day_diaries.find(diary => diary.diary_time === 'SNACK')
+            }
+            onPress={() =>
+              handleRecordBoxPress(
+                !!dayData?.day_diaries.find(
+                  diary => diary.diary_time === 'SNACK',
+                ),
+                'SNACK',
+              )
+            }
           />
         </View>
       </ScrollView>
@@ -302,6 +392,7 @@ const HomeScreen: React.FC = () => {
           onRequestClose={closeModal}>
           <View style={styles.modalContainer}>
             <RecordDetailModal
+              id={selectedRecord.id}
               title={selectedRecord.title}
               date={formatDate(currentDate)}
               kcal={selectedRecord.kcal}
