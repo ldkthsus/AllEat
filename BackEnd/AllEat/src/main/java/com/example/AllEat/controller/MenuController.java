@@ -3,6 +3,7 @@ import com.example.AllEat.dto.diary.DiaryResponseDTO;
 import com.example.AllEat.dto.menu.*;
 import com.example.AllEat.entity.MenuEntity;
 import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.repository.UserRepository;
 import com.example.AllEat.service.DailyDiaryService;
 import com.example.AllEat.service.FoodAddService;
 import com.example.AllEat.service.MenuService;
@@ -25,6 +26,7 @@ public class MenuController {
     private final UserService userService;
     private final DailyDiaryService dailyDiaryServie;
     private final FoodAddService foodAddService;
+    private final UserRepository userRepository;
 
     // 메뉴와 레스토랑 추가
     @PostMapping("/add-menu")
@@ -46,9 +48,13 @@ public class MenuController {
 
     // 모든 메뉴 조회
     @GetMapping("/menus")
-    public ResponseEntity<List<MenuEntity>> getAllMenus() {
-        List<MenuEntity> menus = menuService.getAllMenus();
-        return new ResponseEntity<>(menus, HttpStatus.OK);
+    public ResponseEntity<?> getAllMenus(HttpServletRequest request) {
+        UserEntity findUser = userService.findByRequest(request);
+        if(findUser != null) {
+            List<MenuResponseDTO> menus = menuService.getAllMenus(findUser);
+            return ResponseEntity.status(HttpStatus.OK).body(menus);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     // 특정 레스토랑의 메뉴 조회
@@ -102,7 +108,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/menu/{diaryId}")
-    public ResponseEntity<?> deleteDiary(HttpServletRequest request, @PathVariable Integer diaryId){
+    public ResponseEntity<?> deleteDiary(HttpServletRequest request, @PathVariable(name = "diaryId") Integer diaryId){
         UserEntity findUser = userService.findByRequest(request);
         if(findUser != null) {
             menuService.deleteDiary(diaryId);
