@@ -4,9 +4,14 @@ import com.example.AllEat.dto.menu.MainDataDTO;
 import com.example.AllEat.entity.DiaryEntity;
 import com.example.AllEat.entity.DiaryMappingEntity;
 import com.example.AllEat.entity.MenuEntity;
+import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.DiaryRepository;
+import com.example.AllEat.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,11 +21,30 @@ public class MainDataService {
     @Autowired
     private DiaryRepository diaryRepository;
 
-    public MainDataDTO getDiaryByDate(String date) {
-        LocalDate localDate = LocalDate.parse(date);
-        List<DiaryEntity> diaries = diaryRepository.findByDailyDiary_Date(localDate);
+    @Autowired
+    private UserRepository userRepository;
 
-        // If no data is found, return all values as null
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public MainDataDTO getDiaryByDate(String date, HttpServletRequest request) {
+        // JWT 토큰에서 사용자 이메일 추출
+        String token = request.getHeader("Authorization");
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid or missing Authorization header");
+        }
+        token = token.substring(7); // "Bearer " 부분 제거
+        String email = jwtUtil.getEmail(token);
+
+        // 사용자 찾기
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        LocalDate localDate = LocalDate.parse(date);
+        List<DiaryEntity> diaries = diaryRepository.findByDailyDiary_UserAndDailyDiary_Date(user, localDate);
+
         if (diaries == null || diaries.isEmpty()) {
             MainDataDTO emptyDataDTO = new MainDataDTO();
             emptyDataDTO.setDayKcal(null);
@@ -31,7 +55,6 @@ public class MainDataService {
             return emptyDataDTO;
         }
 
-        // Processing data to fit the response DTO structure
         MainDataDTO mainDataDTO = new MainDataDTO();
         int totalKcal = 0, totalCarb = 0, totalProtein = 0, totalFat = 0, totalCost = 0;
 
@@ -39,9 +62,9 @@ public class MainDataService {
             int diaryCost = 0;
             double diaryKcal = 0.0; // Initialize diary-specific kcal
 
-            // Retrieve information from DiaryMappingEntity to get associated MenuEntity
+
             for (DiaryMappingEntity mapping : diary.getDiaryMapping()) {
-                MenuEntity menu = mapping.getMenu(); // Assuming DiaryMappingEntity has a getMenu() method
+                MenuEntity menu = mapping.getMenu();
                 if (menu != null && mapping.getPersonCount() != null && mapping.getPersonCount() > 0) {
                     int adjustedPrice = (int) Math.round(menu.getMenuPrice() / (double) mapping.getPersonCount());
                     int adjustedCarb = (int) Math.round((menu.getMenuCarbohydrate() != null ? menu.getMenuCarbohydrate() : 0) / (double) mapping.getPersonCount());
@@ -53,12 +76,12 @@ public class MainDataService {
                     totalCarb += adjustedCarb;
                     totalProtein += adjustedProtein;
                     totalFat += adjustedFat;
-                    diaryKcal += adjustedKcal; // Add the adjusted kcal
+                    diaryKcal += adjustedKcal;
                 }
             }
 
-            totalKcal += diaryKcal; // Add the adjusted diary kcal to total kcal
-            totalCost += diaryCost; // Adding diary cost to total cost
+            totalKcal += diaryKcal;
+            totalCost += diaryCost;
             mainDataDTO.addDiaryDetail(diary.getId(), diary.getDiaryTime().name(), (int) Math.round(diaryKcal), diaryCost);
         }
 
