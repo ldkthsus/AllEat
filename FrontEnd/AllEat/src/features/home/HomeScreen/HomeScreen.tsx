@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
 import {icons} from '../../../constants';
@@ -19,10 +19,11 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Home'
 >;
-
+type HomeRouteProp = RouteProp<RootStackParamList, 'Home'>;
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
-
+  const route = useRoute<HomeRouteProp>();
+  const {isUpdated = false} = route.params || {};
   // 현재 날짜를 저장하는 상태
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -73,7 +74,6 @@ const HomeScreen: React.FC = () => {
       });
     } else {
       navigation.navigate('DiaryCreate', {
-        diaryId: selectedRecord?.id,
         date: format(currentDate, 'yyyy-MM-dd'),
         meals: title,
       });
@@ -81,9 +81,8 @@ const HomeScreen: React.FC = () => {
   };
 
   // 리덕스 스토어에서 사용자 정보 가져오기
-  const { goal_cost, goal_kcal } = useSelector((state: RootState) => state.info);
-  const { monthlyUsedAmount } = useSelector((state: RootState) => state.paymoney);
-
+  const {goal_cost, goal_kcal} = useSelector((state: RootState) => state.info);
+  const {monthlyUsedAmount} = useSelector((state: RootState) => state.paymoney);
 
   // 기록된 데이터 상태
   const [dayData, setDayData] = useState<{
@@ -112,7 +111,10 @@ const HomeScreen: React.FC = () => {
       }
     };
     fetchData();
-  }, [currentDate]); // currentDate가 변경될 때마다 데이터 다시 가져오기
+    if (isUpdated) {
+      fetchData();
+    }
+  }, [currentDate, isUpdated]); // currentDate가 변경될 때마다 데이터 다시 가져오기
 
   // 모달 닫기 함수
   const closeModal = () => {
@@ -120,12 +122,21 @@ const HomeScreen: React.FC = () => {
     setSelectedRecord(null);
   };
 
-  const totalNutrients = (dayData?.day_carb || 0) + (dayData?.day_protein || 0) + (dayData?.day_fat || 0);
+  const totalNutrients =
+    (dayData?.day_carb || 0) +
+    (dayData?.day_protein || 0) +
+    (dayData?.day_fat || 0);
 
   // 각 영양소의 비율 계산
-  const carbRatio = totalNutrients ? (dayData?.day_carb || 0) / totalNutrients : 0;
-  const proteinRatio = totalNutrients ? (dayData?.day_protein || 0) / totalNutrients : 0;
-  const fatRatio = totalNutrients ? (dayData?.day_fat || 0) / totalNutrients : 0;
+  const carbRatio = totalNutrients
+    ? (dayData?.day_carb || 0) / totalNutrients
+    : 0;
+  const proteinRatio = totalNutrients
+    ? (dayData?.day_protein || 0) / totalNutrients
+    : 0;
+  const fatRatio = totalNutrients
+    ? (dayData?.day_fat || 0) / totalNutrients
+    : 0;
 
   return (
     <View style={{flex: 1}}>
@@ -191,8 +202,9 @@ const HomeScreen: React.FC = () => {
               <View style={styles.allText}>
                 <icons.tan style={styles.nutrientIcon} height={15} width={15} />
                 <Text style={styles.nutrientText}>
-                  탄수화물 <Text style={styles.nutrientCarb}>
-                  {dayData?.day_carb ? `${dayData.day_carb}g` : '0g'}
+                  탄수화물{' '}
+                  <Text style={styles.nutrientCarb}>
+                    {dayData?.day_carb ? `${dayData.day_carb}g` : '0g'}
                   </Text>
                 </Text>
               </View>
@@ -200,8 +212,9 @@ const HomeScreen: React.FC = () => {
               <View style={styles.allText}>
                 <icons.dan style={styles.nutrientIcon} height={15} width={15} />
                 <Text style={styles.nutrientText}>
-                  단백질 <Text style={styles.nutrientCarb}>
-                  {dayData?.day_protein ? `${dayData.day_protein}g` : '0g'}
+                  단백질{' '}
+                  <Text style={styles.nutrientCarb}>
+                    {dayData?.day_protein ? `${dayData.day_protein}g` : '0g'}
                   </Text>
                 </Text>
               </View>
@@ -209,48 +222,49 @@ const HomeScreen: React.FC = () => {
               <View style={styles.allText}>
                 <icons.ji style={styles.nutrientIcon} height={15} width={15} />
                 <Text style={styles.nutrientText}>
-                  지방 <Text style={styles.nutrientCarb}>
-                  {dayData?.day_fat ? `${dayData.day_fat}g` : '0g'}
+                  지방{' '}
+                  <Text style={styles.nutrientCarb}>
+                    {dayData?.day_fat ? `${dayData.day_fat}g` : '0g'}
                   </Text>
                 </Text>
               </View>
 
               <View style={styles.gaugeBox}>
-            {/* 탄수화물 비율에 맞춘 바 */}
-            <View
-              style={[
-                styles.gaugeSegment,
-                {
-                  width: `${carbRatio * 100}%`, // 탄수화물 비율
-                  backgroundColor: '#769BFF', // 탄수화물 색상
-                  borderTopLeftRadius: 7,
-                  borderBottomLeftRadius: 7,
-                },
-              ]}
-            />
-            {/* 단백질 비율에 맞춘 바 */}
-            <View
-              style={[
-                styles.gaugeSegment,
-                {
-                  width: `${proteinRatio * 100}%`, // 단백질 비율
-                  backgroundColor: '#4D7CFE', // 단백질 색상
-                },
-              ]}
-            />
-            {/* 지방 비율에 맞춘 바 */}
-            <View
-              style={[
-                styles.gaugeSegment,
-                {
-                  width: `${fatRatio * 100}%`, // 지방 비율
-                  backgroundColor: '#A0BFFF', // 지방 색상
-                  borderTopRightRadius: 7,
-                  borderBottomRightRadius: 7,
-                },
-              ]}
-            />
-          </View>
+                {/* 탄수화물 비율에 맞춘 바 */}
+                <View
+                  style={[
+                    styles.gaugeSegment,
+                    {
+                      width: `${carbRatio * 100}%`, // 탄수화물 비율
+                      backgroundColor: '#769BFF', // 탄수화물 색상
+                      borderTopLeftRadius: 7,
+                      borderBottomLeftRadius: 7,
+                    },
+                  ]}
+                />
+                {/* 단백질 비율에 맞춘 바 */}
+                <View
+                  style={[
+                    styles.gaugeSegment,
+                    {
+                      width: `${proteinRatio * 100}%`, // 단백질 비율
+                      backgroundColor: '#4D7CFE', // 단백질 색상
+                    },
+                  ]}
+                />
+                {/* 지방 비율에 맞춘 바 */}
+                <View
+                  style={[
+                    styles.gaugeSegment,
+                    {
+                      width: `${fatRatio * 100}%`, // 지방 비율
+                      backgroundColor: '#A0BFFF', // 지방 색상
+                      borderTopRightRadius: 7,
+                      borderBottomRightRadius: 7,
+                    },
+                  ]}
+                />
+              </View>
             </View>
           </View>
 
@@ -258,7 +272,11 @@ const HomeScreen: React.FC = () => {
           <View style={styles.progressContainer}>
             <View style={styles.progressWrapper}>
               <CircularProgress
-                progress={dayData?.day_cost && goal_cost ? dayData.day_cost / goal_cost : 0}
+                progress={
+                  dayData?.day_cost && goal_cost
+                    ? dayData.day_cost / goal_cost
+                    : 0
+                }
                 total={goal_cost || 0} // 총 금액
                 current={dayData?.day_cost ? dayData.day_cost : 0} // 현재 소비한 금액
                 progressColor="#769BFF"
@@ -274,7 +292,11 @@ const HomeScreen: React.FC = () => {
             </View>
             <View style={styles.progressWrapper}>
               <CircularProgress
-                 progress={dayData?.day_kcal && goal_kcal ? dayData.day_kcal / goal_kcal : 0} // 진행도 계산 (예: 총 1520kcal 대비 비율)
+                progress={
+                  dayData?.day_kcal && goal_kcal
+                    ? dayData.day_kcal / goal_kcal
+                    : 0
+                } // 진행도 계산 (예: 총 1520kcal 대비 비율)
                 total={goal_kcal || 0} // 총 칼로리
                 current={dayData?.day_kcal ? dayData.day_kcal : 0} // 현재 섭취한 칼로리
                 progressColor="#93AAE7"
@@ -289,7 +311,6 @@ const HomeScreen: React.FC = () => {
               />
             </View>
           </View>
-
         </View>
 
         <View style={styles.whiteBox}>
@@ -443,4 +464,3 @@ const HomeScreen: React.FC = () => {
 
 export default HomeScreen;
 // export type RootState = ReturnType<typeof store.getState>;
-
