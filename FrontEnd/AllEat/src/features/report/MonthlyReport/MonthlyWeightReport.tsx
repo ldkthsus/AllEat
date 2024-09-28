@@ -1,4 +1,3 @@
-// MonthlyWeightReport.tsx
 import React from 'react';
 import { View, Text } from 'react-native';
 import Svg, { Polyline, Line, Text as SvgText, Defs, LinearGradient, Stop, Path } from 'react-native-svg';
@@ -7,7 +6,7 @@ import { styles } from './MonthlyWeightReport.styles';
 interface weightRecords {
   date: string;
   weight: number;
-};
+}
 
 interface MonthlyWeightReportProps {
   monthlyCostRecords: number[];
@@ -21,18 +20,25 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
   const dataPoints = monthlyCostRecords.length;
 
   // x축 좌표 계산
-  const xInterval = (width - padding * 2) / (dataPoints - 1);
+  const xInterval = dataPoints > 1 ? (width - padding * 2) / (dataPoints - 1) : 0;
 
   // 식비 추이 그래프 그리기
   const maxCost = Math.max(...monthlyCostRecords);
   const minCost = Math.min(...monthlyCostRecords);
-  const costYRange = maxCost - minCost;
-  
+  const costYRange = maxCost - minCost || 1; // 0인 경우 1로 설정하여 NaN 방지
+
   const costPoints = monthlyCostRecords.map((cost, index) => {
     const x = padding + index * xInterval;
     const y = height - padding - ((cost - minCost) / costYRange) * (height - padding * 2);
+
+    // NaN 방지
+    if (isNaN(y)) {
+      console.error(`Invalid y-coordinate for cost: ${cost}`);
+      return '';
+    }
+
     return `${x},${y}`;
-  }).join(' ');
+  }).filter(point => point !== '').join(' ');
 
   const costGradientPath = `
     M ${padding}, ${height - padding} 
@@ -57,14 +63,21 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
   const weights = monthlyWeightRecords.map(record => record.weight);
   const maxWeight = Math.max(...weights);
   const minWeight = Math.min(...weights);
-  const weightYRange = maxWeight - minWeight;
+  const weightYRange = maxWeight - minWeight || 1; // 0인 경우 1로 설정하여 NaN 방지
 
   const weightPoints = monthlyWeightRecords.map(record => {
     const day = new Date(record.date).getDate();
     const x = padding + (day - 1) * xInterval;
     const y = height - padding - ((record.weight - minWeight) / weightYRange) * (height - padding * 2);
+
+    // NaN 방지
+    if (isNaN(y)) {
+      console.error(`Invalid y-coordinate for weight: ${record.weight}`);
+      return '';
+    }
+
     return `${x},${y}`;
-  }).join(' ');
+  }).filter(point => point !== '').join(' ');
 
   const weightGradientPath = `
     M ${padding}, ${height - padding} 
@@ -98,7 +111,7 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
           <Path d={costGradientPath} fill="url(#costGrad)" />
 
           {/* 꺾은선 그래프 */}
-          <Polyline points={costPoints} fill="none"/>
+          <Polyline points={costPoints} fill="none" stroke="#769BFF" strokeWidth="2" />
 
           {/* x축 레이블 */}
           {[1, Math.ceil(dataPoints / 2), dataPoints].map((day, index) => {
@@ -127,7 +140,7 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
 
       {/* 체중 추이 그래프 */}
       <View style={styles.monthlyMealReportContainer}>
-      <View style={styles.costGraphContainer}>
+        <View style={styles.costGraphContainer}>
           <Text style={styles.costGraphTitle}>
             체중 추이
           </Text>
@@ -145,7 +158,7 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
           <Path d={weightGradientPath} fill="url(#weightGrad)" />
 
           {/* 꺾은선 그래프 */}
-          <Polyline points={weightPoints} fill="none"/>
+          <Polyline points={weightPoints} fill="none" stroke="#FF7F7F" strokeWidth="2" />
 
           {/* x축 레이블 */}
           {[1, Math.ceil(dataPoints / 2), dataPoints].map((day, index) => {
