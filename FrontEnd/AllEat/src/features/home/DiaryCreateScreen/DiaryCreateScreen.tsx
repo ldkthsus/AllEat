@@ -46,7 +46,6 @@ const DiaryCreateScreen: React.FC = () => {
   const navigation = useNavigation<DiaryCreateScreenNavigationProp>();
   const route = useRoute<DiaryCreateRouteProp>();
   const {date, meals, diaryId} = route.params;
-
   const [isModalVisible, setModalVisible] = useState(false); // 모달 상태
   const [modalType, setModalType] = useState('main'); // 기본 모달 상태
 
@@ -325,7 +324,7 @@ const DiaryCreateScreen: React.FC = () => {
       };
 
       console.log('다이어리 요청 데이터:', diaryData);
-      console.log('DiaryId : ',diaryId)
+      console.log('POST인가요,PUT인가요?', diaryId);
 
       let response;
       // POST or PUT 요청 분기
@@ -337,7 +336,7 @@ const DiaryCreateScreen: React.FC = () => {
       console.log('다이어리 추가 성공:', response.data);
 
       // 성공 시 홈 화면으로 돌아가기
-      navigation.navigate('Home');
+      navigation.navigate('Home', {isUpdated: true});
     } catch (error) {
       console.error('다이어리 추가 실패:', error);
     }

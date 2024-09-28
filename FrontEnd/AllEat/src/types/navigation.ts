@@ -1,6 +1,6 @@
 // src/types/navigationTypes.ts
 export type RootStackParamList = {
-  Home: undefined;
+  Home: {isUpdated?: boolean};
   DiaryCreate: {date: string; meals: string; diaryId?: number};
   SignIn: undefined;
   SignUp: undefined;

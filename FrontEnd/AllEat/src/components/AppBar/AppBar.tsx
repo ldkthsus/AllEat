@@ -13,7 +13,7 @@ const AppBar: React.FC = () => {
     <View style={styles.appBar}>
       <Pressable
         style={styles.icon}
-        onPress={() => navigation.navigate('Home')}>
+        onPress={() => navigation.navigate('Home', {})}>
         <icons.home height={30} width={30} />
         <Text style={styles.text}>홈</Text>
       </Pressable>
