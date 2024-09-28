@@ -13,11 +13,7 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.AllEat.repository.MonthlyMealPayRepository;
 
 import java.time.YearMonth;
@@ -41,6 +37,16 @@ public class MealPayController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
+    @PutMapping("/meal-pay")
+    public ResponseEntity<?> updateMealPay(@RequestBody MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
+        UserEntity findUserEntity = userService.findByRequest(request);
+        if (findUserEntity != null) {
+            MealPayEntity mealPayEntity = mealPayService.updateMealPayResult(mealPayRequest, findUserEntity);
+            return ResponseEntity.status(HttpStatus.OK).body(mealPayEntity);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     @GetMapping("/meal-pay")
     public ResponseEntity<?> getMealPayAmount(HttpServletRequest request){
         UserEntity user = userService.findByRequest(request);
@@ -54,7 +60,6 @@ public class MealPayController {
         } else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
     }
 
 }
