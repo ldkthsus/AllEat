@@ -9,6 +9,7 @@ import com.example.AllEat.service.MealPayService;
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,9 @@ public class MealPayController {
     }
 
     @GetMapping("/meal-pay")
-    public ResponseEntity<?> getMealPayAmount(UserEntity user){
+    public ResponseEntity<?> getMealPayAmount(HttpServletRequest request){
+        UserEntity user = userService.findByRequest(request);
+        
         MonthlyMealPayEntity findMonth =  monthlyMealPayRepository.findByUserAndDate(user, YearMonth.now()).get(0);
         MealPayAmountDTO mealPayAmountDTO = new MealPayAmountDTO();
 
