@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -33,13 +34,15 @@ public class DailyDiaryEntity {
     @OneToMany(mappedBy = "dailyDiary", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
 //    @JsonBackReference
-    private List<DiaryEntity> diaryEntities;
+    @Builder.Default
+    private List<DiaryEntity> diaryEntities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public void updateCalories(Integer calories) {
+    public void update(Integer calories, DiaryEntity diary) {
         this.dailyCalories = calories;
+        this.diaryEntities.add(diary);
     }
 }

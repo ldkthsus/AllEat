@@ -52,7 +52,7 @@ public class DailyDiaryResponseDTO {
     @JsonProperty("activity_amount")
     private Integer activityAmount;
 
-    public void FromEntity(DailyDiaryEntity dailyDiaryEntity, UserEntity userEntity) {
+    public void fromEntity(DailyDiaryEntity dailyDiaryEntity, UserEntity userEntity) {
         this.dailyDiaryId = dailyDiaryEntity.getId();
         this.date = dailyDiaryEntity.getDate();
         this.dailyCalories = dailyDiaryEntity.getDailyCalories();
