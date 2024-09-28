@@ -76,24 +76,8 @@ public class ReportController {
         }
 
         Map<String, Object> collectedData = monthReportService.collectMonthReport(yearMonth, request);
-        Map<String, Object> fastApiResponse = monthReportService.sendMonthReportToFastApi(collectedData, request);
-        Map<String, Object> finalReport = monthReportService.prepareFrontendResponse(fastApiResponse, collectedData);
+        Map<String, Object> finalReport = monthReportService.prepareFrontendResponse(collectedData);
 
         return ResponseEntity.ok(finalReport);
-    }
-
-    private ResponseEntity<String> sendToFastApi(Object reportData, HttpServletRequest request, String url) {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-
-        String authorization = request.getHeader("Authorization");
-        if (authorization == null || authorization.isEmpty()) {
-            throw new RuntimeException("Unauthorized - Missing Authorization header");
-        }
-        headers.set("Authorization", authorization);
-
-        HttpEntity<Object> requestEntity = new HttpEntity<>(reportData, headers);
-
-        return restTemplate.postForEntity(url, requestEntity, String.class);
     }
 }
