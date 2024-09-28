@@ -33,4 +33,8 @@ public class UpdateRequestDTO {
     @JsonProperty("activity_amount")
     private Integer activityAmount;
 
+    @JsonProperty("social_login")
+    private String socialLogin;
+
+
 }

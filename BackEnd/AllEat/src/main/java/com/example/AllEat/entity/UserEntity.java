@@ -72,6 +72,8 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
     private AlarmEntity alarm;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
+    private List<MonthlyMealPayEntity> mothlyMealPay;
 
     public void updateRefreshToken(String refreshToken, Timestamp expiration){
         this.refreshToken = refreshToken;
@@ -102,6 +104,10 @@ public class UserEntity {
         }
         if (updateRequest.getUserName() != null){
             this.userName = updateRequest.getUserName();
+        }
+
+        if (updateRequest.getSocialLogin() != null){
+            this.socialLogin = updateRequest.getSocialLogin();
         }
         this.profileUrl = profileUrl;
     }
