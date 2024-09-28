@@ -96,9 +96,14 @@ const SignIn: React.FC = () => {
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       
       // Google 로그인
-
+      await GoogleSignin.signIn();
+      
       const token = await GoogleSignin.getTokens();
       const idToken = token.idToken;
+      setIdToken(idToken);
+      
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+      const res = await auth().signInWithCredential(googleCredential);
 
       const userInfoOfGoogle = await GoogleSignin.signIn();
 
@@ -116,9 +121,6 @@ const SignIn: React.FC = () => {
 
       }else {
         // 이미 있는 계정이면 로그인
-        setIdToken(idToken);
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-        const res = await auth().signInWithCredential(googleCredential);
         if (res.user.email != null){
           const loginData = {
             email: res.user.email,
