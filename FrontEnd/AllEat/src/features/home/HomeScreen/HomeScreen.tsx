@@ -281,11 +281,7 @@ const HomeScreen: React.FC = () => {
           <View style={styles.progressContainer}>
             <View style={styles.progressWrapper}>
               <CircularProgress
-                progress={
-                  dayData?.day_cost && goal_cost
-                    ? dayData.day_cost / goal_cost
-                    : 0
-                }
+                progress={dayData?.day_cost && goal_cost ? Math.min(dayData.day_cost / goal_cost, 1) : 0} // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
                 total={goal_cost || 0} // 총 금액
                 current={dayData?.day_cost ? dayData.day_cost : 0} // 현재 소비한 금액
                 progressColor="#769BFF"
@@ -301,11 +297,7 @@ const HomeScreen: React.FC = () => {
             </View>
             <View style={styles.progressWrapper}>
               <CircularProgress
-                progress={
-                  dayData?.day_kcal && goal_kcal
-                    ? dayData.day_kcal / goal_kcal
-                    : 0
-                } // 진행도 계산 (예: 총 1520kcal 대비 비율)
+                progress={dayData?.day_kcal && goal_kcal ? Math.min(dayData.day_kcal / goal_kcal, 1) : 0} // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
                 total={goal_kcal || 0} // 총 칼로리
                 current={dayData?.day_kcal ? dayData.day_kcal : 0} // 현재 섭취한 칼로리
                 progressColor="#93AAE7"
