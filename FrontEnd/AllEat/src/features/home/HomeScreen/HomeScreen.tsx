@@ -105,7 +105,7 @@ const HomeScreen: React.FC = () => {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
         const response = await api.get(`/AllEat/get/main/${formattedDate}`);
         setDayData(response.data); // 가져온 데이터를 상태에 저장
-        console.log(response.data);
+        console.log("오늘의 데이터 : ",response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -195,7 +195,16 @@ const HomeScreen: React.FC = () => {
                 height={90}
                 width={90}
               />
-              <images.kiki style={styles.kiki} height={120} width={120} />
+              {dayData?.day_diaries.length === 0 ? (
+                // day_diaries가 빈 배열일 때
+                <images.kikiNoRecord style={styles.kiki} height={120} width={120} />
+              ) : dayData?.day_kcal && goal_kcal && dayData.day_kcal > goal_kcal ? (
+                // day_kcal가 goal_kcal보다 클 때
+                <images.kikiOverCal style={styles.kiki} height={120} width={120} />
+              ) : (
+                // 그 외의 경우 기본 kiki 이미지
+                <images.kiki style={styles.kiki} height={120} width={120} />
+              )}
             </View>
 
             <View style={styles.nutrientInfo}>
@@ -230,41 +239,41 @@ const HomeScreen: React.FC = () => {
               </View>
 
               <View style={styles.gaugeBox}>
-                {/* 탄수화물 비율에 맞춘 바 */}
-                <View
-                  style={[
-                    styles.gaugeSegment,
-                    {
-                      width: `${carbRatio * 100}%`, // 탄수화물 비율
-                      backgroundColor: '#769BFF', // 탄수화물 색상
-                      borderTopLeftRadius: 7,
-                      borderBottomLeftRadius: 7,
-                    },
-                  ]}
-                />
-                {/* 단백질 비율에 맞춘 바 */}
-                <View
-                  style={[
-                    styles.gaugeSegment,
-                    {
-                      width: `${proteinRatio * 100}%`, // 단백질 비율
-                      backgroundColor: '#4D7CFE', // 단백질 색상
-                    },
-                  ]}
-                />
-                {/* 지방 비율에 맞춘 바 */}
-                <View
-                  style={[
-                    styles.gaugeSegment,
-                    {
-                      width: `${fatRatio * 100}%`, // 지방 비율
-                      backgroundColor: '#A0BFFF', // 지방 색상
-                      borderTopRightRadius: 7,
-                      borderBottomRightRadius: 7,
-                    },
-                  ]}
-                />
-              </View>
+            {/* 탄수화물 비율에 맞춘 바 */}
+            <View
+              style={[
+                styles.gaugeSegment,
+                {
+                  width: `${carbRatio * 100}%`, // 탄수화물 비율
+                  backgroundColor: '#B0C5FF', // 탄수화물 색상
+                  borderTopLeftRadius: 7,
+                  borderBottomLeftRadius: 7,
+                },
+              ]}
+            />
+            {/* 단백질 비율에 맞춘 바 */}
+            <View
+              style={[
+                styles.gaugeSegment,
+                {
+                  width: `${proteinRatio * 100}%`, // 단백질 비율
+                  backgroundColor: '#769BFF', // 단백질 색상
+                },
+              ]}
+            />
+            {/* 지방 비율에 맞춘 바 */}
+            <View
+              style={[
+                styles.gaugeSegment,
+                {
+                  width: `${fatRatio * 100}%`, // 지방 비율
+                  backgroundColor: '#D3DFFF', // 지방 색상
+                  borderTopRightRadius: 7,
+                  borderBottomRightRadius: 7,
+                },
+              ]}
+            />
+          </View>
             </View>
           </View>
 
