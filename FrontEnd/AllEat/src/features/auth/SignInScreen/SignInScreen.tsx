@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, Pressable, Alert} from 'react-native';
+import React, { useState, useEffect} from 'react';
+import {View, Text, Pressable, Alert, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import FormField from '../../../components/FormField/FormField';
@@ -14,6 +14,17 @@ import {RootState} from '../../../redux/store';
 import {fetchUserInfo} from '../../../redux/features/infoSlice'; // infoSlice에서 fetchUserInfo 가져오기
 import {unwrapResult} from '@reduxjs/toolkit'; // unwrapResult 추가
 import {AppDispatch} from '../../../redux/store';
+import {signupUser} from '../../../redux/features/authSlice';
+import {AUTH_LOGIN_PASSWORD} from '@env';
+import {BACK_URL} from '@env';
+
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -33,10 +44,15 @@ const SignIn: React.FC = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [idToken, setIdToken] = useState<string | null>(null);
 
   // 상태 변경 감지 및 console.log로 토큰 저장 확인
   useEffect(() => {
     console.log('Redux auth 확인:', {isAuthenticated, token});
+    GoogleSignin.configure({
+      webClientId: "63668378347-461lhh603fihl1qri0ikdn759lbnvdub.apps.googleusercontent.com",
+    });
+
     if (isAuthenticated) {
       navigation.replace('Home'); // 로그인 성공 후 Home으로 이동
     }
@@ -72,19 +88,71 @@ const SignIn: React.FC = () => {
     setIsSubmitting(false);
   };
 
+  // 구글 로그인 버튼을 눌렀을 때
+  const onPressGoogleBtn = async () => {
+    try {
+      // Google Play Services 체크
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      
+      // Google 로그인
+
+      const token = await GoogleSignin.getTokens();
+      const idToken = token.idToken;
+
+      const userInfoOfGoogle = await GoogleSignin.signIn();
+
+      // db에서 이메일 찾아보기 
+      const isNewResponse = await axios.post(`${BACK_URL}/AllEat/users/social-login`,userInfoOfGoogle.data?.user.email);
+      const isNew = isNewResponse.data.isNew;
+
+      if (isNew){
+        // 새로운 계정이면 회원 가입 진행 안내 alert 
+        Alert.alert("회원 가입을 먼저 진행해주세요!")
+
+      }else {
+        // 이미 있는 계정이면 로그인
+        setIdToken(idToken);
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        const res = await auth().signInWithCredential(googleCredential);
+        if (res.user.email != null){
+          const loginData = {
+            email: res.user.email,
+            password: AUTH_LOGIN_PASSWORD,
+          };
+          // console.log(loginData);
+          await dispatch(loginUser(loginData));
+          await dispatch(fetchUserInfo());
+        }
+      }
+    } catch (error: any) {
+      // 오류 처리
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        Alert.alert('Sign in cancelled');
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        Alert.alert('Sign in in progress');
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        Alert.alert('Play services not available');
+      } else {
+        console.error(error);
+      }
+    }
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>돌아오셨군요! 반가워요</Text>
 
       <View style={styles.socialContainer}>
-        <View style={styles.socialButtonGoogle}>
-          <icons.socialGoogle
-            style={styles.socialButton}
-            width={24}
-            height={24}
-          />
-          <Text style={styles.socialButtonText}>구글로 계속하기</Text>
-        </View>
+        <TouchableOpacity onPress={onPressGoogleBtn}>
+          <View style={styles.socialButtonGoogle}>
+            <icons.socialGoogle
+              style={styles.socialButton}
+              width={24}
+              height={24}
+            />
+            <Text style={styles.socialButtonText}>구글로 계속하기</Text>
+          </View>
+        </TouchableOpacity>
         <View style={styles.socialButtonKakao}>
           <icons.socialKakao
             style={styles.socialButton}

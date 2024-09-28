@@ -8,6 +8,12 @@ interface AuthData {
   password: string;
 }
 
+interface SignUpData {
+  email: string;
+  password: string;
+  isSocial: boolean;
+}
+
 // 인증 상태를 관리하는 상태의 구조 정의
 interface AuthState {
   isAuthenticated: boolean; // 사용자 인증 여부
@@ -27,12 +33,22 @@ const initialState: AuthState = {
 // 비동기 회원가입 액션 생성
 export const signupUser = createAsyncThunk(
   'auth/signupUser',
-  async (signupData: AuthData, {rejectWithValue}) => {
+  async (signupData: SignUpData, {rejectWithValue}) => {
     try {
       // 회원가입 API 요청
       console.log('회원가입 요청 : ', signupData);
       await axios.post(`${BACK_URL}/AllEat/users/join`, signupData);
+      if (signupData.isSocial){
+        const formData = new FormData();
+        formData.append('data', {
+          string: JSON.stringify({
+            social_login: true,
+          }),
+          type: 'application/json',
+        });
+        axios.put(`${BACK_URL}/AllEat/users/info`,formData);
 
+      }
       console.log('회원가입 성공!');
 
       // 회원가입 성공 후 로그인 요청
