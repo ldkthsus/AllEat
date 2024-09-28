@@ -71,7 +71,7 @@ const SignUp: React.FC = () => {
 
       // db에서 이메일 찾아보기 
       const isNewResponse = await axios.post(`${BACK_URL}/AllEat/users/social-login`,userInfoOfGoogle.data?.user.email);
-      const isNew = isNewResponse.data.isNew;
+      const isNew = isNewResponse.data.is_new;
 
       if (isNew){
         // 새로운 계정이면 회원 가입 진행
@@ -97,6 +97,7 @@ const SignUp: React.FC = () => {
           const loginData = {
             email: res.user.email,
             password: AUTH_LOGIN_PASSWORD,
+            isSocial: true,
           };
           // console.log(loginData);
           await dispatch(loginUser(loginData));

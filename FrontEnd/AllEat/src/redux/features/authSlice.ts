@@ -6,11 +6,6 @@ import {BACK_URL} from '@env';
 interface AuthData {
   email: string;
   password: string;
-}
-
-interface SignUpData {
-  email: string;
-  password: string;
   isSocial: boolean;
 }
 
@@ -20,6 +15,7 @@ interface AuthState {
   loading: boolean; // API 요청 진행 중 여부
   error: string | null; // 오류 메시지
   token: string | null; // 인증 토큰 (초기값은 null)
+  isSocial: boolean;
 }
 
 // 초기 상태
@@ -28,27 +24,18 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   token: null,
+  isSocial: false
 };
 
 // 비동기 회원가입 액션 생성
 export const signupUser = createAsyncThunk(
   'auth/signupUser',
-  async (signupData: SignUpData, {rejectWithValue}) => {
+  async (signupData: AuthData, {rejectWithValue}) => {
     try {
       // 회원가입 API 요청
       console.log('회원가입 요청 : ', signupData);
       await axios.post(`${BACK_URL}/AllEat/users/join`, signupData);
-      if (signupData.isSocial){
-        const formData = new FormData();
-        formData.append('data', {
-          string: JSON.stringify({
-            social_login: true,
-          }),
-          type: 'application/json',
-        });
-        axios.put(`${BACK_URL}/AllEat/users/info`,formData);
 
-      }
       console.log('회원가입 성공!');
 
       // 회원가입 성공 후 로그인 요청
@@ -57,11 +44,13 @@ export const signupUser = createAsyncThunk(
         password: signupData.password,
       });
 
+      
       console.log('로그인도 성공!');
+      const token = loginResponse.headers.authorization.split(' ')[1]; // Bearer 토큰 형식에서 'Bearer '를 제외한 실제 토큰만 추출
+
 
       // 헤더에서 JWT 토큰 추출
-      const token = loginResponse.headers.authorization.split(' ')[1]; // Bearer 토큰 형식에서 'Bearer '를 제외한 실제 토큰만 추출
-      return {token}; // 토큰 반환
+      return {token, isSocial : signupData.isSocial}; // 토큰 반환
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '회원가입 실패');
     }
@@ -83,7 +72,7 @@ export const loginUser = createAsyncThunk(
 
       // 헤더에서 JWT 토큰 추출
       const token = response.headers.authorization.split(' ')[1]; // 토큰 추출
-      return {token}; // 토큰 반환
+      return {token, isSocial : loginData.isSocial}; // 토큰 반환
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response?.data?.message || '로그인 실패');
@@ -110,10 +99,11 @@ const authSlice = createSlice({
       })
       .addCase(
         signupUser.fulfilled,
-        (state, action: PayloadAction<{token: string}>) => {
+        (state, action: PayloadAction<{token: string, isSocial: boolean}>) => {
           state.isAuthenticated = true;
           state.loading = false;
           state.token = action.payload.token; // 토큰 저장
+          state.isSocial = action.payload.isSocial;
         },
       );
     // .addCase(signupUser.rejected, (state, action: PayloadAction<string>) => {
@@ -129,10 +119,11 @@ const authSlice = createSlice({
       })
       .addCase(
         loginUser.fulfilled,
-        (state, action: PayloadAction<{token: string}>) => {
+        (state, action: PayloadAction<{token: string, isSocial:boolean}>) => {
           state.isAuthenticated = true;
           state.loading = false;
           state.token = action.payload.token; // 토큰 저장
+          state.isSocial = action.payload.isSocial;
         },
       );
     // .addCase(loginUser.rejected, (state, action: PayloadAction<string>) => {
