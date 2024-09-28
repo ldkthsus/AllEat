@@ -71,12 +71,6 @@ public class MenuController {
         menuService.deleteMenu(id, request);  // HttpServletRequest 추가
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-//
-//    @GetMapping("/menu/{restaurantId}/{balance}")
-//    public ResponseEntity<?> getPossibleList(@PathVariable(name = "restaurantId") Integer restaurantId, @PathVariable(name = "balance") Integer balance) {
-//        List<MenuEntity> menus = menuService.getMenusByRestaurantIdAndBalance(restaurantId, balance);
-//        return ResponseEntity.status(HttpStatus.OK).body(menus);
-//    }
 
     @GetMapping("/menu-auto/{date}")
     public ResponseEntity<?> getPossibleList(HttpServletRequest request, @PathVariable(name = "date", required = true) LocalDate date) {
@@ -105,6 +99,16 @@ public class MenuController {
     public ResponseEntity<?> addFoodInfo(HttpServletRequest request){
         foodAddService.addFood();
         return ResponseEntity.status(HttpStatus.CREATED).body("successfully added");
+    }
+
+    @DeleteMapping("/menu/{diaryId}")
+    public ResponseEntity<?> deleteDiary(HttpServletRequest request, @PathVariable Integer diaryId){
+        UserEntity findUser = userService.findByRequest(request);
+        if(findUser != null) {
+            menuService.deleteDiary(diaryId);
+            return ResponseEntity.status(HttpStatus.OK).body("successfully deleted");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }
