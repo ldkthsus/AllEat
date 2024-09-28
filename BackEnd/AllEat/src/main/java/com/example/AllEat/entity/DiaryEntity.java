@@ -55,6 +55,7 @@ public class DiaryEntity {
 
 
     public void updateDetails(Integer calories, Integer price) {
+
         this.mealCalories = calories;
         this.dailyPrice = price;
     }

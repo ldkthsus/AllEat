@@ -3,7 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.List;
 
 @Entity
@@ -40,7 +41,6 @@ public class MenuEntity {
     @Column(name = "menu_fat", nullable = true)
     private Double menuFat;  // 지방 (g)
 
-    // menu_type을 int로 변경
     @Column(name = "menu_type", nullable = false)
     private Integer menuType;  // 0 = COUNT, 1 = GRAM, 2 = ML
 
@@ -53,8 +53,18 @@ public class MenuEntity {
     private FavoriteEntity favorite;
 
     @OneToMany(mappedBy = "menu", orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<DiaryMappingEntity> diaryMappings;
 
     @OneToOne(mappedBy = "menu", orphanRemoval = true)
     private AutoEntity auto;
+
+    // 레스토랑 이름과 타입을 가져오기 위한 메서드
+    public String getRestaurantsName() {
+        return this.restaurants != null ? this.restaurants.getRestaurantsName() : null;
+    }
+
+    public String getRestaurantsType() {
+        return this.restaurants != null ? this.restaurants.getRestaurantsType().getType() : null;
+    }
 }

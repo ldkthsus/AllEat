@@ -164,7 +164,4 @@ cython_debug/
 audio/*
 !audio/.gitkeep
 
-# 모델 체크포인트 파일
 *.pth
-
-# /chatbot/KoBertCheckpoint/*

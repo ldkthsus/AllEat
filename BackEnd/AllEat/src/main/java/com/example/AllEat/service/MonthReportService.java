@@ -226,7 +226,7 @@ public class MonthReportService {
 
         // 프론트엔드에 반환할 데이터 구성
         Map<String, Object> finalReport = new HashMap<>();
-        finalReport.put("response", fastApiResponse != null ? fastApiResponse.get("response") : null);
+        finalReport.put("gptResponse", fastApiResponse != null ? fastApiResponse.get("response") : null);
         finalReport.put("monthly_weight_records", collectedData.get("weightRecords"));
         finalReport.put("total_cost", collectedData.get("totalCost"));
         finalReport.put("average_calories", collectedData.get("kcalAvg"));
