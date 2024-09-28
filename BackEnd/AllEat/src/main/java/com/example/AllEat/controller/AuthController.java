@@ -1,5 +1,6 @@
 package com.example.AllEat.controller;
 
+import com.example.AllEat.dto.user.EmailCheckDTO;
 import com.example.AllEat.dto.user.UpdateRequestDTO;
 import com.example.AllEat.dto.user.UserJoinDTO;
 import com.example.AllEat.dto.user.UserResponseDTO;
@@ -14,10 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/AllEat/users")
@@ -74,10 +75,9 @@ public class AuthController {
     @PostMapping("/social-login")
     public ResponseEntity<?> checkUser(@Validated @RequestBody String email) {
         Boolean isUse = userService.getUserEmail(email);
-        if(!isUse) {
-            return ResponseEntity.status(HttpStatus.OK).body(isUse);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(isUse);
+        EmailCheckDTO emailCheckDTO = new EmailCheckDTO();
+        emailCheckDTO.setNew(!isUse);
+        return ResponseEntity.status(HttpStatus.OK).body(emailCheckDTO);
     }
 
 //    @Operation(summary = "회원 정보 수정", description = "회원 정보를 수정할 때 사용합니다. ")

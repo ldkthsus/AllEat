@@ -137,7 +137,9 @@ public class PaymoneyController {
                 payAmount = payTransactionRepository.findByUserEntityAndRestId(user);
             }
 
-            return ResponseEntity.ok(payAmount);
+            PaymoneyDTO paymoneyDTO = new PaymoneyDTO();
+            paymoneyDTO.setBalance(payAmount);
+            return ResponseEntity.ok(paymoneyDTO);
 
         } catch (Exception e){
             System.out.println(e);
