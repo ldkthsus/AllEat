@@ -68,28 +68,20 @@ export const signupUser = createAsyncThunk(
   },
 );
 
-// 비동기 로그인 액션 생성
+// 비동기 로그인 액션 생성 (소셜 로그인 부분 제거)
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (loginData: AuthData, { rejectWithValue }) => {
     try {
-      let response;
-
-      // 이메일과 비밀번호가 있을 경우 일반 로그인 요청
-      if (loginData.email && loginData.password) {
-        response = await axios.post(`${BACK_URL}/login`, {
-          email: loginData.email,
-          password: loginData.password,
-        });
-      }
-      // 토큰이 있을 경우 소셜 로그인 요청
-      else if (loginData.token) {
-        response = await axios.post(`${BACK_URL}/login`, {
-          token: loginData.token,
-        });
-      } else {
+      if (!loginData.email || !loginData.password) {
         throw new Error('로그인 정보가 부족합니다.');
       }
+
+      // 일반 로그인 요청
+      const response = await axios.post(`${BACK_URL}/login`, {
+        email: loginData.email,
+        password: loginData.password,
+      });
 
       console.log('로그인 성공!');
       const token = response.headers.authorization.split(' ')[1]; // 토큰 추출
@@ -100,6 +92,7 @@ export const loginUser = createAsyncThunk(
     }
   }
 );
+
 
 
 // 인증 상태 관리를 위한 Slice 생성
