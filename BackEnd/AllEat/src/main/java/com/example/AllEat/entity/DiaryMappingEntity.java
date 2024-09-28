@@ -33,4 +33,5 @@ public class DiaryMappingEntity {
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private MenuEntity menu;
+
 }

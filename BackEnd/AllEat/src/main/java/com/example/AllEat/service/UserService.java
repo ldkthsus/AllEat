@@ -92,4 +92,12 @@ public class UserService {
         return userResponseDTO;
     }
 
+    public Boolean getUserEmail(String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity == null) {
+            return false;
+        }
+        return true;
+    }
+
 }
