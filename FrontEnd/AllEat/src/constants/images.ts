@@ -25,6 +25,9 @@ import Subtract from '../assets/images/Subtract.svg';
 import Exclude from '../assets/images/Exclude.svg';
 import excludeWhite from '../assets/images/excludeWhite.svg';
 import recordBox from '../assets/images/recordBox.svg';
+import kikiRunning1 from '../assets/images/kikiRunning1.svg';
+import kikiRunning2 from '../assets/images/kikiRunning2.svg';
+import kikiRunning3 from '../assets/images/kikiRunning3.svg';
 
 
 const images = {
@@ -55,6 +58,9 @@ const images = {
   Exclude,
   excludeWhite,
   recordBox,
+  kikiRunning1,
+  kikiRunning2,
+  kikiRunning3
 };
 
 export default images;
