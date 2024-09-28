@@ -16,6 +16,9 @@ public class MenuResponseDTO {
     @JsonProperty("restaurants_name")
     private String restaurantName;
 
+    @JsonProperty("menu_id")
+    private Integer menuId;
+
     @JsonProperty("menu_name")
     private String menuName;
 
@@ -45,6 +48,7 @@ public class MenuResponseDTO {
 
     public MenuResponseDTO(MenuEntity menu, boolean isFavorite){
         this.restaurantName = menu.getRestaurants().getRestaurantsName();
+        this.menuId = menu.getId();
         this.menuName = menu.getMenuName();
         this.menuPrice = menu.getMenuPrice();
         this.menuCalories = menu.getMenuCalories();
