@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
+import com.kakao.sdk.common.KakaoSdk
 
 class MainApplication : Application(), ReactApplication {
 
@@ -39,5 +40,8 @@ class MainApplication : Application(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
+    
+    // 카카오 SDK 초기화
+    KakaoSdk.init(this, "f480ad8fe46bf05b572b86cadaeac0cb")
   }
 }

@@ -116,4 +116,7 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // 카카오 SDK 추가
+    implementation 'com.kakao.sdk:v2-user:2.11.0' // 버전은 최신 버전으로 대체하세요
 }

@@ -4,8 +4,9 @@ import {BACK_URL} from '@env';
 
 // 회원가입 및 로그인 시 필요한 데이터 타입 정의
 interface AuthData {
-  email: string;
-  password: string;
+  email?: string;
+  password?: string;
+  token?: string; // 소셜 로그인을 위한 토큰 필드 추가
 }
 
 // 인증 상태를 관리하는 상태의 구조 정의
@@ -55,25 +56,36 @@ export const signupUser = createAsyncThunk(
 // 비동기 로그인 액션 생성
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async (loginData: AuthData, {rejectWithValue}) => {
+  async (loginData: AuthData, { rejectWithValue }) => {
     try {
-      // 로그인 API 요청
-      const response = await axios.post(`${BACK_URL}/login`, {
-        email: loginData.email,
-        password: loginData.password,
-      });
+      let response;
+
+      // 이메일과 비밀번호가 있을 경우 일반 로그인 요청
+      if (loginData.email && loginData.password) {
+        response = await axios.post(`${BACK_URL}/login`, {
+          email: loginData.email,
+          password: loginData.password,
+        });
+      }
+      // 토큰이 있을 경우 소셜 로그인 요청
+      else if (loginData.token) {
+        response = await axios.post(`${BACK_URL}/login`, {
+          token: loginData.token,
+        });
+      } else {
+        throw new Error('로그인 정보가 부족합니다.');
+      }
 
       console.log('로그인 성공!');
-
-      // 헤더에서 JWT 토큰 추출
       const token = response.headers.authorization.split(' ')[1]; // 토큰 추출
-      return {token}; // 토큰 반환
+      return { token }; // 토큰 반환
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response?.data?.message || '로그인 실패');
     }
-  },
+  }
 );
+
 
 // 인증 상태 관리를 위한 Slice 생성
 const authSlice = createSlice({

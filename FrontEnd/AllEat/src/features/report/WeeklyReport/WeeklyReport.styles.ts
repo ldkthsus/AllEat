@@ -22,5 +22,9 @@ export const styles = StyleSheet.create({
     padding: 20,
     marginTop: 15
   },
-
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
