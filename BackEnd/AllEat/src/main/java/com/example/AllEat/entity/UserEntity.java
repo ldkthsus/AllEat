@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -72,6 +72,8 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
     private AlarmEntity alarm;
 
+    @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)  // 외래키는 AlarmEntity에서 관리
+    private List<MonthlyMealPayEntity> mothlyMealPay;
 
     public void updateRefreshToken(String refreshToken, Timestamp expiration){
         this.refreshToken = refreshToken;
@@ -103,6 +105,10 @@ public class UserEntity {
         if (updateRequest.getUserName() != null){
             this.userName = updateRequest.getUserName();
         }
+
+        if (updateRequest.getSocialLogin() != null){
+            this.socialLogin = updateRequest.getSocialLogin();
+        }
         this.profileUrl = profileUrl;
     }
 
@@ -115,5 +121,12 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DailyDiaryEntity> dailyDiaries;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DayReportEntity> dayReports = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<WeeklyReportEntity> WeeklyReports = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<MonthlyReportEntity> MonthlyReports = new ArrayList<>();
 }

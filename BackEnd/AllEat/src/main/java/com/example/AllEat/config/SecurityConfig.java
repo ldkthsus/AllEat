@@ -90,7 +90,7 @@ public class SecurityConfig{
 
 //        // 허용 URL 및 인증 설정
         http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/AllEat/users/login", "/AllEat/users/join").permitAll()
+                .requestMatchers("/AllEat/users/login", "/AllEat/users/join", "/AllEat/users/social-login").permitAll()
                 .requestMatchers( "/oauth2/**", "/login/**",
                         "/h2-console/**",
                         "/swagger-ui/**", "swagger-resources/**", "/faviocn.ico","/error","/v3/api-docs/**" ).permitAll()

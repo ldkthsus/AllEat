@@ -6,9 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import java.util.List;
-
 @Repository
 public interface DiaryMappingRepository extends JpaRepository<DiaryMappingEntity, Integer> {
-    List<DiaryMappingEntity> findByDiary_id(Integer diaryId);
+    List<DiaryMappingEntity> findByDiary_Id(Integer diaryId);
 }
