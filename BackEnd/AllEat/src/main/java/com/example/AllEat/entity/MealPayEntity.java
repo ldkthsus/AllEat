@@ -1,5 +1,6 @@
 package com.example.AllEat.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import lombok.AllArgsConstructor;
@@ -27,11 +28,12 @@ public class MealPayEntity {
 
     @OneToOne
     @JoinColumn(name = "pay_transaction_id")
+    @JsonIgnore
     private PayTransactionEntity payTransaction;
 
-    @ManyToOne
-    @JoinColumn(name = "diary_id")
-    private DiaryEntity diary;
+//    @ManyToOne
+//    @JoinColumn(name = "diary_id")
+//    private DiaryEntity diary;
 
     public void updateAmount(Integer amount) {
         this.amount = amount;
