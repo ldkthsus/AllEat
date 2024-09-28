@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,7 @@ public class DiaryEntity {
 
     @Enumerated(EnumType.STRING)
     private DiaryTime diaryTime;
-
+    
     @Column(name = "meal_calories")
     private Integer mealCalories;
 
@@ -41,17 +42,21 @@ public class DiaryEntity {
         SNACK
     }
 
-    @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference // 부모 측에 해당하는 어노테이션
-    private List<DiaryMappingEntity> diaryMapping;
+    @OneToMany(mappedBy = "diary",orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonManagedReference
+    @JsonBackReference
+    @Builder.Default
+    private List<DiaryMappingEntity> diaryMapping = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "daily_diary_id")
-    @JsonBackReference // 자식 측에 해당하는 어노테이션
+//    @JsonManagedReference
+    @JsonBackReference
     private DailyDiaryEntity dailyDiary;
 
     @Column(name = "daily_price")
     private Integer dailyPrice;
+
 
     public void updateDetails(Integer calories, Integer price) {
 
@@ -61,5 +66,8 @@ public class DiaryEntity {
 
     @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<MealPayEntity> mealpay;
-}
 
+//    public void updateMapping(DiaryMappingEntity diaryMapping) {
+//        this.diaryMapping.add(diaryMapping);
+//    }
+}
