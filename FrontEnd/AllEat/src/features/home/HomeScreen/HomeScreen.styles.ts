@@ -179,7 +179,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: 'white',
-    paddingBottom: 100,
+    paddingBottom: 30,
   },
   leftRecord: {
     backgroundColor: 'white',
@@ -190,5 +190,42 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  boxContainer: {
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  box: {
+    backgroundColor: '#769BFF',
+    borderRadius: 10,
+    padding: 5,
+  },
+  boxText: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  boxIcon: {position: 'absolute', right: 20},
+  titleBox: {
+    gap: 10,
+    padding: 10,
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  textBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 10,
+  },
+  text: {flexDirection: 'row', width: '50%', gap: 5},
+  textTitle: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  textDiscription: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+  },
+  weightBox: {
+    justifyContent: 'space-evenly',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: 'white',
+    paddingBottom: 100,
   },
 });
