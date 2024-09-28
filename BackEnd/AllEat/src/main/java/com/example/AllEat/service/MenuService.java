@@ -2,6 +2,7 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.dto.menu.MenuCreateDTO;
 import com.example.AllEat.dto.menu.MenuPossibleDTO;
+import com.example.AllEat.dto.menu.MenuResponseDTO;
 import com.example.AllEat.entity.*;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.*;
@@ -129,8 +130,19 @@ public class MenuService {
     }
 
     // 모든 메뉴 조회
-    public List<MenuEntity> getAllMenus() {
-        return menuRepository.findAll();
+    public List<MenuResponseDTO> getAllMenus(UserEntity requestUser) {
+        List<MenuEntity> findMenus = menuRepository.findAll();
+        List<MenuResponseDTO> menuResponseDTOList = new ArrayList<>();
+        for (MenuEntity menuEntity : findMenus) {
+            FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuEntity.getId());
+            boolean isFavorite = false;
+            if(findFavorite != null) {
+                isFavorite = true;
+            }
+            MenuResponseDTO menuResponseDTO = new MenuResponseDTO(menuEntity,isFavorite);
+            menuResponseDTOList.add(menuResponseDTO);
+        }
+        return menuResponseDTOList;
     }
 
     // 특정 레스토랑의 메뉴 조회
