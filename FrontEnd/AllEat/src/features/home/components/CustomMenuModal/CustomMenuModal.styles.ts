@@ -13,6 +13,12 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'lightgray',
   },
+  pickerDisabled: {
+    backgroundColor: 'lightgray',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+  },
   pickerText: {
     fontSize: 12,
     fontFamily: 'Pretendard-SemiBold',
