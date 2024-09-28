@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.Map;
 import java.util.List;
 
 @RestController
@@ -26,8 +26,8 @@ public class DataController {
     }
 
     @GetMapping("/AllEat/get/detail/{diary_id}")
-    public List<DetailDataDTO> getDiaryDetails(@PathVariable("diary_id") Integer diaryId) {
-        // DetailDataService를 통해 diaryId에 해당하는 메뉴들을 가져온다.
-        return detailDataService.getMenusByDiaryId(diaryId);
+    public Map<String, Object> getDiaryDetails(@PathVariable("diary_id") Integer diaryId) {
+        // DetailDataService를 통해 diaryId에 해당하는 메뉴들과 총 영양 정보를 가져온다.
+        return detailDataService.getDiaryDetailsByDiaryId(diaryId);
     }
 }

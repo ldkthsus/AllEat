@@ -28,4 +28,7 @@ public class DetailDataDTO {
 
     @JsonProperty("restaurants_name")
     private String restaurantsName;
+
+    @JsonProperty("person_count")
+    private Integer personCount;
 }
