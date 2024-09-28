@@ -63,9 +63,9 @@ public class DiaryEntity {
         this.mealCalories = calories;
         this.dailyPrice = price;
     }
-
-    @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<MealPayEntity> mealpay;
+//
+//    @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
+//    private List<MealPayEntity> mealpay;
 
 //    public void updateMapping(DiaryMappingEntity diaryMapping) {
 //        this.diaryMapping.add(diaryMapping);
