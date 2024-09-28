@@ -6,13 +6,10 @@ import com.example.AllEat.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+
 import java.time.LocalDate;
 import java.util.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpEntity;
-import org.springframework.web.client.RestTemplate;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -66,7 +63,7 @@ public class ReportService {
             throw new RuntimeException("No daily diary found for the user on this date");
         }
 
-        List<Map<String, Object>> foodDetails = new ArrayList<>();
+        List<Map<String, Object>> food_details = new ArrayList<>();
 
         for (DiaryEntity diary : dailyDiary.getDiaryEntities()) {
             for (DiaryMappingEntity diaryMapping : diary.getDiaryMapping()) {
@@ -74,19 +71,19 @@ public class ReportService {
                 int personCount = diaryMapping.getPersonCount() != null ? diaryMapping.getPersonCount() : 1;
 
                 Map<String, Object> menuDetail = new HashMap<>();
-                menuDetail.put("menuName", menu.getMenuName());
-                menuDetail.put("menuPrice", menu.getMenuPrice() != null ? menu.getMenuPrice() / personCount : 0);
-                menuDetail.put("menuCarbohydrate", menu.getMenuCarbohydrate() != null ? menu.getMenuCarbohydrate() / personCount : 0.0);
-                menuDetail.put("menuProtein", menu.getMenuProtein() != null ? menu.getMenuProtein() / personCount : 0.0);
-                menuDetail.put("menuFat", menu.getMenuFat() != null ? menu.getMenuFat() / personCount : 0.0);
-                menuDetail.put("menuCalories", menu.getMenuCalories() != null ? menu.getMenuCalories() / personCount : 0);
-                menuDetail.put("restaurantName", menu.getRestaurants().getRestaurantsName());
-                menuDetail.put("restaurantType", menu.getRestaurants().getRestaurantsType().name());
+                menuDetail.put("menu_name", menu.getMenuName());
+                menuDetail.put("menu_price", menu.getMenuPrice() != null ? menu.getMenuPrice() / personCount : 0);
+                menuDetail.put("menu_carbohydrate", menu.getMenuCarbohydrate() != null ? menu.getMenuCarbohydrate() / personCount : 0.0);
+                menuDetail.put("menu_protein", menu.getMenuProtein() != null ? menu.getMenuProtein() / personCount : 0.0);
+                menuDetail.put("menu_fat", menu.getMenuFat() != null ? menu.getMenuFat() / personCount : 0.0);
+                menuDetail.put("menu_calories", menu.getMenuCalories() != null ? menu.getMenuCalories() / personCount : 0);
+                menuDetail.put("restaurant_name", menu.getRestaurants().getRestaurantsName());
+                menuDetail.put("restaurant_type", menu.getRestaurants().getRestaurantsType().name());
 
-                foodDetails.add(menuDetail);
+                food_details.add(menuDetail);
             }
         }
 
-        return foodDetails;
+        return food_details;
     }
 }

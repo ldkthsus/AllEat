@@ -107,7 +107,7 @@ public class WeekReportService {
                             "fats", fats,
                             "calories", calories,
                             "cost", cost,
-                            "restaurantType", menu.getRestaurants().getRestaurantsType().name()
+                            "restaurant_type", menu.getRestaurants().getRestaurantsType().name()
                     )));
                 }
             }
@@ -124,7 +124,7 @@ public class WeekReportService {
         // 레스토랑 타입별 카운트
         Map<String, Integer> restaurantTypeCount = new HashMap<>();
         menuEntries.forEach(entry -> {
-            String type = entry.get("restaurantType").toString();
+            String type = entry.get("restaurant_type").toString();
             restaurantTypeCount.put(type, restaurantTypeCount.getOrDefault(type, 0) + 1);
         });
 

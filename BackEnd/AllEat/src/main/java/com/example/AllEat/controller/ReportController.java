@@ -46,7 +46,7 @@ public class ReportController {
         // 데이터 수집 및 반환
         List<Map<String, Object>> dailyFoodInfo = reportService.handleDayReportRequest(day, request);
 
-        return ResponseEntity.ok(Map.of("foodDetails", dailyFoodInfo));
+        return ResponseEntity.ok(Map.of("food_details", dailyFoodInfo));
     }
 
     @PostMapping("/week-report")

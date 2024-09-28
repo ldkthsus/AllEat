@@ -103,7 +103,7 @@ public class MonthReportService {
                             "fats", menu.getMenuFat(),
                             "calories", menu.getMenuCalories(),
                             "cost", menuCost,
-                            "restaurantType", restaurant.getRestaurantsType().name()
+                            "restaurant_type", restaurant.getRestaurantsType().name()
                     ));
 
                     String restaurantType = restaurant.getRestaurantsType().name();
