@@ -15,6 +15,7 @@ type DiaryCardProps = {
   onDelete?: () => void;
   isEdit?: boolean;
 };
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const DiaryCard: React.FC<DiaryCardProps> = ({
   restaurant,
@@ -29,7 +30,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
 }) => {
   const pricePerPerson = price / people; // 인원 수에 따라 가격을 나눔
   const kcalPerPerson = kcal / people; // 인원 수에 따라 칼로리를 나눔
-
+  const displayedRestaurant = emailRegex.test(restaurant) ? '집밥' : restaurant;
   return (
     <View style={styles.mainRecordCard}>
       {isEdit && (
@@ -40,7 +41,7 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
         </View>
       )}
       <View style={styles.mainRecordMenu}>
-        <Text style={styles.cardDescription}>{restaurant}</Text>
+        <Text style={styles.cardDescription}>{displayedRestaurant}</Text>
         <Text style={styles.cardTitle}>{menu}</Text>
       </View>
       <View style={styles.mainRecordDetail}>

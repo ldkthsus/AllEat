@@ -62,13 +62,14 @@ const CustomMenuModal: React.FC<CustomMenuModalProps> = ({
         <View style={styles.pickerContainer}>
           <Text style={styles.pickerLabel}>가게이름</Text>
           <DropDownPicker
+            disabled={isHomeMade}
             open={isRestaurantOpen}
             value={restaurantValue}
             items={restaurantItems} // 드롭다운에 맞는 형식으로 변환된 아이템 리스트
             setOpen={setIsRestaurantOpen}
             setValue={setRestaurantValue}
-            placeholder="오늘 결제한 식당"
-            style={styles.picker}
+            placeholder={isHomeMade ? '집밥' : '오늘 결제한 식당'}
+            style={isHomeMade ? styles.pickerDisabled : styles.picker}
             textStyle={styles.pickerText}
             dropDownContainerStyle={styles.picker}
           />

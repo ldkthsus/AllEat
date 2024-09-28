@@ -134,9 +134,10 @@ const DiaryCreateScreen: React.FC = () => {
         try {
           const response = await api.get(`/AllEat/get/detail/${diaryId}`);
           const {menus} = response.data;
-
+          console.log('menus : ', menus);
           setMealList(
             menus.map((menu: any) => ({
+              id: menu.menu_id,
               restaurant: menu.restaurants_name,
               menu: menu.menu_name,
               price: menu.menu_price,
@@ -313,24 +314,30 @@ const DiaryCreateScreen: React.FC = () => {
   };
   const handleAddDiary = async () => {
     try {
-      // 요청할 데이터 생성
-      const diaryData = {
-        date: date, // 화면에 전달된 날짜 사용
-        diary_time: meals.toUpperCase(), // BREAKFAST, LUNCH, DINNER 등으로 변환
-        menus: mealList.map(meal => ({
-          menu_id: meal.id,
-          person_count: meal.people, // 해당 메뉴의 인원 수
-        })),
-      };
-
-      console.log('다이어리 요청 데이터:', diaryData);
-      console.log('POST인가요,PUT인가요?', diaryId);
-
       let response;
+      let diaryData;
       // POST or PUT 요청 분기
       if (diaryId) {
-        response = await api.put('/AllEat/record/menu/', diaryData);
+        // 요청할 데이터 생성
+        diaryData = {
+          diary_id: diaryId,
+          menus: mealList.map(meal => ({
+            menu_id: meal.id,
+            person_count: meal.people, // 해당 메뉴의 인원 수
+          })),
+        };
+        console.log(diaryData);
+        response = await api.put('/AllEat/record/menu', diaryData);
       } else {
+        // 요청할 데이터 생성
+        diaryData = {
+          date: date, // 화면에 전달된 날짜 사용
+          diary_time: meals.toUpperCase(), // BREAKFAST, LUNCH, DINNER 등으로 변환
+          menus: mealList.map(meal => ({
+            menu_id: meal.id,
+            person_count: meal.people, // 해당 메뉴의 인원 수
+          })),
+        };
         response = await api.post('/AllEat/record/menu', diaryData);
       }
       console.log('다이어리 추가 성공:', response.data);
