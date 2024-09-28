@@ -27,8 +27,8 @@ public class DataController {
     }
 
     @GetMapping("/AllEat/get/detail/{diary_id}")
-    public Map<String, Object> getDiaryDetails(@PathVariable("diary_id") Integer diaryId, HttpServletRequest request) {
-        // HttpServletRequest를 전달하여 사용자 식별
-        return detailDataService.getDiaryDetailsByDiaryId(diaryId, request);
+    public Map<String, Object> getDiaryDetails(@PathVariable("diary_id") Integer diaryId) {
+
+        return detailDataService.getDiaryDetailsByDiaryId(diaryId);
     }
 }
