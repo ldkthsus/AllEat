@@ -12,8 +12,10 @@ import RecordBox from '../../../components/RecordBox/RecordBox';
 import RecordDetailModal from '../components/RecordDetailModal/RecordDetailModal';
 import {formatDate} from '../../../utils/dateUtils'; // formatDate 유틸리티 함수 가져오기
 import api from '../../../utils/api';
-import {RootState} from '../../../redux/store';
-import {useSelector} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
+import {AppDispatch,RootState} from '../../../redux/store';
+import {useDispatch,useSelector} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
+import {fetchUserInfo} from '../../../redux/features/infoSlice';
+import FormModal from '../../../components/FormModal/FormModal';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -22,8 +24,12 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 type HomeRouteProp = RouteProp<RootStackParamList, 'Home'>;
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<HomeRouteProp>();
   const {isUpdated = false} = route.params || {};
+
+  const [weightModalVisible, setWeightModalVisible] = useState(false);
+
   // 현재 날짜를 저장하는 상태
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -81,8 +87,8 @@ const HomeScreen: React.FC = () => {
   };
 
   // 리덕스 스토어에서 사용자 정보 가져오기
-  const {goal_cost, goal_kcal} = useSelector((state: RootState) => state.info);
-  const {monthlyUsedAmount} = useSelector((state: RootState) => state.paymoney);
+  const {goal_cost, goal_kcal,weights,goal_weight} = useSelector((state: RootState) => state.info);
+  // const {monthlyUsedAmount} = useSelector((state: RootState) => state.paymoney);
 
   // 기록된 데이터 상태
   const [dayData, setDayData] = useState<{
@@ -137,6 +143,52 @@ const HomeScreen: React.FC = () => {
   const fatRatio = totalNutrients
     ? (dayData?.day_fat || 0) / totalNutrients
     : 0;
+
+  // isToday 함수 추가
+const isToday = (dateString: string): boolean => {
+  const date = new Date(dateString);
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+};
+
+  // 체중 기록 관련
+  const handleWeightChange = async (
+    currentWeight: string,
+    goalWeight: string,
+  ) => {
+    // goal에 대한 POST 요청
+
+    console.log('Saving current weight:', currentWeight);
+    console.log('Saving goal weight:', goalWeight);
+    const goalResponse = await api.put('/AllEat/users/goals', {
+      goal_weight: parseFloat(goalWeight),
+      goal_cost: goal_cost,
+    });
+    console.log('Goal Response:', goalResponse.data);
+    // weight에 대한 POST 요청
+    if (weights && weights.length > 0 && isToday(weights[0].createdAt)) {
+      // 오늘의 체중이 있으면 PUT 요청
+      const weightResponse = await api.put('/AllEat/weight', {
+        weight: parseFloat(currentWeight),
+      });
+      console.log('Weight (PUT) Response:', weightResponse.data);
+    } else {
+      // 오늘의 체중이 없거나 weights가 비었으면 POST 요청
+      const weightResponse = await api.post('/AllEat/weight', {
+        weight: parseFloat(currentWeight),
+      });
+      console.log('Weight (POST) Response:', weightResponse.data);
+    }
+    dispatch(fetchUserInfo());
+    setWeightModalVisible(false); // 모달을 닫음
+  };
+
+
 
   return (
     <View style={{flex: 1}}>
@@ -438,6 +490,47 @@ const HomeScreen: React.FC = () => {
             }
           />
         </View>
+        <View style={styles.weightBox}>
+        <View style={styles.boxContainer}>
+            <View style={styles.box}>
+              <View style={styles.titleBox}>
+                <TouchableOpacity
+                  style={styles.boxIcon}
+                  onPress={() => setWeightModalVisible(true)}>
+                  <icons.settingsWhite height={20} width={20} />
+                </TouchableOpacity>
+                <icons.scale height={20} width={20} />
+                <Text style={styles.boxText}>목표 체중 변경{goal_kcal}</Text>
+              </View>
+              <View style={styles.textBox}>
+                <View style={styles.text}>
+                  <Text style={styles.textTitle}>현재 체중</Text>
+                  <Text style={styles.textDiscription}>
+                    {weights && weights.length > 0 && weights[0].weight} kg
+                  </Text>
+                </View>
+                <View style={styles.text}>
+                  <Text style={styles.textTitle}>목표 체중</Text>
+                  <Text style={styles.textDiscription}>{goal_weight} kg</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+        <FormModal
+            visible={weightModalVisible}
+            title="현재 체중 입력"
+            initialValue={String(
+              weights && weights.length > 0 && weights[0].weight,
+            )}
+            anotherTitle="목표 체중 입력"
+            anotherInitialValue={String(goal_weight)}
+            onClose={() => setWeightModalVisible(false)}
+            onSave={handleWeightChange}
+            isWeight={true}
+            keyboardType="numeric"
+          />
+
       </ScrollView>
       {/* RecordDetail 모달 */}
       {selectedRecord && (
