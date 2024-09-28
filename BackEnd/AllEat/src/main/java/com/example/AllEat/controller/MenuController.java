@@ -1,5 +1,6 @@
 package com.example.AllEat.controller;
 
+import com.example.AllEat.dto.diary.DiaryResponseDTO;
 import com.example.AllEat.dto.menu.*;
 import com.example.AllEat.entity.MenuEntity;
 import com.example.AllEat.entity.UserEntity;
@@ -89,15 +90,15 @@ public class MenuController {
 //    }
 
     @PostMapping("/menu")
-    public ResponseEntity<?> addMenu(@RequestBody UpdateMenuRequestDTO addMenuRequests, HttpServletRequest request) {
+    public ResponseEntity<?> addMenu(@RequestBody AddMenuRequestDTO addMenuRequests, HttpServletRequest request) {
         DailyDiaryResponseDTO getDailyDiary = dailyDiaryServie.getDailyDiary(request, addMenuRequests);
         return ResponseEntity.status(HttpStatus.OK).body(getDailyDiary);
     }
 
     @PutMapping("/menu")
     public ResponseEntity<?> updateMenu(@RequestBody UpdateMenuRequestDTO updateMenuRequests, HttpServletRequest request) {
-        DailyDiaryResponseDTO modifiedDailyDiary = dailyDiaryServie.getDailyDiary(request, updateMenuRequests);
-        return ResponseEntity.status(HttpStatus.OK).body(modifiedDailyDiary);
+        DiaryResponseDTO modifiedDiary = dailyDiaryServie.modifyDailyDiary(request, updateMenuRequests);
+        return ResponseEntity.status(HttpStatus.OK).body(modifiedDiary);
 
     }
 
