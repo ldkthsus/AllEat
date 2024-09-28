@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, Pressable, Alert } from 'react-native';
 import LinearGradient from "react-native-linear-gradient";
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../../types/navigation';
-import { images } from '../../../constants';
-import { styles } from './PaymoneyScreen.styles';
-import LinkButton from '../../../components/linkButton';
-import InoutModal from './components/InoutModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../redux/store';
 import { chargePaymoney, transferPaymoney, fetchPaymoneyBalance, fetchMonthlyUsedAmount } from '../../../redux/features/paymoneySlice';
 import { format, getDaysInMonth } from 'date-fns'; // date-fns 임포트
-import { icons } from '../../../constants'
+import { icons } from '../../../constants';
+import InoutModal from './components/InoutModal';
+import { styles } from './PaymoneyScreen.styles';
+import LinkButton from '../../../components/linkButton';
+import { images } from '../../../constants';
 
 const PaymoneyScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,12 +22,15 @@ const PaymoneyScreen: React.FC = () => {
   // Redux state에서 balance와 loading, error, monthlyUsedAmount 가져오기
   const { balance, loading, error, monthlyUsedAmount } = useSelector((state: RootState) => state.paymoney);
 
-  // 현재 월의 사용 금액을 가져오는 함수
-  const fetchCurrentMonthUsedAmount = () => {
+  // 현재 월의 사용 금액과 잔액을 가져오는 함수
+  const fetchCurrentMonthUsedAmount = async () => {
     const today = new Date();
     const startDate = format(new Date(today.getFullYear(), today.getMonth(), 1), 'yyyy-MM-dd');
     const period = getDaysInMonth(today);
-    dispatch(fetchMonthlyUsedAmount({ startDate, period }));
+    await dispatch(fetchMonthlyUsedAmount({ startDate, period }));
+    
+    // 사용 금액을 조회한 후 잔액을 다시 가져오기
+    dispatch(fetchPaymoneyBalance());
   };
 
   useEffect(() => {
@@ -48,9 +48,7 @@ const PaymoneyScreen: React.FC = () => {
         await dispatch(transferPaymoney({ amount, restaurant_id: 1 })).unwrap();
         Alert.alert('송금 성공', `송금이 완료되었습니다.`);
       }
-      await dispatch(fetchPaymoneyBalance());
-      
-      // 사용 금액을 다시 조회하여 업데이트
+      // 잔액 및 사용 금액 업데이트
       fetchCurrentMonthUsedAmount();
     } catch (error) {
       console.error('요청 실패:', error);

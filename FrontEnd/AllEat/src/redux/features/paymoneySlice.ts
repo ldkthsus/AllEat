@@ -2,6 +2,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import api from '../../utils/api'; // Axios 인스턴스 임포트
 import {RootState} from '../store';
+
 // 페이머니 상태 타입 정의
 interface PaymoneyState {
   loading: boolean;
@@ -61,8 +62,8 @@ export const fetchMonthlyUsedAmount = createAsyncThunk(
       const response = await api.get(
         `/AllEat/paymoney/amount_only?startDate=${startDate}&period=${period}`,
       );
-      console.log('사용 금액 확인', response.data);
-      return Math.abs(response.data); // 해당 월 사용 금액 반환
+      console.log('사용 금액 확인', response.data.balance);
+      return Math.abs(response.data.balance); // 해당 월 사용 금액 반환
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || '월별 사용 금액 조회 실패',
@@ -81,7 +82,7 @@ export const chargePaymoney = createAsyncThunk(
         transaction_type: 0, // 충전
         restaurant_id: 1, // 고정 ID
       });
-      return response.data.amount; // 반환된 잔액
+      return response.data.balance; // 반환된 잔액
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '충전 실패');
     }
@@ -110,7 +111,7 @@ export const transferPaymoney = createAsyncThunk(
         restaurant_id,
       });
 
-      return {balance: response.data.amount}; // 반환된 잔액
+      return {balance: response.data.balance}; // 반환된 잔액
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '송금 실패');
     }
