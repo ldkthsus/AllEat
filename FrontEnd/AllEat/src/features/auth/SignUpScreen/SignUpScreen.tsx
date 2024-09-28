@@ -70,7 +70,10 @@ const SignUp: React.FC = () => {
       const userInfoOfGoogle = await GoogleSignin.signIn();
 
       // db에서 이메일 찾아보기 
-      const isNewResponse = await axios.post(`${BACK_URL}/AllEat/users/social-login`,userInfoOfGoogle.data?.user.email);
+      const email = {
+        email : userInfoOfGoogle.data?.user.email
+      }
+      const isNewResponse = await axios.post(`${BACK_URL}/AllEat/users/social-login`,email);
       const isNew = isNewResponse.data.is_new;
 
       if (isNew){
