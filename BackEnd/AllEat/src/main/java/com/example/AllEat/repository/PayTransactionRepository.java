@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PayTransactionRepository extends JpaRepository<PayTransactionEntity,Integer> {
@@ -36,5 +37,9 @@ public interface PayTransactionRepository extends JpaRepository<PayTransactionEn
     // 해당 유저의 오늘 소비 금액 반환
     @Query("SELECT SUM(p.amount) FROM PayTransactionEntity p WHERE p.user = :user AND FUNCTION('DATE', p.transactionDate) = CURRENT_DATE AND p.restaurant.id != 1")
     Integer findByUserEntityAndRestId(@Param("user") UserEntity user);
+
+    @Query("SELECT p FROM PayTransactionEntity p WHERE p.user.id = :userId AND DATE(p.transactionDate) = :date")
+    List<PayTransactionEntity> findByUser_idAndTransactionDate(@Param("userId")Integer userId, @Param("date") LocalDate date);
+
 
 }

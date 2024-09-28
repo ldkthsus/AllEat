@@ -78,15 +78,15 @@ public class MenuController {
 //        return ResponseEntity.status(HttpStatus.OK).body(menus);
 //    }
 
-//    @GetMapping("/menu/{date}")
-//    public ResponseEntity<?> getPossibleList(HttpServletRequest request, @PathVariable(name = "date", required = true) LocalDate date) {
-//        UserEntity findUser = userService.findByRequest(request);
-//        if(findUser != null) {
-//            List<MenuPossibleDTO> menuList = menuService.getUserPossibleMenu(findUser,date);
-//            return ResponseEntity.status(HttpStatus.OK).body(menuList);
-//        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//    }
+    @GetMapping("/menu-auto/{date}")
+    public ResponseEntity<?> getPossibleList(HttpServletRequest request, @PathVariable(name = "date", required = true) LocalDate date) {
+        UserEntity findUser = userService.findByRequest(request);
+        if(findUser != null) {
+            List<MenuPossibleDTO> menuList = menuService.getUserPossibleMenu(findUser,date);
+            return ResponseEntity.status(HttpStatus.OK).body(menuList);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
     @PostMapping("/menu")
     public ResponseEntity<?> addMenu(@RequestBody AddMenuRequestDTO addMenuRequests, HttpServletRequest request) {
