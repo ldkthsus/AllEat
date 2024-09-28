@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("/day")
 async def get_day_summary(request: DayReportRequest):
-    print(request)
+    # print(request)
     try:
         # 총 영양소 및 비용 계산
         total_carbohydrates = sum(detail.menu_carbohydrate for detail in request.food_details)
@@ -46,7 +46,7 @@ async def get_day_summary(request: DayReportRequest):
 
 @router.post("/week")
 async def get_week_summary(request: WeekReportRequest):
-    print(request)
+    # print(request)
     try:
         # 프롬프트 생성
         base_prompt = f"""
@@ -83,7 +83,7 @@ async def get_week_summary(request: WeekReportRequest):
 
 @router.post("/month")
 async def get_month_summary(request: MonthlyReportRequest):
-    print(request)
+    # print(request)
     try:
         # 가장 많이 사용한 레스토랑 유형 찾기
         most_used_restaurant_type = max(request.restaurant_type_count, key=request.restaurant_type_count.get)
