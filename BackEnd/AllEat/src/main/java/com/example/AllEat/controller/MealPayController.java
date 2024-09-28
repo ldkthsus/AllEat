@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.AllEat.repository.MonthlyMealPayRepository;
@@ -30,7 +31,7 @@ public class MealPayController {
     private final UserService userService;
 
     @PostMapping("/meal-pay")
-    public ResponseEntity<?> recordMealPay(MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
+    public ResponseEntity<?> recordMealPay(@RequestBody MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
         UserEntity findUserEntity = userService.findByRequest(request);
         if (findUserEntity != null) {
             MealPayEntity mealPayEntity = mealPayService.getMealPayResult(mealPayRequest, findUserEntity);
