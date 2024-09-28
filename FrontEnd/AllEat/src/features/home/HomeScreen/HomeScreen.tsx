@@ -106,7 +106,7 @@ const HomeScreen: React.FC = () => {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
         const response = await api.get(`/AllEat/get/main/${formattedDate}`);
         setDayData(response.data); // 가져온 데이터를 상태에 저장
-        console.log(response.data);
+        console.log("오늘의 데이터 : ",response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -222,7 +222,7 @@ const HomeScreen: React.FC = () => {
                 styles.gaugeSegment,
                 {
                   width: `${carbRatio * 100}%`, // 탄수화물 비율
-                  backgroundColor: '#769BFF', // 탄수화물 색상
+                  backgroundColor: '#B0C5FF', // 탄수화물 색상
                   borderTopLeftRadius: 7,
                   borderBottomLeftRadius: 7,
                 },
@@ -234,7 +234,7 @@ const HomeScreen: React.FC = () => {
                 styles.gaugeSegment,
                 {
                   width: `${proteinRatio * 100}%`, // 단백질 비율
-                  backgroundColor: '#4D7CFE', // 단백질 색상
+                  backgroundColor: '#769BFF', // 단백질 색상
                 },
               ]}
             />
@@ -244,7 +244,7 @@ const HomeScreen: React.FC = () => {
                 styles.gaugeSegment,
                 {
                   width: `${fatRatio * 100}%`, // 지방 비율
-                  backgroundColor: '#A0BFFF', // 지방 색상
+                  backgroundColor: '#D3DFFF', // 지방 색상
                   borderTopRightRadius: 7,
                   borderBottomRightRadius: 7,
                 },

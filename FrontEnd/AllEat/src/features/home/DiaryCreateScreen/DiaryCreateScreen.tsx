@@ -325,6 +325,7 @@ const DiaryCreateScreen: React.FC = () => {
       };
 
       console.log('다이어리 요청 데이터:', diaryData);
+      console.log('DiaryId : ',diaryId)
 
       let response;
       // POST or PUT 요청 분기
