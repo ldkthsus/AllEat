@@ -1,17 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
+import {useSelector} from 'react-redux';
 import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
 import {icons} from '../../../constants';
-import {formatDate} from '../../../utils/dateUtils';
+import {formatDateString} from '../../../utils/dateUtils';
 import {styles} from './DiaryCreateScreen.styles';
 import CustomButton from '../../../components/CustomButton';
 import DiaryCard from '../components/DiaryCard/DiaryCard';
 import MenuCard from '../../../components/MenuCard/MenuCard';
-
+import api from '../../../utils/api';
 import CustomMenuModal from '../components/CustomMenuModal/CustomMenuModal';
 import AddMenuModal from '../components/AddMenuModal/AddMenuModal';
+import {RootState} from '../../../redux/store';
+
 type DiaryCreateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'DiaryCreate'
@@ -30,11 +33,19 @@ const calculateNutrients = (
 
   return {newCarbohydrate, newProtein, newFat, newCalories};
 };
+type Meal = {
+  id: number;
+  restaurant: string;
+  menu: string;
+  price: number;
+  kcal: number;
+  people: number;
+};
 
 const DiaryCreateScreen: React.FC = () => {
   const navigation = useNavigation<DiaryCreateScreenNavigationProp>();
   const route = useRoute<DiaryCreateRouteProp>();
-  const {date, meals} = route.params;
+  const {date, meals, diaryId} = route.params;
 
   const [isModalVisible, setModalVisible] = useState(false); // 모달 상태
   const [modalType, setModalType] = useState('main'); // 기본 모달 상태
@@ -116,41 +127,116 @@ const DiaryCreateScreen: React.FC = () => {
       });
     }
   }, [totalNutrients]); // 용량 변경 시에만 실행되도록 의존성 배열 설정
+  // 다이어리 데이터 가져오기 (diaryId가 있을 때만)
+  const [mealList, setMealList] = useState<Meal[]>([]);
+  useEffect(() => {
+    if (diaryId) {
+      const fetchData = async () => {
+        try {
+          const response = await api.get(`/AllEat/get/detail/${diaryId}`);
+          const {menus} = response.data;
 
-  //여기서 메뉴추가 axios요청 보냄
-  const addMealToList = () => {
-    setMealList(prevMealList => [
-      ...prevMealList,
-      {
-        restaurant: restaurantValue || '집밥', // 식당 이름 없으면 기본값
-        menu: form.menu_name,
-        price: form.menu_price,
-        kcal: form.menu_calories,
-        people: 1,
-      },
-    ]);
-    closeModal(); // 모달 닫기
+          setMealList(
+            menus.map((menu: any) => ({
+              restaurant: menu.restaurants_name,
+              menu: menu.menu_name,
+              price: menu.menu_price,
+              kcal: menu.menu_calories,
+              people: menu.person_count,
+            })),
+          );
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      fetchData();
+    }
+  }, [diaryId]);
+  const email = useSelector((state: RootState) => state.info.email); // 리덕스 스토어에서 email 가져오기
+  const addMealToList = async () => {
+    try {
+      // 탄단지 값 반올림
+      const roundedCarbohydrate = Math.round(form.menu_carbohydrate);
+      const roundedProtein = Math.round(form.menu_protein);
+      const roundedFat = Math.round(form.menu_fat);
+
+      // 전체 영양소 값 계산 (탄단지 총합)
+      const total = roundedCarbohydrate + roundedProtein + roundedFat;
+
+      // 메뉴 데이터 구성
+      const requestData = {
+        restaurant_name: restaurantValue || email, // 식당 이름 없으면 email로 설정 (집밥인 경우)
+        restaurant_type: restaurantValue ? 'RESTAURANTS' : 'HOME', // 식당이 있으면 restaurant, 없으면 HOME
+        menu_name: form.menu_name,
+        menu_calories: Math.round(form.menu_calories), // 칼로리 반올림
+        menu_carbohydrate: roundedCarbohydrate, // 탄수화물 반올림
+        menu_protein: roundedProtein, // 단백질 반올림
+        menu_fat: roundedFat, // 지방 반올림
+        menu_price: form.menu_price,
+        menu_type: form.menu_type,
+        menu_value: total, // 영양소 총합 값
+      };
+
+      console.log('메뉴 추가 요청 데이터:', requestData);
+
+      // 메뉴 추가 API 요청 보내기
+      const response = await api.post('/AllEat/record/add-menu', requestData);
+
+      console.log('메뉴 추가 성공:', response.data);
+
+      // 성공 후, 로컬 상태 업데이트 (mealList에 추가)
+      setMealList(prevMealList => [
+        ...prevMealList,
+        {
+          id: response.data.id,
+          restaurant: restaurantValue || '집밥', // 식당 이름 없으면 기본값으로 '집밥'
+          menu: form.menu_name,
+          price: form.menu_price,
+          kcal: form.menu_calories,
+          people: 1,
+        },
+      ]);
+
+      // 모달 닫기
+      closeModal();
+    } catch (error) {
+      console.error('메뉴 추가 실패:', error);
+    }
   };
   // 모달 내용 변경 (직접 등록)
   const openCustomMenuModal = () => setModalType('custom');
   const [isHomeMade, setIsHomeMade] = useState(false);
-  const [mealList, setMealList] = useState([
-    {restaurant: '집밥', menu: '삶은계란', price: 0, kcal: 78, people: 1},
-  ]);
+
   const [restaurantIndex, setRestaurantIndex] = useState(0);
 
   const [restaurants, setRestaurants] = useState([
     {
       name: '투썸플레이스',
       menus: [
-        {menu: '아이스아메리카노', price: 4500, kcal: 5, isFavorate: false},
+        {
+          id: 2,
+          menu: '아이스아메리카노',
+          price: 4500,
+          kcal: 5,
+          isFavorate: false,
+        },
       ],
     },
     {
       name: '아리소바제면소',
-      menus: [{menu: '고사리소바', price: 8900, kcal: 300, isFavorate: false}],
+      menus: [
+        {id: 2, menu: '고사리소바', price: 8900, kcal: 300, isFavorate: false},
+      ],
     },
   ]);
+  const titleMapping: {[key: string]: string} = {
+    BREAKFAST: '아침',
+    LUNCH: '점심',
+    DINNER: '저녁',
+    SNACK: '간식',
+  };
+
   const [isRestaurantOpen, setIsRestaurantOpen] = useState<boolean>(false);
   const [restaurantValue, setRestaurantValue] = useState<string | null>(null); // 선택된 식당 값
   // 레스토랑을 DropDownPicker에 맞는 {label, value} 형식으로 변환
@@ -209,7 +295,7 @@ const DiaryCreateScreen: React.FC = () => {
   const toggleHomeMade = () => {
     setIsHomeMade(!isHomeMade);
   };
-
+  const translatedTitle = titleMapping[meals] || meals;
   // 메뉴 추가 함수
   const addMeal = (menuIdx: number) => {
     const selectedMenu = restaurants[restaurantIndex].menus[menuIdx];
@@ -217,6 +303,7 @@ const DiaryCreateScreen: React.FC = () => {
     setMealList(prevMealList => [
       ...prevMealList,
       {
+        id: selectedMenu.id,
         restaurant: restaurants[restaurantIndex].name,
         menu: selectedMenu.menu,
         price: selectedMenu.price,
@@ -225,7 +312,35 @@ const DiaryCreateScreen: React.FC = () => {
       },
     ]);
   };
+  const handleAddDiary = async () => {
+    try {
+      // 요청할 데이터 생성
+      const diaryData = {
+        date: date, // 화면에 전달된 날짜 사용
+        diary_time: meals.toUpperCase(), // BREAKFAST, LUNCH, DINNER 등으로 변환
+        menus: mealList.map(meal => ({
+          menu_id: meal.id,
+          person_count: meal.people, // 해당 메뉴의 인원 수
+        })),
+      };
 
+      console.log('다이어리 요청 데이터:', diaryData);
+
+      let response;
+      // POST or PUT 요청 분기
+      if (diaryId) {
+        response = await api.put('/AllEat/record/menu/', diaryData);
+      } else {
+        response = await api.post('/AllEat/record/menu', diaryData);
+      }
+      console.log('다이어리 추가 성공:', response.data);
+
+      // 성공 시 홈 화면으로 돌아가기
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('다이어리 추가 실패:', error);
+    }
+  };
   return (
     <View style={styles.diaryBody}>
       <View style={styles.topbar}>
@@ -234,7 +349,7 @@ const DiaryCreateScreen: React.FC = () => {
         </TouchableOpacity>
 
         <Text style={styles.title}>
-          {formatDate(date)} {meals}
+          {formatDateString(date)} {translatedTitle}
         </Text>
 
         <TouchableOpacity>
@@ -243,7 +358,8 @@ const DiaryCreateScreen: React.FC = () => {
       </View>
       <View style={styles.main}>
         <Text style={styles.mainTitle}>
-          {formatDate(date)} {meals}으로 먹은 음식을 기록해보세요!
+          {formatDateString(date)} {translatedTitle}으로 먹은 음식을
+          기록해보세요!
         </Text>
         <View style={styles.mainRecord}>
           <ScrollView>
@@ -317,7 +433,7 @@ const DiaryCreateScreen: React.FC = () => {
         </View>
         <CustomButton
           title="등록"
-          handlePress={() => navigation.navigate('Home')}
+          handlePress={handleAddDiary}
           containerStyles="w-[24%] h-[50px] bg-primary"
           textStyles="text-white font-pbold "
         />

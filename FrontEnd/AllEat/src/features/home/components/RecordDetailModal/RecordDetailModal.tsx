@@ -96,6 +96,23 @@ const RecordDetailModal: React.FC<RecordDetailProps> = ({
           {kcal}·{price}
         </Text>
       </View>
+      <View style={styles.tandanjiContainer}>
+        <View style={styles.tandanjiBox}>
+          <icons.tan height={20} width={20} />
+          <Text style={styles.tandanjiTitle}>탄수화물</Text>
+          <Text style={styles.tandanjiInfo}>{diaryData.diary_carb}g</Text>
+        </View>
+        <View style={styles.tandanjiBox}>
+          <icons.dan height={20} width={20} />
+          <Text style={styles.tandanjiTitle}>단백질</Text>
+          <Text style={styles.tandanjiInfo}>{diaryData.diary_protein}g</Text>
+        </View>
+        <View style={styles.tandanjiBox}>
+          <icons.ji height={20} width={20} />
+          <Text style={styles.tandanjiTitle}>지방</Text>
+          <Text style={styles.tandanjiInfo}>{diaryData.diary_fat}g</Text>
+        </View>
+      </View>
       <View style={styles.modalList}>
         {mealList.map((meal, index) => (
           <DiaryCard

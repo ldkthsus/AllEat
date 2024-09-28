@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
   },
   modalHeader: {
     width: '88%',
-    margin: 20,
+    marginTop: 20,
+    marginBottom: 10,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -20,7 +21,29 @@ export const styles = StyleSheet.create({
     color: '#3d3d3d',
     fontFamily: 'Pretendard-SemiBold',
   },
-  modalBody: {width: '88%', margin: 10},
+  modalBody: {width: '88%', marginBottom: 10},
+  tandanjiContainer: {
+    flexDirection: 'row',
+    // alignItems: 'center',
+    marginBottom: 8,
+    width: '88%',
+    justifyContent: 'space-between',
+  },
+  tandanjiBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  tandanjiTitle: {
+    fontSize: 12,
+    color: '#3d3d3d',
+    fontFamily: 'Pretendard-SemiBold',
+  },
+  tandanjiInfo: {
+    fontSize: 10,
+    color: '#3d3d3d',
+    fontFamily: 'Pretendard-Regular',
+  },
   modalKcalPrice: {
     fontSize: 20,
     color: '#93AAE7',
