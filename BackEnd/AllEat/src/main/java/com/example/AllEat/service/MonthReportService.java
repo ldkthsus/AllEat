@@ -1,8 +1,7 @@
 package com.example.AllEat.service;
-import org.springframework.http.HttpHeaders;
+
 import com.example.AllEat.dto.weight.WeightResponseDTO;
 import com.example.AllEat.entity.*;
-import org.springframework.http.HttpEntity;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.DailyDiaryRepository;
 import com.example.AllEat.repository.GoalRepository;
@@ -11,13 +10,10 @@ import com.example.AllEat.repository.WeightRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
-import org.springframework.web.client.RestTemplate;
 import java.util.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class MonthReportService {
@@ -31,17 +27,11 @@ public class MonthReportService {
     @Autowired
     private WeightRepository weightRepository;
 
-    private final RestTemplate restTemplate = new RestTemplate();
-
     @Autowired
     private GoalRepository goalRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
-
-
-    @Value("${fast.api.url}")
-    private String fastApi;
 
     public Map<String, Object> collectMonthReport(String yearMonth, HttpServletRequest request) {
         // JWT 토큰에서 사용자 식별
@@ -127,11 +117,11 @@ public class MonthReportService {
         double averageProteins = totalProteins / dayCount;
         double averageFats = totalFats / dayCount;
         double averageCalories = (double) totalCalories / dayCount;
-
+        double costAvg = (double) totalCost / dayCount;
         // 수집된 데이터를 모두 포함한 Map 반환
         Map<String, Object> collectedData = new HashMap<>();
-        collectedData.put("user", user); // user 정보를 추가
-        collectedData.put("yearMonth", yearMonth); // yearMonth 정보를 추가
+        collectedData.put("user", user);
+        collectedData.put("yearMonth", yearMonth);
         collectedData.put("goalWeight", goal.getGoalWeight());
         collectedData.put("goalCost", goal.getGoalCost());
         collectedData.put("startWeight", startWeight);
@@ -141,6 +131,7 @@ public class MonthReportService {
         collectedData.put("fatAvg", averageFats);
         collectedData.put("kcalAvg", averageCalories);
         collectedData.put("totalCost", totalCost);
+        collectedData.put("costAvg", costAvg);
         collectedData.put("restaurantTypeCount", restaurantTypeCount);
         collectedData.put("menuEntries", menuEntries);
         collectedData.put("weightRecords", processedWeightRecords);
@@ -148,47 +139,10 @@ public class MonthReportService {
         return collectedData;
     }
 
-    public Map<String, Object> sendMonthReportToFastApi(Map<String, Object> collectedData, HttpServletRequest request) {
-        // 헤더에 Authorization 토큰 추가
-        String token = request.getHeader("Authorization");
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token);
-
-        // 가장 많이 등장한 레스토랑 타입을 찾기
-        Map<String, Integer> restaurantTypeCount = (Map<String, Integer>) collectedData.get("restaurantTypeCount");
-        String mostCommonRestaurantType = restaurantTypeCount.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse("Unknown");
-
-        // FastAPI에 전송할 데이터 생성
-        Map<String, Object> fastApiRequest = new HashMap<>();
-        fastApiRequest.put("goal_weight", collectedData.get("goalWeight"));
-        fastApiRequest.put("goal_cost", collectedData.get("goalCost"));
-        fastApiRequest.put("weight_change", Arrays.asList(collectedData.get("startWeight"), collectedData.get("endWeight")));
-        fastApiRequest.put("average_carbohydrates", collectedData.get("carbAvg"));
-        fastApiRequest.put("average_proteins", collectedData.get("proteinAvg"));
-        fastApiRequest.put("average_fats", collectedData.get("fatAvg"));
-        fastApiRequest.put("average_calories", collectedData.get("kcalAvg"));
-        fastApiRequest.put("total_cost", collectedData.get("totalCost"));
-        fastApiRequest.put("most_common_restaurant_type", mostCommonRestaurantType);  // 문자열로 변환하여 전송
-
-        // FastAPI로 데이터 전송
-        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(fastApiRequest, headers);
-        String fastApiUrl = fastApi + "/fast-api/report/month"; // FastAPI URL
-        ResponseEntity<Map> responseEntity = restTemplate.exchange(fastApiUrl, HttpMethod.POST, entity, Map.class);
-
-        return responseEntity.getBody();
-    }
-
-
-    public Map<String, Object> prepareFrontendResponse(Map<String, Object> fastApiResponse, Map<String, Object> collectedData) {
+    public Map<String, Object> prepareFrontendResponse(Map<String, Object> collectedData) {
         // collectMonthReport에서 필요한 데이터 추출
-        UserEntity user = (UserEntity) collectedData.get("user"); // user 정보 추출
-
         List<Map<String, Object>> menuEntries = (List<Map<String, Object>>) collectedData.get("menuEntries");
 
-        // 메뉴별 정보를 생성
         List<Map<String, Object>> kcalRanking = menuEntries.stream()
                 .sorted(Comparator.comparingDouble(entry -> ((Number) ((Map<String, Object>) entry).get("calories")).doubleValue()).reversed())
                 .limit(10)
@@ -201,18 +155,16 @@ public class MonthReportService {
 
         Map<String, Integer> restaurantTypeCount = (Map<String, Integer>) collectedData.get("restaurantTypeCount");
 
-        // 해당 월의 시작일과 종료일 계산
+        // 일별 비용 계산을 위한 초기화
         String yearMonth = collectedData.get("yearMonth").toString();
         LocalDate startDate = LocalDate.parse(yearMonth + "-01");
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
-
-        // 일별 비용 계산을 위한 초기화
         List<Integer> dailyCosts = new ArrayList<>(Collections.nCopies(endDate.getDayOfMonth(), 0));
 
         // 일별 비용 계산
-        List<DailyDiaryEntity> monthlyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, startDate, endDate);
+        List<DailyDiaryEntity> monthlyDiaries = dailyDiaryRepository.findByUserAndDateBetween((UserEntity) collectedData.get("user"), startDate, endDate);
         for (DailyDiaryEntity diary : monthlyDiaries) {
-            int day = diary.getDate().getDayOfMonth() - 1; // 인덱스는 0부터 시작하므로 1을 빼줌
+            int day = diary.getDate().getDayOfMonth() - 1;
             int dailyTotalCost = 0;
 
             for (DiaryEntity diaryEntity : diary.getDiaryEntities()) {
@@ -226,19 +178,15 @@ public class MonthReportService {
 
         // 프론트엔드에 반환할 데이터 구성
         Map<String, Object> finalReport = new HashMap<>();
-        finalReport.put("gptResponse", fastApiResponse != null ? fastApiResponse.get("response") : null);
         finalReport.put("monthly_weight_records", collectedData.get("weightRecords"));
+        finalReport.put("cost_avg", collectedData.get("costAvg"));
         finalReport.put("total_cost", collectedData.get("totalCost"));
         finalReport.put("average_calories", collectedData.get("kcalAvg"));
         finalReport.put("kcal_ranking", kcalRanking);
         finalReport.put("cost_ranking", costRanking);
         finalReport.put("restaurant_type_count", restaurantTypeCount);
-        finalReport.put("monthly_cost_records", dailyCosts); // 일별 비용 리스트 추가
-
-        // 로그 추가
-        System.out.println("Final report prepared for frontend: " + finalReport);
+        finalReport.put("monthly_cost_records", dailyCosts);
 
         return finalReport;
     }
-
 }
