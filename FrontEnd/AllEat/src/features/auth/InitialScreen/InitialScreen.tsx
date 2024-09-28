@@ -7,8 +7,8 @@ import {images} from '../../../constants';
 import {styles} from './InitialScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
 import FormField from '../../../components/FormField/FormField';
-import {useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
 import GenderSelection from '../components/GenderSelection/GenderSelection';
@@ -16,13 +16,26 @@ import ActivityLevelSelection from '../components/ActivityLevelSelection/Activit
 import api from '../../../utils/api';
 import {AppDispatch} from '../../../redux/store';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
+import {RootState} from '../../../redux/store';
+
 
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Initial'
 >;
+
+
 const InitialScreen: React.FC = () => {
   const navigation = useNavigation<InitialScreenNavigationProp>();
+
+  const {isSocial} = useSelector(
+    (state: RootState) => state.auth,
+  );
+
+  useEffect(()=>{
+    console.log(isSocial);
+
+  })
 
   const [weight, setWeight] = useState({
     weight: '',
@@ -100,6 +113,7 @@ const InitialScreen: React.FC = () => {
         user_height: parseFloat(form.user_height),
         activity_amount: form.activity_amount,
         user_name: form.user_name,
+        social_login: isSocial
       }),
       type: 'application/json',
     });
