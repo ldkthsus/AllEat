@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -115,5 +115,12 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private List<DailyDiaryEntity> dailyDiaries;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DayReportEntity> dayReports = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<WeeklyReportEntity> WeeklyReports = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<MonthlyReportEntity> MonthlyReports = new ArrayList<>();
 }
