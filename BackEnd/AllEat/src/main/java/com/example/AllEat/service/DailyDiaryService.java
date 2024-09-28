@@ -102,7 +102,7 @@ public class DailyDiaryService {
             if (findUser != null) {
                 DiaryEntity findDiary = diaryRepository.findById(requestMenu.getDiaryId()).orElseThrow(() -> new IllegalArgumentException("diary not found"));
                 if (findDiary != null) {
-                    List<DiaryMappingEntity> diaryMappingList = diaryMappingRepository.findByDiary_id(findDiary.getId());
+                    List<DiaryMappingEntity> diaryMappingList = diaryMappingRepository.findByDiary_Id(findDiary.getId());
                     if (diaryMappingList != null) {
                         Boolean existDiaryMapping[] = new Boolean[diaryMappingList.size()];
                         Boolean newDiaryMapping[] = new Boolean[requestMenu.getMenus().size()];
@@ -153,7 +153,7 @@ public class DailyDiaryService {
                                 System.out.println("완젼 새로운 메뉴 추가요 : " + findMenu.getId() );
                             }
                         }
-                        List<DiaryMappingEntity> finalDiaryMappingList = diaryMappingRepository.findByDiary_id(findDiary.getId());
+                        List<DiaryMappingEntity> finalDiaryMappingList = diaryMappingRepository.findByDiary_Id(findDiary.getId());
                         DiaryResponseDTO diaryResponse = new DiaryResponseDTO();
                         diaryResponse.fromEntity(findDiary, finalDiaryMappingList);
                         return diaryResponse;
