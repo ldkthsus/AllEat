@@ -1,3 +1,4 @@
+package com.example.AllEat.controller;
 
 import com.example.AllEat.dto.diary.DiaryResponseDTO;
 import com.example.AllEat.dto.menu.*;
