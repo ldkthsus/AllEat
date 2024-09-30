@@ -48,12 +48,14 @@ public class MonthReportService {
 
         // 해당 월의 시작일과 종료일 계산
         LocalDate startDate = LocalDate.parse(yearMonth + "-01");
-        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth()); // 해당 월의 마지막 날로 설정
 
-        // 해당 월에 기록된 몸무게 데이터 가져오기
-        List<WeightResponseDTO> weightRecords = weightRepository.findByUserEntityAndDateRange(user,
-                java.sql.Date.valueOf(startDate), java.sql.Date.valueOf(endDate));
-
+        // 해당 월에 기록된 몸무게 데이터 가져오기 (날짜만을 기준으로 가져옴)
+        List<WeightResponseDTO> weightRecords = new ArrayList<>();
+        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
+            List<WeightResponseDTO> dailyWeights = weightRepository.findByUserEntityAndExactDate(user, java.sql.Date.valueOf(date));
+            weightRecords.addAll(dailyWeights);
+        }
         // 기록된 몸무게 데이터의 날짜 변환 및 저장
         List<Map<String, Object>> processedWeightRecords = new ArrayList<>();
         Double startWeight = null, endWeight = null;
