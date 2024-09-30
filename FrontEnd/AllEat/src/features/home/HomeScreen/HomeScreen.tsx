@@ -16,6 +16,7 @@ import {AppDispatch,RootState} from '../../../redux/store';
 import {useDispatch,useSelector} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
+import CalanderModal from '../components/CalanderModal/CalanderModel';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -27,6 +28,14 @@ const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<HomeRouteProp>();
   const {isUpdated = false} = route.params || {};
+
+  // 캘린더 모달
+  const [isCalanderModalVisible, setIsCalanderModalVisible] = useState(false);
+  // 캘린더 모달의 날짜 선택 시 처리
+  const handleSelectDate = (date: Date) => {
+    setCurrentDate(date);
+    setIsCalanderModalVisible(false); // 모달을 닫음
+  };
 
   const [weightModalVisible, setWeightModalVisible] = useState(false);
 
@@ -202,7 +211,14 @@ const isToday = (dateString: string): boolean => {
           />
         </TouchableOpacity>
 
-        <Text style={styles.day}>{formatDate(currentDate)}</Text>
+        {/* 캘린더 */}
+        <TouchableOpacity 
+          style={styles.homeDate}
+          onPress={() => setIsCalanderModalVisible(true)} // 캘린더 모달을 띄우는 onPress 이벤트 추가
+        >
+          <Text style={styles.day}>{formatDate(currentDate)}</Text>
+          <icons.arrowDropDown style={styles.calanderBtn} height={15} width={15} />
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={handleNextDay}>
           <icons.arrowBackRight
@@ -552,6 +568,13 @@ const isToday = (dateString: string): boolean => {
           </View>
         </Modal>
       )}
+
+      {/* CalanderModal */}
+      <CalanderModal
+        visible={isCalanderModalVisible}
+        onClose={() => setIsCalanderModalVisible(false)} // 모달 닫기
+        onSelectDate={handleSelectDate} // 날짜 선택 시 처리
+      />
     </View>
   );
 };

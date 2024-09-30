@@ -55,7 +55,7 @@ const WeeklyReport: React.FC = () => {
           setAiResponse('AI 응답을 가져오지 못했습니다.');
         }
       } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
+        // console.error('데이터 가져오기 오류:', error);
       }
     };
     fetchData();
@@ -81,14 +81,6 @@ const WeeklyReport: React.FC = () => {
 
   const kikiImages = [images.kikiRunning1, images.kikiRunning2];
 
-  if (!reportData) {
-    return (
-      <View style={styles.loadingContainer}>
-        {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
-      </View>
-    );
-  }
-
   return (
     <ScrollView style={styles.weeklyReportContainer}>
       <View style={styles.dateNavigatorContainer}>
@@ -101,43 +93,54 @@ const WeeklyReport: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      {/* AI 레포트 영역 */}
-      <View style={styles.AIContainer}>
-        <icons.mypage style={styles.AIIcon} width={30} height={30} />
-        <Text style={styles.AITitleText}>AllEat! 주간 레포트</Text>
-        {aiResponse ? (
-          <AIReport title='AllEat! 주간 레포트' aiData={aiResponse} />
-        ) : (
-          <View style={styles.loadingContainer}>
-            {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
-            <Text style={styles.loadingText}>키키가 AI 레포트를 배달 중이에요</Text>
-            <Text style={styles.loadingText}>조금만 기다려 주세요!</Text>
+      {!reportData ? (
+        // 로딩 애니메이션을 dateNavigatorContainer 아래에 표시
+        <View style={styles.loadingContainer}>
+          {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
+          <Text style={styles.loadingText}>키키가 데이터를 가져오는 중이에요!</Text>
+        </View>
+      ) : (
+        <>
+          {/* AI 레포트 영역 */}
+          <View style={styles.AIContainer}>
+            <icons.mypage style={styles.AIIcon} width={30} height={30} />
+            <Text style={styles.AITitleText}>AllEat! 주간 레포트</Text>
+            {aiResponse ? (
+              <AIReport title='AllEat! 주간 레포트' aiData={aiResponse} />
+            ) : (
+              <View style={styles.loadingContainer}>
+                {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
+                <Text style={styles.loadingText}>키키가 AI 레포트를 배달 중이에요</Text>
+                <Text style={styles.loadingText}>조금만 기다려 주세요!</Text>
+              </View>
+            )}
           </View>
-        )}
-      </View>
-      <View style={styles.ReportContainer}>
-        {/* 식단 레포트 영역 */}
-        <WeeklyMealReport
-          goalKcal={goalKcal}
-          kcalAverage={reportData.kcal_average}
-          proteinAvg={reportData.protein_avg}
-          carbAvg={reportData.carb_avg}
-          costAvg={reportData.cost_avg}
-          fatAvg={reportData.fat_avg}
-          proteinRanking={reportData.protein_ranking}
-          kcalRanking={reportData.menu_kcal}
-        />
-      </View>
 
-      {/* 식비 레포트 영역 */}
-      <View style={styles.ReportContainer}>
-        <WeeklyFeeReport
-          goalFee={weekGoalCost}
-          costAvg={reportData.cost_avg}
-          costRanking={reportData.cost_ranking}
-          costWhere={reportData.cost_where}
-        />
-      </View>
+          <View style={styles.ReportContainer}>
+            {/* 식단 레포트 영역 */}
+            <WeeklyMealReport
+              goalKcal={goalKcal}
+              kcalAverage={reportData.kcal_average}
+              proteinAvg={reportData.protein_avg}
+              carbAvg={reportData.carb_avg}
+              costAvg={reportData.cost_avg}
+              fatAvg={reportData.fat_avg}
+              proteinRanking={reportData.protein_ranking}
+              kcalRanking={reportData.menu_kcal}
+            />
+          </View>
+
+          {/* 식비 레포트 영역 */}
+          <View style={styles.ReportContainer}>
+            <WeeklyFeeReport
+              goalFee={weekGoalCost}
+              costAvg={reportData.cost_avg}
+              costRanking={reportData.cost_ranking}
+              costWhere={reportData.cost_where}
+            />
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 };

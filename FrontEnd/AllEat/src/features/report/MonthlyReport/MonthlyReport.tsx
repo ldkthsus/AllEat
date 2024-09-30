@@ -28,6 +28,7 @@ const MonthlyReport: React.FC = () => {
   const paymoneyCost = monthUsedAmount ?? 0; 
   const token = useSelector((state: RootState) => state.auth.token);
 
+  
   // API 요청 useEffect
   useEffect(() => {
     console.log('MonthlyReport useEffect 실행됨');
@@ -38,6 +39,7 @@ const MonthlyReport: React.FC = () => {
         });
         
         const data = response.data;
+        console.log('체중 추이', data.monthly_weight_records)
         setReportData(data); // 서버로부터 받은 데이터를 상태에 저장
         
         // FastAPI에 요청 보내기
@@ -58,7 +60,7 @@ const MonthlyReport: React.FC = () => {
           setAiResponse('AI 응답을 가져오지 못했습니다.');
         }
       } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
+        // console.error('데이터 가져오기 오류:', error);
       }
     };
     fetchData();

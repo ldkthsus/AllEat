@@ -15,7 +15,7 @@ const DailyReport: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [reportData, setReportData] = useState<any>(null);
   const [aiResponse, setAiResponse] = useState<string | null>(null);
-  const [imageIndex, setImageIndex] = useState(0); // 이미지 인덱스를 위한 상태 추가
+  const [imageIndex, setImageIndex] = useState(0);
 
   const formattedDate = format(currentDate, 'yyyy-MM-dd');
 
@@ -26,7 +26,6 @@ const DailyReport: React.FC = () => {
   const firstWeight = recentWeight && recentWeight.length > 0 ? recentWeight[0].weight : null;
 
   const token = useSelector((state: RootState) => state.auth.token);
-
 
   const handlePreviousDate = () => {
     setCurrentDate(prevDate => subDays(prevDate, 1));
@@ -44,18 +43,15 @@ const DailyReport: React.FC = () => {
           day: formattedDate,
         });
         const data = response.data;
-        setReportData(data); // 서버로부터 받은 데이터를 상태에 저장
-        
-        // AI에게 보낼 데이터를 준비
+        setReportData(data);
+
         const aiData = {
           food_details: data.food_details,
           goal_weight: goalWeight,
           goal_cost: goalFee,
           recent_weight: firstWeight,
         };
-        
-        console.log('데이터 확인', aiData)
-        // FastAPI에 요청 보내기
+
         const aiResponse = await fetch('https://j11b104.p.ssafy.io/fast-api/fast-api/report/day', {
           method: 'POST',
           headers: {
@@ -67,67 +63,33 @@ const DailyReport: React.FC = () => {
 
         if (aiResponse.ok) {
           const aiResult = await aiResponse.json();
-          setAiResponse(aiResult.response); // AI 응답 저장
+          setAiResponse(aiResult.response);
         } else {
           console.error('AI 응답 오류:', aiResponse.statusText);
           setAiResponse('AI 응답을 가져오지 못했습니다.');
         }
       } catch (error) {
-        console.error('데이터 가져오기 오류:', error);
+        // console.error('데이터 가져오기 오류:', error);
       }
     };
 
     fetchData();
-  }, [formattedDate, goalWeight, goalFee, firstWeight]); // 필요한 종속성 추가
+  }, [currentDate, goalWeight, goalFee, firstWeight]);
 
-  // 이미지가 바뀌는 로직 설정
+  // 날짜 변경 시 reportData를 초기화
+  useEffect(() => {
+    setReportData(null);
+  }, [currentDate]);
+
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setImageIndex(prevIndex => (prevIndex + 1) % 2); // 0, 1 반복
-    }, 500); // 0.5초마다 이미지 변경
+      setImageIndex(prevIndex => (prevIndex + 1) % 2);
+    }, 500);
 
-    return () => clearInterval(intervalId); // 컴포넌트가 언마운트될 때 interval 정리
+    return () => clearInterval(intervalId);
   }, []);
 
-  // 이미지 배열 생성
   const kikiImages = [images.kikiRunning1, images.kikiRunning2];
-
-  // 데이터를 받아오기 전 로딩 처리
-  if (!reportData) {
-    return (
-      <View style={styles.loadingContainer}>
-        {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
-      </View>
-    );
-  }
-
-  // 전체 영양소 및 가격 합계 계산
-  const totalValues = reportData.food_details.reduce(
-    (acc, item) => ({
-      totalPrice: acc.totalPrice + item.menu_price,
-      totalCarbohydrate: acc.totalCarbohydrate + item.menu_carbohydrate,
-      totalProtein: acc.totalProtein + item.menu_protein,
-      totalCalories: acc.totalCalories + item.menu_calories,
-      totalFat: acc.totalFat + item.menu_fat,
-    }),
-    { totalPrice: 0, totalCarbohydrate: 0, totalProtein: 0, totalCalories: 0, totalFat: 0 }
-  );
-
-  // 탄수화물, 단백질, 지방 객체 생성
-  const carbohydrates = reportData.food_details.map(item => ({
-    menuName: item.menu_name,
-    menuCarbohydrate: item.menu_carbohydrate,
-  }));
-
-  const proteins = reportData.food_details.map(item => ({
-    menuName: item.menu_name,
-    menuProtein: item.menu_protein,
-  }));
-
-  const fats = reportData.food_details.map(item => ({
-    menuName: item.menu_name,
-    menuFat: item.menu_fat,
-  }));
 
   return (
     <ScrollView style={styles.dailyReportContainer}>
@@ -141,43 +103,62 @@ const DailyReport: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      {/* AI 레포트 영역 */}
-      <View style={styles.AIContainer}>
-      <icons.mypage style={styles.AIIcon} width={30} height={30} />
-      <Text style={styles.AITitleText}>AllEat! 오늘의 레포트</Text>
-        {aiResponse ? (
-          <AIReport title='AllEat! 오늘의 레포트' aiData={aiResponse} />
-        ) : (
-          <View style={styles.loadingContainer}>
-            {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
-            <Text style={styles.lodingText}>키키가 AI 레포트를 배달 중이에요</Text>
-            <Text style={styles.lodingText}>조금만 기다려 주세요!</Text>
-          </View>
-        )}
+      {!reportData ? (
+        // 로딩 애니메이션을
+        <View style={styles.loadingContainer}>
+          {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
+          <Text style={styles.lodingText}>아직 오늘의 식단을 기록하지 않았어요!</Text>
         </View>
+      ) : (
+        <>
+          {/*AI 레포트 영역 */}
+          <View style={styles.AIContainer}>
+            <icons.mypage style={styles.AIIcon} width={30} height={30} />
+            <Text style={styles.AITitleText}>AllEat! 오늘의 레포트</Text>
+            {aiResponse ? (
+              <AIReport title='AllEat! 오늘의 레포트' aiData={aiResponse} />
+            ) : (
+              <View style={styles.loadingContainer}>
+                {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
+                <Text style={styles.lodingText}>키키가 AI 레포트를 배달 중이에요</Text>
+                <Text style={styles.lodingText}>조금만 기다려 주세요!</Text>
+              </View>
+            )}
+          </View>
 
-      <View style={styles.ReportContainer}>
-        {/* 식단 레포트 영역 */}
-        <DailyMealReport
-          goalKcal={goalKcal}
-          totalCalories={totalValues.totalCalories}
-          totalCarbohydrate={totalValues.totalCarbohydrate}
-          totalProtein={totalValues.totalProtein}
-          totalFat={totalValues.totalFat}
-          carbohydrates={carbohydrates}
-          proteins={proteins}
-          fats={fats}
-        />
-      </View>
+          <View style={styles.ReportContainer}>
+            {/* 식단 레포트 영역 */}
+            <DailyMealReport
+              goalKcal={goalKcal}
+              totalCalories={reportData.food_details.reduce((acc, item) => acc + item.menu_calories, 0)}
+              totalCarbohydrate={reportData.food_details.reduce((acc, item) => acc + item.menu_carbohydrate, 0)}
+              totalProtein={reportData.food_details.reduce((acc, item) => acc + item.menu_protein, 0)}
+              totalFat={reportData.food_details.reduce((acc, item) => acc + item.menu_fat, 0)}
+              carbohydrates={reportData.food_details.map(item => ({
+                menuName: item.menu_name,
+                menuCarbohydrate: item.menu_carbohydrate,
+              }))}
+              proteins={reportData.food_details.map(item => ({
+                menuName: item.menu_name,
+                menuProtein: item.menu_protein,
+              }))}
+              fats={reportData.food_details.map(item => ({
+                menuName: item.menu_name,
+                menuFat: item.menu_fat,
+              }))}
+            />
+          </View>
 
-      {/* 식비 레포트 영역 */}
-      <View style={styles.ReportContainer}>
-        <DailyFeeReport
-          goalFee={goalFee}
-          totalPrice={totalValues.totalPrice}
-          foodDetails={reportData.food_details} // food_details를 전달
-        />
-      </View>
+          {/* 식비 레포트 영역 */}
+          <View style={styles.ReportContainer}>
+            <DailyFeeReport
+              goalFee={goalFee}
+              totalPrice={reportData.food_details.reduce((acc, item) => acc + item.menu_price, 0)}
+              foodDetails={reportData.food_details}
+            />
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 };

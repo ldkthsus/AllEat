@@ -151,10 +151,6 @@ const SignIn: React.FC = () => {
       <Text style={styles.title}>돌아오셨군요! 반가워요</Text>
 
       <View style={styles.socialContainer}>
-<<<<<<< HEAD
-        <View style={styles.socialButtonGoogle}>
-          <icons.socialGoogle
-=======
         <TouchableOpacity onPress={onPressGoogleBtn}>
           <View style={styles.socialButtonGoogle}>
             <icons.socialGoogle
@@ -167,16 +163,11 @@ const SignIn: React.FC = () => {
         </TouchableOpacity>
         <View style={styles.socialButtonKakao}>
           <icons.socialKakao
->>>>>>> FE_firebase
             style={styles.socialButton}
             width={24}
             height={24}
           />
-<<<<<<< HEAD
-          <Text style={styles.socialButtonText}>구글로 계속하기</Text>
-=======
           <Text style={styles.socialButtonText}>카카오로 계속하기</Text>
->>>>>>> FE_firebase
         </View>
       </View>
 
