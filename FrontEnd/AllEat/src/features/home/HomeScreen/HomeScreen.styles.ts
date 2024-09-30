@@ -44,6 +44,14 @@ export const styles = StyleSheet.create({
   arrowBackLeft: {
     // position: 'absolute',
   },
+  homeDate: {
+    position: 'relative'
+  },
+  calanderBtn: {
+    position: 'absolute',
+    top: 8,
+    left: 67
+  },
   day: {
     color: 'black',
     fontSize: 20,

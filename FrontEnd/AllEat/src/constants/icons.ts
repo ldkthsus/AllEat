@@ -41,6 +41,7 @@ import plusWhite from '../assets/icons/plusWhite.svg';
 import plusWhiteReverse from '../assets/icons/plusWhiteReverse.svg';
 import checkWhite from '../assets/icons/checkWhite.svg';
 import controlMonth from '../assets/icons/controlMonth.svg';
+import arrowDropDown from '../assets/icons/arrowDropDown.svg';
 
 const icons = {
   settings,
@@ -86,5 +87,6 @@ const icons = {
   warning,
   checkWhite,
   controlMonth,
+  arrowDropDown,
 };
 export default icons;
