@@ -77,15 +77,15 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.kcalGrpahDetailContainer}>
             <View style={styles.kcalGraphDetailBox}>
               <icons.tan width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>탄수화물 {totalCarbohydrate}g</Text>
+              <Text style={styles.kcalGraphDetailText}>탄수화물 {totalCarbohydrate.toFixed(0)}g</Text>
             </View>
             <View style={styles.kcalGraphDetailBox}>
               <icons.dan width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>단백질 {totalProtein}g</Text>
+              <Text style={styles.kcalGraphDetailText}>단백질 {totalProtein.toFixed(0)}g</Text>
             </View>            
             <View style={styles.kcalGraphDetailBox}>
               <icons.ji width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>지방 {totalFat}g</Text>
+              <Text style={styles.kcalGraphDetailText}>지방 {totalFat.toFixed(0)}g</Text>
             </View>
           </View>
         </View>
@@ -94,7 +94,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.nutrientTitleContainer}>
             <icons.tan style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>탄수화물</Text>
-            <Text style={styles.nutrientNum}>{totalCarbohydrate}g</Text>
+            <Text style={styles.nutrientNum}>{totalCarbohydrate.toFixed(0)}g</Text>
             {carbVisible ? 
               <icons.arrowTop width={18} height={18}/> : 
               <icons.arrowBottom width={18} height={18}/>
@@ -105,7 +105,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.nutrientDetailContainer}>
             {carbohydrates.map((item, index) => (
               <View key={index} style={styles.nutrientDetailRow}>
-                <Text style={styles.nutrienDetailText}>{item.menuName} · {item.menuCarbohydrate}g</Text>
+                <Text style={styles.nutrienDetailText}>{item.menuName} · {item.menuCarbohydrate.toFixed(0)}g</Text>
               </View>
             ))}
           </View>
@@ -116,7 +116,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.nutrientTitleContainer}>
             <icons.dan style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>단백질</Text>
-            <Text style={styles.nutrientNum}>{totalProtein}g</Text>
+            <Text style={styles.nutrientNum}>{totalProtein.toFixed(0)}g</Text>
             {proteinVisible ? 
               <icons.arrowTop width={18} height={18}/> : 
               <icons.arrowBottom width={18} height={18}/>
@@ -127,7 +127,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.nutrientDetailContainer}>
             {proteins.map((item, index) => (
               <View key={index} style={styles.nutrientDetailRow}>
-                <Text style={styles.nutrienDetailText}>{item.menuName} · {item.menuProtein}g</Text>
+                <Text style={styles.nutrienDetailText}>{item.menuName} · {item.menuProtein.toFixed(0)}g</Text>
               </View>
             ))}
           </View>
@@ -138,7 +138,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.nutrientTitleContainer}>
             <icons.ji style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>지방</Text>
-            <Text style={styles.nutrientNum}>{totalFat}g</Text>
+            <Text style={styles.nutrientNum}>{totalFat.toFixed(0)}g</Text>
             {fatVisible ? 
               <icons.arrowTop width={18} height={18}/> : 
               <icons.arrowBottom width={18} height={18}/>
@@ -149,7 +149,7 @@ const DailyMealReport: React.FC<DailyMealReportProps> = ({ goalKcal, totalCalori
           <View style={styles.nutrientDetailContainer}>
             {fats.map((item, index) => (
               <View key={index} style={styles.nutrientDetailRow}>
-                <Text style={styles.nutrienDetailText}>{item.menuName} · {item.menuFat}g</Text>
+                <Text style={styles.nutrienDetailText}>{item.menuName} · {item.menuFat.toFixed(0)}g</Text>
               </View>
             ))}
           </View>

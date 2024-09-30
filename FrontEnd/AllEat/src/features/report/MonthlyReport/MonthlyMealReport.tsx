@@ -36,7 +36,7 @@ const MonthlyMealReport: React.FC<MonthlyMealReportProps> = ({ goalKcal, kcalAve
   return (
     <View style={styles.monthlyMealReportContainer}>
       <Text style={styles.monthlyMealReportTitle}>
-        한 달 평균 {kcalAverage}kcal를 섭취했어요!
+        한 달 평균 {kcalAverage.toFixed(0)}kcal를 섭취했어요!
       </Text>
       <View style={styles.kcalBarContainer}>
         {kcalAverage > goalKcal && (
@@ -53,7 +53,7 @@ const MonthlyMealReport: React.FC<MonthlyMealReportProps> = ({ goalKcal, kcalAve
           <Text
             style={[styles.kcalTextOverlay,
             { color: kcalAverage > goalKcal ? '#D60000' : '#000000' }]}
-          >{kcalAverage} / {goalKcal} kcal</Text>
+          >{kcalAverage.toFixed(0)} / {goalKcal} kcal</Text>
         </View>         
       </View>
       <View style={styles.nutrientContainer}>

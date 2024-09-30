@@ -46,7 +46,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
   return (
     <View style={styles.weeklyMealReportContainer}>
       <Text style={styles.weeklyMealReportTitle}>
-        한 주 평균 {kcalAverage}kcal를 섭취했어요!
+        한 주 평균 {kcalAverage.toFixed(0)}kcal를 섭취했어요!
       </Text>
       <View style={styles.kcalBarContainer}>
         {kcalAverage > goalKcal && (
@@ -63,7 +63,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <Text
             style={[styles.kcalTextOverlay,
             { color: kcalAverage > goalKcal ? '#D60000' : '#000000' }]}
-          >{kcalAverage} / {goalKcal} kcal</Text>
+          >{kcalAverage.toFixed(0)} / {goalKcal} kcal</Text>
         </View>         
       </View>
       <View style={styles.nutrientContainer}>
@@ -108,15 +108,15 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.kcalGrpahDetailContainer}>
             <View style={styles.kcalGraphDetailBox}>
               <icons.tan width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>탄수화물 {carbAvg}g</Text>
+              <Text style={styles.kcalGraphDetailText}>탄수화물 {carbAvg.toFixed(0)}g</Text>
             </View>
             <View style={styles.kcalGraphDetailBox}>
               <icons.dan width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>단백질 {proteinAvg}g</Text>
+              <Text style={styles.kcalGraphDetailText}>단백질 {proteinAvg.toFixed(0)}g</Text>
             </View>            
             <View style={styles.kcalGraphDetailBox}>
               <icons.ji width={18} height={18} />
-              <Text style={styles.kcalGraphDetailText}>지방 {fatAvg}g</Text>
+              <Text style={styles.kcalGraphDetailText}>지방 {fatAvg.toFixed(0)}g</Text>
             </View>
           </View>
         </View>
@@ -125,7 +125,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.nutrientTitleContainer}>
             <icons.tan style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>탄수화물</Text>
-            <Text style={styles.nutrientNum}>{carbAvg}g</Text>
+            <Text style={styles.nutrientNum}>{carbAvg.toFixed(0)}g</Text>
             {carbVisible ? 
               <icons.arrowTop width={18} height={18}/> : 
               <icons.arrowBottom width={18} height={18}/>
@@ -136,7 +136,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.nutrientDetailContainer}>
             {proteinRanking.map((item, index) => (
               <View key={index} style={styles.nutrientDetailRow}>
-                <Text style={styles.nutrienDetailText}>{item.menu_name} · {item.proteins}g</Text>
+                <Text style={styles.nutrienDetailText}>{item.menu_name} · {item.carbohydrates.toFixed(0)}g</Text>
               </View>
             ))}
           </View>
@@ -147,7 +147,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.nutrientTitleContainer}>
             <icons.dan style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>단백질</Text>
-            <Text style={styles.nutrientNum}>{proteinAvg}g</Text>
+            <Text style={styles.nutrientNum}>{proteinAvg.toFixed(0)}g</Text>
             {proteinVisible ? 
               <icons.arrowTop width={18} height={18}/> : 
               <icons.arrowBottom width={18} height={18}/>
@@ -158,7 +158,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.nutrientDetailContainer}>
             {proteinRanking.map((item, index) => (
               <View key={index} style={styles.nutrientDetailRow}>
-                <Text style={styles.nutrienDetailText}>{item.menu_name} · {item.proteins}g</Text>
+                <Text style={styles.nutrienDetailText}>{item.menu_name} · {item.proteins.toFixed(0)}g</Text>
               </View>
             ))}
           </View>
@@ -169,7 +169,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.nutrientTitleContainer}>
             <icons.ji style={styles.nutrientIcon} width={18} height={18}/>
             <Text style={styles.nutrientText}>지방</Text>
-            <Text style={styles.nutrientNum}>{fatAvg}g</Text>
+            <Text style={styles.nutrientNum}>{fatAvg.toFixed(0)}g</Text>
             {fatVisible ? 
               <icons.arrowTop width={18} height={18}/> : 
               <icons.arrowBottom width={18} height={18}/>
@@ -180,7 +180,7 @@ const WeeklyMealReport: React.FC<WeeklyMealReportProps> = ({ goalKcal, kcalAvera
           <View style={styles.nutrientDetailContainer}>
             {proteinRanking.map((item, index) => (
               <View key={index} style={styles.nutrientDetailRow}>
-                <Text style={styles.nutrienDetailText}>{item.menu_name} · {item.proteins}g</Text>
+                <Text style={styles.nutrienDetailText}>{item.menu_name} · {item.fats.toFixed(0)}g</Text>
               </View>
             ))}
           </View>

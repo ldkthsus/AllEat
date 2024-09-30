@@ -56,7 +56,7 @@ const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, c
   return (
     <View style={styles.dailyFeeReportContainer}>
       <Text style={styles.dailyFeeReportTitle}>
-        한 달 평균 {costAvg}원을 소비했어요!
+        한 달 평균 {costAvg.toFixed(0)}원을 소비했어요!
       </Text>
       <View style={styles.feeBarContainer}>
         {costAvg > goalFee && (
@@ -76,7 +76,7 @@ const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, c
               { color: costAvg > goalFee ? '#D60000' : '#000000' } // goalFee를 초과하면 텍스트 색상 변경
             ]}
           >
-            {costAvg} / {goalFee} ₩
+            {costAvg.toFixed(0)} / {goalFee} ₩
           </Text>
         </View>
       </View>
