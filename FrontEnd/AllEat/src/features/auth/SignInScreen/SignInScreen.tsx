@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Pressable, Alert, TouchableOpacity} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
@@ -14,6 +14,7 @@ import {RootState} from '../../../redux/store';
 import {fetchUserInfo} from '../../../redux/features/infoSlice'; // infoSlice에서 fetchUserInfo 가져오기
 import {unwrapResult} from '@reduxjs/toolkit'; // unwrapResult 추가
 import {AppDispatch} from '../../../redux/store';
+import {fetchMenus} from '../../../redux/features/menuSlice';
 import {signupUser} from '../../../redux/features/authSlice';
 import {AUTH_LOGIN_PASSWORD} from '@env';
 import {BACK_URL} from '@env';
@@ -50,11 +51,12 @@ const SignIn: React.FC = () => {
   useEffect(() => {
     console.log('Redux auth 확인:', {isAuthenticated, token});
     GoogleSignin.configure({
-      webClientId: "63668378347-461lhh603fihl1qri0ikdn759lbnvdub.apps.googleusercontent.com",
+      webClientId:
+        '63668378347-461lhh603fihl1qri0ikdn759lbnvdub.apps.googleusercontent.com',
     });
 
     if (isAuthenticated) {
-      navigation.replace('Home'); // 로그인 성공 후 Home으로 이동
+      navigation.replace('Home', {}); // 로그인 성공 후 Home으로 이동
     }
   }, [isAuthenticated, token, navigation]);
 
@@ -63,7 +65,7 @@ const SignIn: React.FC = () => {
     const loginData = {
       email: form.email,
       password: form.password,
-      isSocial:false
+      isSocial: false,
     };
     console.log(loginData);
     try {
@@ -73,6 +75,7 @@ const SignIn: React.FC = () => {
       // 로그인 성공 시 fetchUserInfo 호출
       console.log('로그인 성공, 유저 정보 가져오기 시도');
       await dispatch(fetchUserInfo());
+      await dispatch(fetchMenus());
     } catch (error) {
       // error가 unknown 타입일 때 처리
       let errorMessage = '로그인에 실패했습니다.';
@@ -94,34 +97,35 @@ const SignIn: React.FC = () => {
     try {
       // Google Play Services 체크
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      
+
       // Google 로그인
       await GoogleSignin.signIn();
-      
+
       const token = await GoogleSignin.getTokens();
       const idToken = token.idToken;
       setIdToken(idToken);
-      
+
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const res = await auth().signInWithCredential(googleCredential);
 
       const userInfoOfGoogle = await GoogleSignin.signIn();
 
-      // db에서 이메일 찾아보기 
+      // db에서 이메일 찾아보기
       const email = {
-        email : userInfoOfGoogle.data?.user.email
-      }
-      const isNewResponse = await axios.post(`${BACK_URL}/AllEat/users/social-login`,email);
+        email: userInfoOfGoogle.data?.user.email,
+      };
+      const isNewResponse = await axios.post(
+        `${BACK_URL}/AllEat/users/social-login`,
+        email,
+      );
       const isNew = isNewResponse.data.is_new;
 
-
-      if (isNew){
-        // 새로운 계정이면 회원 가입 진행 안내 alert 
-        Alert.alert("회원 가입을 먼저 진행해주세요!")
-
-      }else {
+      if (isNew) {
+        // 새로운 계정이면 회원 가입 진행 안내 alert
+        Alert.alert('회원 가입을 먼저 진행해주세요!');
+      } else {
         // 이미 있는 계정이면 로그인
-        if (res.user.email != null){
+        if (res.user.email != null) {
           const loginData = {
             email: res.user.email,
             password: AUTH_LOGIN_PASSWORD,
@@ -130,6 +134,7 @@ const SignIn: React.FC = () => {
           // console.log(loginData);
           await dispatch(loginUser(loginData));
           await dispatch(fetchUserInfo());
+          await dispatch(fetchMenus());
         }
       }
     } catch (error: any) {
@@ -145,7 +150,7 @@ const SignIn: React.FC = () => {
       }
     }
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>돌아오셨군요! 반가워요</Text>

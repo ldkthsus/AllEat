@@ -28,6 +28,14 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
   },
   modalIcon: {},
+  searchBox: {
+    height: '300%',
+    top: '100%',
+    width: '100%',
+    position: 'absolute',
+    backgroundColor: 'white',
+    zIndex: 3,
+  },
   addMenu: {flexDirection: 'row'},
   addMenuContainer: {
     backgroundColor: '#EAF0FF',

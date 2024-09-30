@@ -34,20 +34,43 @@ const calculateNutrients = (
   return {newCarbohydrate, newProtein, newFat, newCalories};
 };
 type Meal = {
-  id: number;
-  restaurant: string;
-  menu: string;
-  price: number;
-  kcal: number;
-  people: number;
+  menu_id: number;
+  restaurants_name: string;
+  menu_name: string;
+  menu_price: number;
+  menu_calories: number;
+  person_count: number;
 };
+interface DiaryIds {
+  BREAKFAST: number | null;
+  LUNCH: number | null;
+  DINNER: number | null;
+  SNACK: number | null;
+}
+
+const mealTimes = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK']; // 가능한 식사 시간 배열
 
 const DiaryCreateScreen: React.FC = () => {
   const navigation = useNavigation<DiaryCreateScreenNavigationProp>();
   const route = useRoute<DiaryCreateRouteProp>();
-  const {date, meals, diaryId} = route.params;
+  const {date, meals: initialMealTime, diaryId} = route.params; // 처음 전달된 meal 값을 저장
   const [isModalVisible, setModalVisible] = useState(false); // 모달 상태
   const [modalType, setModalType] = useState('main'); // 기본 모달 상태
+  const [meals, setMeals] = useState(initialMealTime); // meals를 상태로 관리
+  type MealType = keyof DiaryIds;
+  // meals 값이 변경될 때 호출되는 함수
+  const goToPreviousMealTime = () => {
+    const currentIndex = mealTimes.indexOf(meals);
+    const previousIndex =
+      (currentIndex - 1 + mealTimes.length) % mealTimes.length;
+    setMeals(mealTimes[previousIndex]); // 이전 식사 시간 설정
+  };
+
+  const goToNextMealTime = () => {
+    const currentIndex = mealTimes.indexOf(meals);
+    const nextIndex = (currentIndex + 1) % mealTimes.length;
+    setMeals(mealTimes[nextIndex]); // 다음 식사 시간 설정
+  };
 
   // 모달 열기 및 닫기
   const openModal = () => setModalVisible(true);
@@ -128,21 +151,24 @@ const DiaryCreateScreen: React.FC = () => {
   }, [totalNutrients]); // 용량 변경 시에만 실행되도록 의존성 배열 설정
   // 다이어리 데이터 가져오기 (diaryId가 있을 때만)
   const [mealList, setMealList] = useState<Meal[]>([]);
+  const mealKey = meals as MealType;
   useEffect(() => {
-    if (diaryId) {
+    if (diaryId && diaryId[mealKey]) {
       const fetchData = async () => {
         try {
-          const response = await api.get(`/AllEat/get/detail/${diaryId}`);
+          const response = await api.get(
+            `/AllEat/get/detail/${diaryId[mealKey]}`,
+          );
           const {menus} = response.data;
           console.log('menus : ', menus);
           setMealList(
             menus.map((menu: any) => ({
-              id: menu.menu_id,
-              restaurant: menu.restaurants_name,
-              menu: menu.menu_name,
-              price: menu.menu_price,
-              kcal: menu.menu_calories,
-              people: menu.person_count,
+              menu_id: menu.menu_id,
+              restaurants_name: menu.restaurants_name,
+              menu_name: menu.menu_name,
+              menu_price: menu.menu_price,
+              menu_calories: menu.menu_calories,
+              person_count: menu.person_count,
             })),
           );
         } catch (error) {
@@ -151,8 +177,10 @@ const DiaryCreateScreen: React.FC = () => {
       };
 
       fetchData();
+    } else {
+      setMealList([]);
     }
-  }, [diaryId]);
+  }, [diaryId, meals, mealKey]); // diaryId와 meals가 변경될 때마다 useEffect 실행
   const email = useSelector((state: RootState) => state.info.email); // 리덕스 스토어에서 email 가져오기
   const addMealToList = async () => {
     try {
@@ -189,12 +217,12 @@ const DiaryCreateScreen: React.FC = () => {
       setMealList(prevMealList => [
         ...prevMealList,
         {
-          id: response.data.id,
-          restaurant: restaurantValue || '집밥', // 식당 이름 없으면 기본값으로 '집밥'
-          menu: form.menu_name,
-          price: form.menu_price,
-          kcal: form.menu_calories,
-          people: 1,
+          menu_id: response.data.id,
+          restaurants_name: restaurantValue || '집밥', // 식당 이름 없으면 기본값으로 '집밥'
+          menu_name: form.menu_name,
+          menu_price: form.menu_price,
+          menu_calories: form.menu_calories,
+          person_count: 1,
         },
       ]);
 
@@ -210,26 +238,35 @@ const DiaryCreateScreen: React.FC = () => {
 
   const [restaurantIndex, setRestaurantIndex] = useState(0);
 
-  const [restaurants, setRestaurants] = useState([
+  const [restaurants, setRestaurants] = useState<
     {
-      name: '투썸플레이스',
-      menus: [
-        {
-          id: 2,
-          menu: '아이스아메리카노',
-          price: 4500,
-          kcal: 5,
-          isFavorate: false,
-        },
-      ],
-    },
-    {
-      name: '아리소바제면소',
-      menus: [
-        {id: 2, menu: '고사리소바', price: 8900, kcal: 300, isFavorate: false},
-      ],
-    },
-  ]);
+      restaurants_id: number;
+      restaurants_name: string;
+      menus: {
+        menuId: number;
+        menuName: string;
+        price: number;
+        menuCalories: number;
+        favorite: boolean;
+      }[];
+    }[]
+  >([]);
+
+  // 페이지가 로드될 때 API 요청 보내기
+  useEffect(() => {
+    const fetchRestaurantsData = async () => {
+      try {
+        const response = await api.get(`/AllEat/record/menu-auto/${date}`); // API 요청
+        setRestaurants(response.data); // API 응답을 그대로 restaurants 상태에 저장
+        console.log(response.data);
+      } catch (error) {
+        console.error('Error fetching restaurants data:', error);
+      }
+    };
+
+    fetchRestaurantsData(); // 컴포넌트 마운트 시 API 호출
+  }, [date]);
+
   const titleMapping: {[key: string]: string} = {
     BREAKFAST: '아침',
     LUNCH: '점심',
@@ -241,33 +278,37 @@ const DiaryCreateScreen: React.FC = () => {
   const [restaurantValue, setRestaurantValue] = useState<string | null>(null); // 선택된 식당 값
   // 레스토랑을 DropDownPicker에 맞는 {label, value} 형식으로 변환
   const restaurantItems = restaurants.map(restaurant => ({
-    label: restaurant.name,
-    value: restaurant.name,
+    label: restaurant.restaurants_name,
+    value: restaurant.restaurants_name,
   }));
 
   // 인원 증가 함수
-  const increasePeople = (index: number) => {
+  const increasePeople = (id: number) => {
     setMealList(prevMealList =>
-      prevMealList.map((meal, i) =>
-        i === index ? {...meal, people: meal.people + 1} : meal,
+      prevMealList.map(meal =>
+        meal.menu_id === id
+          ? {...meal, person_count: meal.person_count + 1}
+          : meal,
       ),
     );
   };
 
   // 인원 감소 함수
-  const decreasePeople = (index: number) => {
+  const decreasePeople = (id: number) => {
     setMealList(prevMealList =>
-      prevMealList.map((meal, i) =>
-        i === index && meal.people > 1
-          ? {...meal, people: meal.people - 1}
+      prevMealList.map(meal =>
+        meal.menu_id === id && meal.person_count > 1
+          ? {...meal, person_count: meal.person_count - 1}
           : meal,
       ),
     );
   };
 
   // 메뉴 삭제 함수
-  const deleteMeal = (index: number) => {
-    setMealList(prevMealList => prevMealList.filter((_, i) => i !== index));
+  const deleteMeal = (id: number) => {
+    setMealList(prevMealList =>
+      prevMealList.filter(meal => meal.menu_id !== id),
+    );
   };
 
   // 식당 순회: 이전
@@ -283,14 +324,39 @@ const DiaryCreateScreen: React.FC = () => {
       prevIndex === restaurants.length - 1 ? 0 : prevIndex + 1,
     );
   };
+  const toggleFavorite = async (menuId: number, favorite: boolean) => {
+    try {
+      // API 요청
+      if (favorite) {
+        await api.delete(`/AllEat/record/favorites/${menuId}`);
+      } else {
+        await api.post(`/AllEat/record/favorites/${menuId}`);
+      }
 
-  // 즐겨찾기 토글
-  const toggleFavorite = (menuIdx: number) => {
-    const updatedRestaurants = [...restaurants];
-    updatedRestaurants[restaurantIndex].menus[menuIdx].isFavorate =
-      !updatedRestaurants[restaurantIndex].menus[menuIdx].isFavorate;
-    setRestaurantIndex(restaurantIndex);
-    setRestaurants(updatedRestaurants);
+      // 상태 업데이트: menuId로 해당 메뉴를 찾아 즐겨찾기 상태를 토글
+      const updatedRestaurants = restaurants.map(restaurant => {
+        // 메뉴 목록에서 해당 메뉴 ID를 찾아서 즐겨찾기 상태 변경
+        const updatedMenus = restaurant.menus.map(menu => {
+          if (menu.menuId === menuId) {
+            return {
+              ...menu,
+              favorite: !menu.favorite, // favorite 상태를 토글
+            };
+          }
+          return menu;
+        });
+
+        return {
+          ...restaurant,
+          menus: updatedMenus, // 메뉴 업데이트
+        };
+      });
+
+      setRestaurants(updatedRestaurants); // 레스토랑 상태 업데이트
+    } catch (error) {
+      console.error('즐겨찾기 토글 실패:', error);
+      // 필요시 추가적인 에러 처리 로직 추가
+    }
   };
   const toggleHomeMade = () => {
     setIsHomeMade(!isHomeMade);
@@ -303,12 +369,12 @@ const DiaryCreateScreen: React.FC = () => {
     setMealList(prevMealList => [
       ...prevMealList,
       {
-        id: selectedMenu.id,
-        restaurant: restaurants[restaurantIndex].name,
-        menu: selectedMenu.menu,
-        price: selectedMenu.price,
-        kcal: selectedMenu.kcal,
-        people: 1,
+        menu_id: selectedMenu.menuId,
+        restaurants_name: restaurants[restaurantIndex].restaurants_name,
+        menu_name: selectedMenu.menuName,
+        menu_price: selectedMenu.price,
+        menu_calories: selectedMenu.menuCalories,
+        person_count: 1,
       },
     ]);
   };
@@ -317,13 +383,14 @@ const DiaryCreateScreen: React.FC = () => {
       let response;
       let diaryData;
       // POST or PUT 요청 분기
-      if (diaryId) {
+      console.log(diaryData);
+      if (diaryId[mealKey]) {
         // 요청할 데이터 생성
         diaryData = {
           diary_id: diaryId,
           menus: mealList.map(meal => ({
-            menu_id: meal.id,
-            person_count: meal.people, // 해당 메뉴의 인원 수
+            menu_id: meal.menu_id,
+            person_count: meal.person_count, // 해당 메뉴의 인원 수
           })),
         };
         console.log(diaryData);
@@ -334,10 +401,11 @@ const DiaryCreateScreen: React.FC = () => {
           date: date, // 화면에 전달된 날짜 사용
           diary_time: meals.toUpperCase(), // BREAKFAST, LUNCH, DINNER 등으로 변환
           menus: mealList.map(meal => ({
-            menu_id: meal.id,
-            person_count: meal.people, // 해당 메뉴의 인원 수
+            menu_id: meal.menu_id,
+            person_count: meal.person_count, // 해당 메뉴의 인원 수
           })),
         };
+        console.log(diaryData);
         response = await api.post('/AllEat/record/menu', diaryData);
       }
       console.log('다이어리 추가 성공:', response.data);
@@ -351,7 +419,7 @@ const DiaryCreateScreen: React.FC = () => {
   return (
     <View style={styles.diaryBody}>
       <View style={styles.topbar}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={goToPreviousMealTime}>
           <icons.arrowBackLeft height={30} width={30} />
         </TouchableOpacity>
 
@@ -359,7 +427,7 @@ const DiaryCreateScreen: React.FC = () => {
           {formatDateString(date)} {translatedTitle}
         </Text>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={goToNextMealTime}>
           <icons.arrowBackRight height={30} width={30} />
         </TouchableOpacity>
       </View>
@@ -370,17 +438,17 @@ const DiaryCreateScreen: React.FC = () => {
         </Text>
         <View style={styles.mainRecord}>
           <ScrollView>
-            {mealList.map((meal, index) => (
+            {mealList.map(meal => (
               <DiaryCard
-                key={index}
-                restaurant={meal.restaurant}
-                menu={meal.menu}
-                price={meal.price}
-                kcal={meal.kcal}
-                people={meal.people}
-                onIncreasePeople={() => increasePeople(index)}
-                onDecreasePeople={() => decreasePeople(index)}
-                onDelete={() => deleteMeal(index)}
+                key={meal.menu_id}
+                restaurant={meal.restaurants_name}
+                menu={meal.menu_name}
+                price={meal.menu_price}
+                kcal={meal.menu_calories}
+                people={meal.person_count}
+                onIncreasePeople={() => increasePeople(meal.menu_id)}
+                onDecreasePeople={() => decreasePeople(meal.menu_id)}
+                onDelete={() => deleteMeal(meal.menu_id)}
               />
             ))}
             {mealList.length === 0 && (
@@ -401,28 +469,34 @@ const DiaryCreateScreen: React.FC = () => {
       </View>
       <View style={styles.restaurant}>
         <View style={styles.restaurantTitle}>
-          <TouchableOpacity onPress={goToPreviousRestaurant}>
-            <icons.arrowBackLeft height={24} width={24} />
-          </TouchableOpacity>
+          {restaurants[restaurantIndex] && (
+            <TouchableOpacity onPress={goToPreviousRestaurant}>
+              <icons.arrowBackLeft height={24} width={24} />
+            </TouchableOpacity>
+          )}
           <Text style={styles.restaurantTitleText}>
             {' '}
-            {restaurants[restaurantIndex].name}
+            {restaurants[restaurantIndex]?.restaurants_name}
           </Text>
-          <TouchableOpacity onPress={goToNextRestaurant}>
-            <icons.arrowBackRight height={24} width={24} />
-          </TouchableOpacity>
+          {restaurants[restaurantIndex] && (
+            <TouchableOpacity onPress={goToNextRestaurant}>
+              <icons.arrowBackRight height={24} width={24} />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.restaurantMenuContainer}>
           <ScrollView>
-            {restaurants[restaurantIndex].menus.map((menu, index) => (
+            {restaurants[restaurantIndex]?.menus.map(menu => (
               <MenuCard
-                key={index}
-                isFavorate={menu.isFavorate}
-                menu={menu.menu}
-                kcal={menu.kcal}
+                key={menu.menuId}
+                isFavorate={menu.favorite}
+                menu={menu.menuName}
+                kcal={menu.menuCalories}
                 price={menu.price}
-                onToggleFavorite={() => toggleFavorite(index)}
-                onAddMeal={() => addMeal(index)}
+                onToggleFavorite={() =>
+                  toggleFavorite(menu.menuId, menu.favorite)
+                }
+                onAddMeal={() => addMeal(menu.menuId)}
               />
             ))}
           </ScrollView>
@@ -433,7 +507,10 @@ const DiaryCreateScreen: React.FC = () => {
           <Text style={styles.buttonTitle}>식비</Text>
           <Text style={styles.buttonCost}>
             {Math.round(
-              mealList.reduce((sum, meal) => sum + meal.price / meal.people, 0),
+              mealList.reduce(
+                (sum, meal) => sum + meal.menu_price / meal.person_count,
+                0,
+              ),
             )}
             원
           </Text>
@@ -455,6 +532,19 @@ const DiaryCreateScreen: React.FC = () => {
           {modalType === 'main' ? (
             <AddMenuModal
               onClose={closeModal}
+              onAddMeal={menu =>
+                setMealList(prevMealList => [
+                  ...prevMealList,
+                  {
+                    menu_id: menu.menu_id,
+                    restaurants_name: menu.restaurants_name,
+                    menu_name: menu.menu_name,
+                    menu_price: menu.menu_price,
+                    menu_calories: menu.menu_calories,
+                    person_count: 1,
+                  },
+                ])
+              }
               onOpenCustomMenuModal={openCustomMenuModal}
             />
           ) : (

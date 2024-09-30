@@ -23,7 +23,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
 }) => {
   return (
     <View style={styles.restaurantMenu}>
-      <TouchableOpacity onPress={onToggleFavorite}>
+      <TouchableOpacity style={styles.icons} onPress={onToggleFavorite}>
         {isFavorate ? (
           <icons.bookmark height={24} width={24} />
         ) : (
@@ -34,7 +34,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
       <Text style={styles.restaurantMenuDetail}>
         {kcal}kcal · {price}원
       </Text>
-      <TouchableOpacity onPress={onAddMeal}>
+      <TouchableOpacity style={styles.icons} onPress={onAddMeal}>
         <icons.plusWhite height={20} width={20} />
       </TouchableOpacity>
     </View>
