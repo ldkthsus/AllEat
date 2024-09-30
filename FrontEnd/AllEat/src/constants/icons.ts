@@ -40,6 +40,8 @@ import minusWhite from '../assets/icons/minusWhite.svg';
 import plusWhite from '../assets/icons/plusWhite.svg';
 import plusWhiteReverse from '../assets/icons/plusWhiteReverse.svg';
 import checkWhite from '../assets/icons/checkWhite.svg';
+import controlMonth from '../assets/icons/controlMonth.svg';
+
 const icons = {
   settings,
   home,
@@ -83,5 +85,6 @@ const icons = {
   arrowBottom,
   warning,
   checkWhite,
+  controlMonth,
 };
 export default icons;
