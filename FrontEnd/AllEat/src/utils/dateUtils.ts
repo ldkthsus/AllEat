@@ -52,5 +52,5 @@ export const formatDateString = (dateString: string): string => {
   }
 
   // 오늘, 어제, 내일이 아닐 경우 원래의 yyyy-MM-dd 형식 유지
-  return dateString;
+  return format(dateString, 'MM/dd');
 };

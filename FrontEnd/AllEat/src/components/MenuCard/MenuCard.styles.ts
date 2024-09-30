@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 10,
+    marginBottom: 10,
   },
   restaurantMenuTitle: {
     color: 'white',
@@ -18,7 +19,11 @@ export const styles = StyleSheet.create({
   },
   restaurantMenuDetail: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 12,
     fontFamily: 'Pretendard-Regular',
+    width: '35%',
+    textAlign: 'right',
+    paddingRight: 8,
   },
+  icons: {width: '10%'},
 });

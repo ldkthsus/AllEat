@@ -4,7 +4,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './features/authSlice';
 import paymoneyReducer from './features/paymoneySlice';
 import infoReducer from './features/infoSlice';
-
+import menuReducer from './features/menuSlice';
 // Redux Persist 설정
 const persistConfig = {
   key: 'auth', // auth 상태를 영구적으로 저장
@@ -21,6 +21,7 @@ export const store = configureStore({
     auth: persistedAuthReducer, // 영구적으로 저장되는 리듀서
     paymoney: paymoneyReducer, // paymony 리듀서 등록
     info: persistedInfoReducer,
+    menu: menuReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
