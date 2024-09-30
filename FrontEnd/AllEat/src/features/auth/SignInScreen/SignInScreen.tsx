@@ -14,7 +14,7 @@ import {RootState} from '../../../redux/store';
 import {fetchUserInfo} from '../../../redux/features/infoSlice'; // infoSlice에서 fetchUserInfo 가져오기
 import {unwrapResult} from '@reduxjs/toolkit'; // unwrapResult 추가
 import {AppDispatch} from '../../../redux/store';
-
+import {fetchMenus} from '../../../redux/features/menuSlice';
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'SignIn'
@@ -38,7 +38,7 @@ const SignIn: React.FC = () => {
   useEffect(() => {
     console.log('Redux auth 확인:', {isAuthenticated, token});
     if (isAuthenticated) {
-      navigation.replace('Home'); // 로그인 성공 후 Home으로 이동
+      navigation.replace('Home', {}); // 로그인 성공 후 Home으로 이동
     }
   }, [isAuthenticated, token, navigation]);
 
@@ -56,6 +56,7 @@ const SignIn: React.FC = () => {
       // 로그인 성공 시 fetchUserInfo 호출
       console.log('로그인 성공, 유저 정보 가져오기 시도');
       await dispatch(fetchUserInfo());
+      await dispatch(fetchMenus());
     } catch (error) {
       // error가 unknown 타입일 때 처리
       let errorMessage = '로그인에 실패했습니다.';

@@ -50,36 +50,6 @@ const HomeScreen: React.FC = () => {
     price: string;
   } | null>(null);
 
-  // RecordBox 클릭 시 처리 함수
-  const handleRecordBoxPress = (isRecorded: boolean, title: string) => {
-    if (isRecorded) {
-      // 이미 기록된 경우 모달 표시
-      const record = dayData?.day_diaries.find(
-        diary => diary.diary_time === title.toUpperCase(),
-      );
-      setSelectedRecord({
-        id: record ? record.diary_id : 0,
-        title,
-        kcal: record ? `${record.diary_kcal}kcal` : '0kcal',
-        price: record ? `${record.diary_cost}₩` : '0₩',
-      });
-      setIsRecordDetailVisible(true);
-    } else if (isRecordDetailVisible) {
-      // 기록되지 않은 경우 DiaryCreate 페이지로 이동
-      setIsRecordDetailVisible(false);
-      navigation.navigate('DiaryCreate', {
-        diaryId: selectedRecord?.id,
-        date: format(currentDate, 'yyyy-MM-dd'),
-        meals: title,
-      });
-    } else {
-      navigation.navigate('DiaryCreate', {
-        date: format(currentDate, 'yyyy-MM-dd'),
-        meals: title,
-      });
-    }
-  };
-
   // 리덕스 스토어에서 사용자 정보 가져오기
   const {goal_cost, goal_kcal} = useSelector((state: RootState) => state.info);
   const {monthlyUsedAmount} = useSelector((state: RootState) => state.paymoney);
@@ -99,13 +69,56 @@ const HomeScreen: React.FC = () => {
     }>;
   } | null>(null);
   // 날짜가 변경될 때마다 API로 데이터 가져오기
+  const DiaryIds = {
+    BREAKFAST:
+      dayData?.day_diaries.find(diary => diary.diary_time === 'BREAKFAST')
+        ?.diary_id || null,
+    LUNCH:
+      dayData?.day_diaries.find(diary => diary.diary_time === 'LUNCH')
+        ?.diary_id || null,
+    DINNER:
+      dayData?.day_diaries.find(diary => diary.diary_time === 'DINNER')
+        ?.diary_id || null,
+    SNACK:
+      dayData?.day_diaries.find(diary => diary.diary_time === 'SNACK')
+        ?.diary_id || null,
+  };
+  const handleRecordBoxPress = (isRecorded: boolean, title: string) => {
+    if (isRecorded) {
+      // 이미 기록된 경우 모달 표시
+      const record = dayData?.day_diaries.find(
+        diary => diary.diary_time === title.toUpperCase(),
+      );
+      setSelectedRecord({
+        id: record ? record.diary_id : 0,
+        title,
+        kcal: record ? `${record.diary_kcal}kcal` : '0kcal',
+        price: record ? `${record.diary_cost}₩` : '0₩',
+      });
+      setIsRecordDetailVisible(true);
+    } else if (isRecordDetailVisible) {
+      // 기록되지 않은 경우 DiaryCreate 페이지로 이동
+      setIsRecordDetailVisible(false);
+      navigation.navigate('DiaryCreate', {
+        diaryId: DiaryIds,
+        date: format(currentDate, 'yyyy-MM-dd'),
+        meals: title,
+      });
+    } else {
+      navigation.navigate('DiaryCreate', {
+        diaryId: DiaryIds,
+        date: format(currentDate, 'yyyy-MM-dd'),
+        meals: title,
+      });
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
         const response = await api.get(`/AllEat/get/main/${formattedDate}`);
         setDayData(response.data); // 가져온 데이터를 상태에 저장
-        console.log("오늘의 데이터 : ",response.data);
+        console.log('오늘의 데이터 : ', response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -197,10 +210,20 @@ const HomeScreen: React.FC = () => {
               />
               {dayData?.day_diaries.length === 0 ? (
                 // day_diaries가 빈 배열일 때
-                <images.kikiNoRecord style={styles.kiki} height={120} width={120} />
-              ) : dayData?.day_kcal && goal_kcal && dayData.day_kcal > goal_kcal ? (
+                <images.kikiNoRecord
+                  style={styles.kiki}
+                  height={120}
+                  width={120}
+                />
+              ) : dayData?.day_kcal &&
+                goal_kcal &&
+                dayData.day_kcal > goal_kcal ? (
                 // day_kcal가 goal_kcal보다 클 때
-                <images.kikiOverCal style={styles.kiki} height={120} width={120} />
+                <images.kikiOverCal
+                  style={styles.kiki}
+                  height={120}
+                  width={120}
+                />
               ) : (
                 // 그 외의 경우 기본 kiki 이미지
                 <images.kiki style={styles.kiki} height={120} width={120} />
@@ -239,41 +262,41 @@ const HomeScreen: React.FC = () => {
               </View>
 
               <View style={styles.gaugeBox}>
-            {/* 탄수화물 비율에 맞춘 바 */}
-            <View
-              style={[
-                styles.gaugeSegment,
-                {
-                  width: `${carbRatio * 100}%`, // 탄수화물 비율
-                  backgroundColor: '#B0C5FF', // 탄수화물 색상
-                  borderTopLeftRadius: 7,
-                  borderBottomLeftRadius: 7,
-                },
-              ]}
-            />
-            {/* 단백질 비율에 맞춘 바 */}
-            <View
-              style={[
-                styles.gaugeSegment,
-                {
-                  width: `${proteinRatio * 100}%`, // 단백질 비율
-                  backgroundColor: '#769BFF', // 단백질 색상
-                },
-              ]}
-            />
-            {/* 지방 비율에 맞춘 바 */}
-            <View
-              style={[
-                styles.gaugeSegment,
-                {
-                  width: `${fatRatio * 100}%`, // 지방 비율
-                  backgroundColor: '#D3DFFF', // 지방 색상
-                  borderTopRightRadius: 7,
-                  borderBottomRightRadius: 7,
-                },
-              ]}
-            />
-          </View>
+                {/* 탄수화물 비율에 맞춘 바 */}
+                <View
+                  style={[
+                    styles.gaugeSegment,
+                    {
+                      width: `${carbRatio * 100}%`, // 탄수화물 비율
+                      backgroundColor: '#B0C5FF', // 탄수화물 색상
+                      borderTopLeftRadius: 7,
+                      borderBottomLeftRadius: 7,
+                    },
+                  ]}
+                />
+                {/* 단백질 비율에 맞춘 바 */}
+                <View
+                  style={[
+                    styles.gaugeSegment,
+                    {
+                      width: `${proteinRatio * 100}%`, // 단백질 비율
+                      backgroundColor: '#769BFF', // 단백질 색상
+                    },
+                  ]}
+                />
+                {/* 지방 비율에 맞춘 바 */}
+                <View
+                  style={[
+                    styles.gaugeSegment,
+                    {
+                      width: `${fatRatio * 100}%`, // 지방 비율
+                      backgroundColor: '#D3DFFF', // 지방 색상
+                      borderTopRightRadius: 7,
+                      borderBottomRightRadius: 7,
+                    },
+                  ]}
+                />
+              </View>
             </View>
           </View>
 
