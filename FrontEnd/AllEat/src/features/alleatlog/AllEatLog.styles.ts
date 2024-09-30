@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
   day: {
     fontSize: 18,
     fontWeight: 'bold',
+    fontFamily: 'pre'
   },
   arrowBackLeft: {
     marginRight: 20,
@@ -24,6 +25,7 @@ export const styles = StyleSheet.create({
   notificationIcon: {
     position: 'absolute',
     right: 40,
+    zIndex:-1
   },
   notiBadge: {
     position: 'absolute',
