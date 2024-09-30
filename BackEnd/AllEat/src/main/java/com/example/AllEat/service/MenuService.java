@@ -150,16 +150,11 @@ public class MenuService {
         RestaurantsEntity restaurant = restaurantsService.findRestaurantById(restaurantId);
         return menuRepository.findByRestaurants(restaurant);
     }
-
+//
 //    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
 //        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
 //        return findMenu;
 //    }
-
-    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
-        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
-        return findMenu;
-    }
 
     public List<MenuPossibleDTO> getUserPossibleMenu(UserEntity requestUser,LocalDate date) {
         List<PayTransactionEntity> findPayTransaction = payTransactionRepository.findByUser_idAndTransactionDate(requestUser.getId(), date);

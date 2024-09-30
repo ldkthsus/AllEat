@@ -40,6 +40,7 @@ public class MenuPossibleDTO {
         private Integer price;
         private Integer menuType;
         private Integer menuCalories;
+        private boolean favorite;
 
         public MenuConvertDTO(MenuEntity menu) {
             this.menuId = menu.getId();
@@ -47,6 +48,12 @@ public class MenuPossibleDTO {
             this.price = menu.getMenuPrice();
             this.menuType = menu.getMenuType();
             this.menuCalories = menu.getMenuCalories();
+            if(menu.getFavorite() == null){
+                this.favorite = false;
+            }
+            else{
+                this.favorite = true;
+            }
         }
     }
 }
