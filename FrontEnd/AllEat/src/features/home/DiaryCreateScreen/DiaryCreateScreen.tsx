@@ -387,7 +387,7 @@ const DiaryCreateScreen: React.FC = () => {
       if (diaryId[mealKey]) {
         // 요청할 데이터 생성
         diaryData = {
-          diary_id: diaryId,
+          diary_id: diaryId[mealKey],
           menus: mealList.map(meal => ({
             menu_id: meal.menu_id,
             person_count: meal.person_count, // 해당 메뉴의 인원 수

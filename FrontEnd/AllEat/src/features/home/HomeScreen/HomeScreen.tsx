@@ -12,8 +12,8 @@ import RecordBox from '../../../components/RecordBox/RecordBox';
 import RecordDetailModal from '../components/RecordDetailModal/RecordDetailModal';
 import {formatDate} from '../../../utils/dateUtils'; // formatDate 유틸리티 함수 가져오기
 import api from '../../../utils/api';
-import {AppDispatch,RootState} from '../../../redux/store';
-import {useDispatch,useSelector} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
+import {AppDispatch, RootState} from '../../../redux/store';
+import {useDispatch, useSelector} from 'react-redux'; // Redux에서 액션을 디스패치하기 위한 훅
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
 import CalanderModal from '../components/CalanderModal/CalanderModel';
@@ -66,7 +66,9 @@ const HomeScreen: React.FC = () => {
   } | null>(null);
 
   // 리덕스 스토어에서 사용자 정보 가져오기
-  const {goal_cost, goal_kcal,weights,goal_weight} = useSelector((state: RootState) => state.info);
+  const {goal_cost, goal_kcal, weights, goal_weight} = useSelector(
+    (state: RootState) => state.info,
+  );
   // const {monthlyUsedAmount} = useSelector((state: RootState) => state.paymoney);
 
   // 기록된 데이터 상태
@@ -167,16 +169,16 @@ const HomeScreen: React.FC = () => {
     : 0;
 
   // isToday 함수 추가
-const isToday = (dateString: string): boolean => {
-  const date = new Date(dateString);
-  const today = new Date();
+  const isToday = (dateString: string): boolean => {
+    const date = new Date(dateString);
+    const today = new Date();
 
-  return (
-    date.getFullYear() === today.getFullYear() &&
-    date.getMonth() === today.getMonth() &&
-    date.getDate() === today.getDate()
-  );
-};
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  };
 
   // 체중 기록 관련
   const handleWeightChange = async (
@@ -210,8 +212,6 @@ const isToday = (dateString: string): boolean => {
     setWeightModalVisible(false); // 모달을 닫음
   };
 
-
-
   return (
     <View style={{flex: 1}}>
       {/* 고정된 상단 바 */}
@@ -225,12 +225,16 @@ const isToday = (dateString: string): boolean => {
         </TouchableOpacity>
 
         {/* 캘린더 */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.homeDate}
           onPress={() => setIsCalanderModalVisible(true)} // 캘린더 모달을 띄우는 onPress 이벤트 추가
         >
           <Text style={styles.day}>{formatDate(currentDate)}</Text>
-          <icons.arrowDropDown style={styles.calanderBtn} height={15} width={15} />
+          <icons.arrowDropDown
+            style={styles.calanderBtn}
+            height={15}
+            width={15}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleNextDay}>
@@ -372,7 +376,11 @@ const isToday = (dateString: string): boolean => {
           <View style={styles.progressContainer}>
             <View style={styles.progressWrapper}>
               <CircularProgress
-                progress={dayData?.day_cost && goal_cost ? Math.min(dayData.day_cost / goal_cost, 1) : 0} // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
+                progress={
+                  dayData?.day_cost && goal_cost
+                    ? Math.min(dayData.day_cost / goal_cost, 1)
+                    : 0
+                } // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
                 total={goal_cost || 0} // 총 금액
                 current={dayData?.day_cost ? dayData.day_cost : 0} // 현재 소비한 금액
                 progressColor="#769BFF"
@@ -388,7 +396,11 @@ const isToday = (dateString: string): boolean => {
             </View>
             <View style={styles.progressWrapper}>
               <CircularProgress
-                progress={dayData?.day_kcal && goal_kcal ? Math.min(dayData.day_kcal / goal_kcal, 1) : 0} // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
+                progress={
+                  dayData?.day_kcal && goal_kcal
+                    ? Math.min(dayData.day_kcal / goal_kcal, 1)
+                    : 0
+                } // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
                 total={goal_kcal || 0} // 총 칼로리
                 current={dayData?.day_kcal ? dayData.day_kcal : 0} // 현재 섭취한 칼로리
                 progressColor="#93AAE7"
@@ -530,7 +542,7 @@ const isToday = (dateString: string): boolean => {
           />
         </View>
         <View style={styles.weightBox}>
-        <View style={styles.boxContainer}>
+          <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>
                 <TouchableOpacity
@@ -539,7 +551,7 @@ const isToday = (dateString: string): boolean => {
                   <icons.settingsWhite height={20} width={20} />
                 </TouchableOpacity>
                 <icons.scale height={20} width={20} />
-                <Text style={styles.boxText}>목표 체중 변경{goal_kcal}</Text>
+                <Text style={styles.boxText}>목표 체중 변경</Text>
               </View>
               <View style={styles.textBox}>
                 <View style={styles.text}>
@@ -557,19 +569,18 @@ const isToday = (dateString: string): boolean => {
           </View>
         </View>
         <FormModal
-            visible={weightModalVisible}
-            title="현재 체중 입력"
-            initialValue={String(
-              weights && weights.length > 0 && weights[0].weight,
-            )}
-            anotherTitle="목표 체중 입력"
-            anotherInitialValue={String(goal_weight)}
-            onClose={() => setWeightModalVisible(false)}
-            onSave={handleWeightChange}
-            isWeight={true}
-            keyboardType="numeric"
-          />
-
+          visible={weightModalVisible}
+          title="현재 체중 입력"
+          initialValue={String(
+            weights && weights.length > 0 && weights[0].weight,
+          )}
+          anotherTitle="목표 체중 입력"
+          anotherInitialValue={String(goal_weight)}
+          onClose={() => setWeightModalVisible(false)}
+          onSave={handleWeightChange}
+          isWeight={true}
+          keyboardType="numeric"
+        />
       </ScrollView>
       {/* RecordDetail 모달 */}
       {selectedRecord && (

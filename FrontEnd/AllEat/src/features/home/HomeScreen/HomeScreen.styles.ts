@@ -45,12 +45,12 @@ export const styles = StyleSheet.create({
     // position: 'absolute',
   },
   homeDate: {
-    position: 'relative'
+    position: 'relative',
   },
   calanderBtn: {
     position: 'absolute',
     top: 8,
-    left: 67
+    left: 67,
   },
   day: {
     color: 'black',
@@ -200,7 +200,7 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   boxContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingTop: 10,
   },
   box: {

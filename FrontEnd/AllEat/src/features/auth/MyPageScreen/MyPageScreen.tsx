@@ -45,7 +45,6 @@ const MyPageScreen: React.FC = () => {
     weights,
     goal_weight,
     goal_cost,
-    goal_kcal,
     breakfast_alarm,
     lunch_alarm,
     dinner_alarm,
@@ -159,7 +158,7 @@ const MyPageScreen: React.FC = () => {
                   <icons.settingsWhite height={20} width={20} />
                 </TouchableOpacity>
                 <icons.scale height={20} width={20} />
-                <Text style={styles.boxText}>목표 체중 변경{goal_kcal}</Text>
+                <Text style={styles.boxText}>목표 체중 변경</Text>
               </View>
               <View style={styles.textBox}>
                 <View style={styles.text}>
