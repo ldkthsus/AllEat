@@ -1,9 +1,6 @@
 package com.example.AllEat.controller;
 
-import com.example.AllEat.dto.user.EmailCheckDTO;
-import com.example.AllEat.dto.user.UpdateRequestDTO;
-import com.example.AllEat.dto.user.UserJoinDTO;
-import com.example.AllEat.dto.user.UserResponseDTO;
+import com.example.AllEat.dto.user.*;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.handler.FileHandler;
 import com.example.AllEat.jwt.JwtUtil;
@@ -73,8 +70,8 @@ public class AuthController {
     }
 
     @PostMapping("/social-login")
-    public ResponseEntity<?> checkUser(@Validated @RequestBody String email) {
-        Boolean isUse = userService.getUserEmail(email);
+    public ResponseEntity<?> checkUser(@Validated @RequestBody UserEmailRequestDTO userEmailRequestDTO) {
+        Boolean isUse = userService.getUserEmail(userEmailRequestDTO.getEmail());
         EmailCheckDTO emailCheckDTO = new EmailCheckDTO();
         emailCheckDTO.setNew(!isUse);
         return ResponseEntity.status(HttpStatus.OK).body(emailCheckDTO);

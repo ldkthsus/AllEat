@@ -6,6 +6,7 @@ import com.example.AllEat.dto.menu.DailyDiaryResponseDTO;
 import com.example.AllEat.dto.menu.AddMenuRequestDTO;
 import com.example.AllEat.dto.menu.UpdateMenuRequestDTO;
 import com.example.AllEat.entity.*;
+import com.example.AllEat.service.UserService;
 import com.example.AllEat.repository.DailyDiaryRepository;
 import com.example.AllEat.repository.DiaryMappingRepository;
 import com.example.AllEat.repository.DiaryRepository;

@@ -1,9 +1,9 @@
 package com.example.AllEat.controller;
-
 import com.example.AllEat.dto.diary.DiaryResponseDTO;
 import com.example.AllEat.dto.menu.*;
 import com.example.AllEat.entity.MenuEntity;
 import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.repository.UserRepository;
 import com.example.AllEat.service.DailyDiaryService;
 import com.example.AllEat.service.FoodAddService;
 import com.example.AllEat.service.MenuService;
@@ -26,6 +26,7 @@ public class MenuController {
     private final UserService userService;
     private final DailyDiaryService dailyDiaryServie;
     private final FoodAddService foodAddService;
+    private final UserRepository userRepository;
 
     // 메뉴와 레스토랑 추가
     @PostMapping("/add-menu")
@@ -47,9 +48,13 @@ public class MenuController {
 
     // 모든 메뉴 조회
     @GetMapping("/menus")
-    public ResponseEntity<List<MenuEntity>> getAllMenus() {
-        List<MenuEntity> menus = menuService.getAllMenus();
-        return new ResponseEntity<>(menus, HttpStatus.OK);
+    public ResponseEntity<?> getAllMenus(HttpServletRequest request) {
+        UserEntity findUser = userService.findByRequest(request);
+        if(findUser != null) {
+            List<MenuResponseDTO> menus = menuService.getAllMenus(findUser);
+            return ResponseEntity.status(HttpStatus.OK).body(menus);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     // 특정 레스토랑의 메뉴 조회
@@ -72,22 +77,16 @@ public class MenuController {
         menuService.deleteMenu(id, request);  // HttpServletRequest 추가
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-//
-//    @GetMapping("/menu/{restaurantId}/{balance}")
-//    public ResponseEntity<?> getPossibleList(@PathVariable(name = "restaurantId") Integer restaurantId, @PathVariable(name = "balance") Integer balance) {
-//        List<MenuEntity> menus = menuService.getMenusByRestaurantIdAndBalance(restaurantId, balance);
-//        return ResponseEntity.status(HttpStatus.OK).body(menus);
-//    }
 
-//    @GetMapping("/menu/{date}")
-//    public ResponseEntity<?> getPossibleList(HttpServletRequest request, @PathVariable(name = "date", required = true) LocalDate date) {
-//        UserEntity findUser = userService.findByRequest(request);
-//        if(findUser != null) {
-//            List<MenuPossibleDTO> menuList = menuService.getUserPossibleMenu(findUser,date);
-//            return ResponseEntity.status(HttpStatus.OK).body(menuList);
-//        }
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//    }
+    @GetMapping("/menu-auto/{date}")
+    public ResponseEntity<?> getPossibleList(HttpServletRequest request, @PathVariable(name = "date", required = true) LocalDate date) {
+        UserEntity findUser = userService.findByRequest(request);
+        if(findUser != null) {
+            List<MenuPossibleDTO> menuList = menuService.getUserPossibleMenu(findUser,date);
+            return ResponseEntity.status(HttpStatus.OK).body(menuList);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
     @PostMapping("/menu")
     public ResponseEntity<?> addMenu(@RequestBody AddMenuRequestDTO addMenuRequests, HttpServletRequest request) {
@@ -106,6 +105,16 @@ public class MenuController {
     public ResponseEntity<?> addFoodInfo(HttpServletRequest request){
         foodAddService.addFood();
         return ResponseEntity.status(HttpStatus.CREATED).body("successfully added");
+    }
+
+    @DeleteMapping("/menu/{diaryId}")
+    public ResponseEntity<?> deleteDiary(HttpServletRequest request, @PathVariable(name = "diaryId") Integer diaryId){
+        UserEntity findUser = userService.findByRequest(request);
+        if(findUser != null) {
+            menuService.deleteDiary(diaryId);
+            return ResponseEntity.status(HttpStatus.OK).body("successfully deleted");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
 }

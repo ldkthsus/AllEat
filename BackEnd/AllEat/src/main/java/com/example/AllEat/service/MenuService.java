@@ -2,6 +2,7 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.dto.menu.MenuCreateDTO;
 import com.example.AllEat.dto.menu.MenuPossibleDTO;
+import com.example.AllEat.dto.menu.MenuResponseDTO;
 import com.example.AllEat.entity.*;
 import com.example.AllEat.jwt.JwtUtil;
 import com.example.AllEat.repository.*;
@@ -29,6 +30,7 @@ public class MenuService {
     private final UserService userService;
     private final PayTransactionRepository payTransactionRepository;
     private final FavoriteRepository favoriteRepository;
+    private final DiaryRepository diaryRepository;
 
     // JWT 토큰을 이용해 사용자 식별
     public UserEntity findUserByRequest(HttpServletRequest request) {
@@ -128,8 +130,19 @@ public class MenuService {
     }
 
     // 모든 메뉴 조회
-    public List<MenuEntity> getAllMenus() {
-        return menuRepository.findAll();
+    public List<MenuResponseDTO> getAllMenus(UserEntity requestUser) {
+        List<MenuEntity> findMenus = menuRepository.findAll();
+        List<MenuResponseDTO> menuResponseDTOList = new ArrayList<>();
+        for (MenuEntity menuEntity : findMenus) {
+            FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuEntity.getId());
+            boolean isFavorite = false;
+            if(findFavorite != null) {
+                isFavorite = true;
+            }
+            MenuResponseDTO menuResponseDTO = new MenuResponseDTO(menuEntity,isFavorite);
+            menuResponseDTOList.add(menuResponseDTO);
+        }
+        return menuResponseDTOList;
     }
 
     // 특정 레스토랑의 메뉴 조회
@@ -143,30 +156,44 @@ public class MenuService {
 //        return findMenu;
 //    }
 
-//    public List<MenuPossibleDTO> getUserPossibleMenu(UserEntity requestUser,LocalDate date) {
-//        List<PayTransactionEntity> findPayTransaction = payTransactionRepository.findByUser_idAndTransactionDate(requestUser.getId(), date);
-//        for (PayTransactionEntity payTransactionEntity : findPayTransaction) {
-//            RestaurantsEntity findRestaurants = restaurantsRepository.findById(payTransactionEntity.getRestaurant().getId()).orElseThrow(()-> new IllegalArgumentException("restaurant not found"));
-//            List<MenuEntity> findMenus = menuRepository.findByRestaurants_idAndMenuPriceLessThanEqualOrderByMenuPriceDesc(findRestaurants.getId(), payTransactionEntity.getAmount());
-//
-//            List<MenuEntity> favoriteMenus = new ArrayList<>();
-//            List<MenuEntity> nonFavoriteMenus = new ArrayList<>();
-//
-//            for (MenuEntity menuEntity : findMenus) {
-//                FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuEntity.getId());
-//                if (findFavorite != null) {
-//                    favoriteMenus.add(menuEntity);
-//                }
-//                else {
-//                    nonFavoriteMenus.add(menuEntity);
-//                }
-//            }
-//
-//            // Step 3: 즐겨찾기 메뉴 + 일반 메뉴 순서로 병합
-//            List<MenuEntity> finalMenuList = new ArrayList<>();
-//            finalMenuList.addAll(favoriteMenus);  // 즐겨찾기 메뉴 먼저 추가
-//            finalMenuList.addAll(nonFavoriteMenus);  // 그 외 메뉴 추가
-//
-//        }
-//    }
+    public List<MenuEntity> getMenusByRestaurantIdAndBalance(Integer restaurantId, Integer balance) {
+        List<MenuEntity> findMenu = menuRepository.findByRestaurants_IdAndMenuPrice(restaurantId, balance);
+        return findMenu;
+    }
+
+    public List<MenuPossibleDTO> getUserPossibleMenu(UserEntity requestUser,LocalDate date) {
+        List<PayTransactionEntity> findPayTransaction = payTransactionRepository.findByUser_idAndTransactionDate(requestUser.getId(), date);
+        List<MenuPossibleDTO> possibleMenu = new ArrayList<>();
+        for (PayTransactionEntity payTransactionEntity : findPayTransaction) {
+            RestaurantsEntity findRestaurants = restaurantsRepository.findById(payTransactionEntity.getRestaurant().getId()).orElseThrow(()-> new IllegalArgumentException("restaurant not found"));
+            List<MenuEntity> findMenus = menuRepository.findByRestaurants_idAndMenuPriceLessThanEqualOrderByMenuPriceDesc(findRestaurants.getId(), Math.abs(payTransactionEntity.getAmount()));
+
+            List<MenuEntity> favoriteMenus = new ArrayList<>();
+            List<MenuEntity> nonFavoriteMenus = new ArrayList<>();
+
+            for (MenuEntity menuEntity : findMenus) {
+                FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuEntity.getId());
+                if (findFavorite != null) {
+                    favoriteMenus.add(menuEntity);
+                }
+                else {
+                    nonFavoriteMenus.add(menuEntity);
+                }
+            }
+
+            // Step 3: 즐겨찾기 메뉴 + 일반 메뉴 순서로 병합
+            List<MenuEntity> finalMenuList = new ArrayList<>();
+            finalMenuList.addAll(favoriteMenus);  // 즐겨찾기 메뉴 먼저 추가
+            finalMenuList.addAll(nonFavoriteMenus);
+
+            MenuPossibleDTO menuPossibleDTO = new MenuPossibleDTO(findRestaurants, finalMenuList);
+            possibleMenu.add(menuPossibleDTO);
+
+        }
+        return possibleMenu;
+    }
+    public void deleteDiary(Integer diaryId){
+        DiaryEntity findDiary = diaryRepository.findById(diaryId).orElseThrow(()-> new IllegalArgumentException("diary not found"));
+        diaryRepository.delete(findDiary);
+    }
 }

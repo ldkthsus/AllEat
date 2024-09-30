@@ -71,7 +71,6 @@ public class PaymoneyController {
         try{
             paymoneyService.modifyPaymoneyBalance(payTransactionDTO.getAmount(), request);
             PayTransactionEntity payTransaction = payTransactionService.payTransactionCreate(payTransactionDTO, request);
-
             return ResponseEntity.ok(payTransaction);
 
         } catch (Exception e){

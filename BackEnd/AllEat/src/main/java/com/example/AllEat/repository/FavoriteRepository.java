@@ -15,4 +15,6 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Intege
 
     // 유저와 메뉴를 기준으로 즐겨찾기 조회
     Optional<FavoriteEntity> findByUserAndMenu(UserEntity user, MenuEntity menu);
+
+    FavoriteEntity findByUser_idAndMenu_id(Integer userId, Integer menuId);
 }

@@ -13,9 +13,6 @@ public class MealPayRequestDTO {
     @JsonProperty("transaction_id")
     private Integer transactionId;
 
-    @JsonProperty("diary_id")
-    private Integer diaryId;
-
     @JsonProperty("amount")
     private Integer amount;
 }

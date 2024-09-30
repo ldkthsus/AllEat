@@ -22,11 +22,11 @@ public class MenuPossibleDTO {
 
     private List<MenuConvertDTO> menus;
 
-    public void MenuPossibleDTO(RestaurantsEntity restaurants) {
+    public MenuPossibleDTO(RestaurantsEntity restaurants, List<MenuEntity> menuList) {
         this.restaurantsId = restaurants.getId();
         this.restaurantsName = restaurants.getRestaurantsName();
         this.menus = new ArrayList<>();
-        for(MenuEntity menu : restaurants.getMenuList()){
+        for(MenuEntity menu : menuList){
             this.menus.add(new MenuConvertDTO(menu));
         }
     }
