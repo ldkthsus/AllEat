@@ -15,6 +15,7 @@ const WeeklyReport: React.FC = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [reportData, setReportData] = useState<any>(null);
   const [imageIndex, setImageIndex] = useState(0);
+  const [aiResponse, setAiResponse] = useState<string | null>(null);
 
   const startDate = subDays(currentDate, 6);
   const formattedDate = `${format(startDate, 'yyyy. MM. dd')} - ${format(currentDate, 'yyyy. MM. dd')}`;
@@ -22,25 +23,43 @@ const WeeklyReport: React.FC = () => {
 
   const goalKcal = useSelector((state: RootState) => state.info.goal_kcal);
   const goalFee = useSelector((state: RootState) => state.info.goal_cost);
-
+  const weekGoalCost = goalFee ? (goalFee / 7).toFixed(0) : '0';
+  const token = useSelector((state: RootState) => state.auth.token);
 
   // API 요청 useEffect
   useEffect(() => {
-    console.log('WeeklyReport useEffect 실행됨');
     const fetchData = async () => {
       try {
-        console.log('보내는 날짜:', postDate);
         const response = await api.post('/AllEat/week-report', {
           day: postDate,
         });
-        console.log('데이터 확인', response.data.cost_where);
-        setReportData(response.data);
+        
+        const data = response.data;
+        setReportData(data); // 서버로부터 받은 데이터를 상태에 저장
+
+        // FastAPI에 요청 보내기
+        const aiResponse = await fetch('https://j11b104.p.ssafy.io/fast-api/fast-api/report/week', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify(data), // 그대로 전달
+        });
+
+        if (aiResponse.ok) {
+          const aiResult = await aiResponse.json();
+          setAiResponse(aiResult.response); // AI 응답 저장
+        } else {
+          console.error('AI 응답 오류:', aiResponse.statusText);
+          setAiResponse('AI 응답을 가져오지 못했습니다.');
+        }
       } catch (error) {
         console.error('데이터 가져오기 오류:', error);
       }
     };
     fetchData();
-  }, [postDate]);
+  }, [currentDate]); // currentDate를 의존성 배열로 사용
 
   // 날짜 변경 핸들러
   const handlePreviousDate = () => setCurrentDate(prevDate => subDays(prevDate, 7));
@@ -66,7 +85,6 @@ const WeeklyReport: React.FC = () => {
     return (
       <View style={styles.loadingContainer}>
         {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
-        <Text>Loading...</Text>
       </View>
     );
   }
@@ -84,8 +102,19 @@ const WeeklyReport: React.FC = () => {
       </View>
 
       {/* AI 레포트 영역 */}
-      <AIReport title='AllEat! 주간 레포트' aiData="임시" />
-
+      <View style={styles.AIContainer}>
+        <icons.mypage style={styles.AIIcon} width={30} height={30} />
+        <Text style={styles.AITitleText}>AllEat! 주간 레포트</Text>
+        {aiResponse ? (
+          <AIReport title='AllEat! 주간 레포트' aiData={aiResponse} />
+        ) : (
+          <View style={styles.loadingContainer}>
+            {React.createElement(kikiImages[imageIndex], { width: 200, height: 200 })}
+            <Text style={styles.loadingText}>키키가 AI 레포트를 배달 중이에요</Text>
+            <Text style={styles.loadingText}>조금만 기다려 주세요!</Text>
+          </View>
+        )}
+      </View>
       <View style={styles.ReportContainer}>
         {/* 식단 레포트 영역 */}
         <WeeklyMealReport
@@ -103,7 +132,7 @@ const WeeklyReport: React.FC = () => {
       {/* 식비 레포트 영역 */}
       <View style={styles.ReportContainer}>
         <WeeklyFeeReport
-          goalFee={goalFee}
+          goalFee={weekGoalCost}
           costAvg={reportData.cost_avg}
           costRanking={reportData.cost_ranking}
           costWhere={reportData.cost_where}
