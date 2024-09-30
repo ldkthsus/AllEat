@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
   priceText: {
     position: 'absolute',
     top: 46,
-    right: 10,
+    right: 6,
     color: '#FFF',
     fontSize: 12,
     fontFamily: 'Pretendard-SemiBold',
