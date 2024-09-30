@@ -25,7 +25,9 @@ const AppBar: React.FC = () => {
         <Text style={styles.text}>페이머니</Text>
       </Pressable>
 
-      <Pressable style={styles.icon} onPress={() => {}}>
+      <Pressable
+        style={styles.icon}
+        onPress={() => navigation.navigate('AllEatLog')}>
         <icons.log height={30} width={30} />
         <Text style={styles.text}>로그</Text>
       </Pressable>
