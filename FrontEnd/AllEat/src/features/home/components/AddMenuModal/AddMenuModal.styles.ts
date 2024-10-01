@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     // flexWrap: 'wrap',
     justifyContent: 'space-around',
+    position: 'relative',
   },
   modalTitle: {
     flexDirection: 'row',
@@ -29,8 +30,8 @@ export const styles = StyleSheet.create({
   },
   modalIcon: {},
   searchBox: {
-    height: '480%',
-    top: '100%',
+    height: '420%',
+    top: '110%',
     width: '100%',
     position: 'absolute',
     backgroundColor: 'white',
@@ -52,9 +53,9 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
   },
   bookmarkContainer: {
-    margin: 10,
+    margin: 4,
     padding: 12,
-    paddingTop: 20,
+    // paddingTop: 20,
     borderRadius: 10,
     backgroundColor: '#B7CAFF',
     maxHeight: 200,
@@ -62,13 +63,13 @@ export const styles = StyleSheet.create({
   },
   bookmarkTitleContainer: {
     flexDirection: 'row',
-
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
   bookmarkTitle: {
     color: 'white',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
-    marginBottom: 10,
+    marginBottom: 2,
   },
 });
