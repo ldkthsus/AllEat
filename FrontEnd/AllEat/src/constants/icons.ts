@@ -44,6 +44,7 @@ import controlMonth from '../assets/icons/controlMonth.svg';
 import arrowDropDown from '../assets/icons/arrowDropDown.svg';
 import arrowBackTopWhite from '../assets/icons/arrowBackTopWhite.svg';
 import arrowBackBottomWhite from '../assets/icons/arrowBackBottomWhite.svg';
+import camera from '../assets/icons/camera.svg';
 const icons = {
   settings,
   home,
@@ -91,5 +92,6 @@ const icons = {
   arrowDropDown,
   arrowBackBottomWhite,
   arrowBackTopWhite,
+  camera,
 };
 export default icons;
