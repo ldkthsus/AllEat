@@ -9,13 +9,11 @@ import com.example.AllEat.service.MealPayService;
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.example.AllEat.repository.MonthlyMealPayRepository;
 
 import java.time.YearMonth;
@@ -30,7 +28,7 @@ public class MealPayController {
     private final UserService userService;
 
     @PostMapping("/meal-pay")
-    public ResponseEntity<?> recordMealPay(MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
+    public ResponseEntity<?> recordMealPay(@RequestBody MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
         UserEntity findUserEntity = userService.findByRequest(request);
         if (findUserEntity != null) {
             MealPayEntity mealPayEntity = mealPayService.getMealPayResult(mealPayRequest, findUserEntity);
@@ -39,8 +37,20 @@ public class MealPayController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/meal-pay")
-    public ResponseEntity<?> getMealPayAmount(UserEntity user){
+    @PutMapping("/meal-pay")
+    public ResponseEntity<?> updateMealPay(@RequestBody MealPayRequestDTO mealPayRequest, HttpServletRequest request) {
+        UserEntity findUserEntity = userService.findByRequest(request);
+        if (findUserEntity != null) {
+            MealPayEntity mealPayEntity = mealPayService.updateMealPayResult(mealPayRequest, findUserEntity);
+            return ResponseEntity.status(HttpStatus.OK).body(mealPayEntity);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @GetMapping("/meal-pay/monthly-amount")
+    public ResponseEntity<?> getMealPayAmount(HttpServletRequest request){
+        UserEntity user = userService.findByRequest(request);
+
         MonthlyMealPayEntity findMonth =  monthlyMealPayRepository.findByUserAndDate(user, YearMonth.now()).get(0);
         MealPayAmountDTO mealPayAmountDTO = new MealPayAmountDTO();
 
@@ -50,6 +60,15 @@ public class MealPayController {
         } else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/meal-pay")
+    public ResponseEntity<?> getMealPay(HttpServletRequest request){
+        UserEntity user = userService.findByRequest(request);
+        // pay transaction 에서 한달 특정기간 긁어옴
+        // 긁어온 거에서 DTO 구성해서 반환
+        // 소비처 , 식비,  
+        return ResponseEntity.status(HttpStatus.OK).body("아직 구현 안됨!");
 
     }
 
