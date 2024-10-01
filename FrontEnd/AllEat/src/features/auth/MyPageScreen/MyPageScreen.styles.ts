@@ -98,6 +98,26 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
   },
+  bookmarkContainer: {
+    margin: 10,
+    padding: 10,
+    paddingTop: 20,
+    borderRadius: 10,
+    backgroundColor: '#B7CAFF',
+    maxHeight: 500,
+  },
+  bookmarkTitleContainer: {
+    flexDirection: 'row',
+
+    justifyContent: 'space-between',
+  },
+  bookmarkTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    marginBottom: 10,
+  },
+
   input: {
     width: '100%',
   },

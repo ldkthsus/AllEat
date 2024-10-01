@@ -19,8 +19,7 @@ import {
 import FormField from '../../../../components/FormField/FormField';
 import MenuCard from '../../../../components/MenuCard/MenuCard';
 import {AppDispatch} from '../../../../redux/store';
-import {fetchMenus} from '../../../../redux/features/menuSlice';
-import api from '../../../../utils/api';
+
 interface AddMenuModalProps {
   onClose: () => void;
   onOpenCustomMenuModal: () => void;
@@ -37,6 +36,12 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const {menus, searchQuery, loading, error} = useSelector(
     (state: RootState) => state.menu,
   );
+  const [toggleBookmark, setToggleBookmark] = useState(false);
+  // 리덕스에서 favorite이 true인 메뉴만 필터링해서 가져오기
+  const selectFavoriteMenus = (state: RootState) =>
+    state.menu.menus.filter(menu => menu.favorite);
+
+  const favoriteMenus = useSelector(selectFavoriteMenus);
 
   // 검색어에 따른 메뉴 필터링
   const filteredMenus = menus.filter(
@@ -63,6 +68,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     Keyboard.dismiss(); // 메뉴 선택 후 키보드가 열려 있으면 닫음
     setSearchBoxVisible(false);
   };
+
   return (
     <View style={styles.modalContent}>
       <View style={styles.modalTitle}>
@@ -115,6 +121,43 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Image source={images.addMenu} style={styles.addMenuImage} />
           <Text style={styles.addMenuContainerText}>직접 등록</Text>
         </TouchableOpacity>
+      </View>
+      <View style={styles.bookmarkContainer}>
+        <View style={styles.bookmarkTitleContainer}>
+          <Text style={styles.bookmarkTitle}>즐겨찾기</Text>
+          {toggleBookmark ? (
+            <TouchableOpacity onPress={() => setToggleBookmark(false)}>
+              <icons.arrowBackTopWhite height={20} width={20} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => setToggleBookmark(true)}>
+              <icons.arrowBackBottomWhite height={20} width={20} />
+            </TouchableOpacity>
+          )}
+        </View>
+        {toggleBookmark && (
+          <ScrollView>
+            {favoriteMenus.map(favoriteItem => (
+              <MenuCard
+                key={favoriteItem.menu_id} // menu_id를 키로 사용
+                isFavorate={favoriteItem.favorite} // favorite 상태
+                menu={favoriteItem.menu_name} // 메뉴 이름
+                kcal={favoriteItem.menu_calories} // 칼로리
+                price={favoriteItem.menu_price} // 가격
+                onToggleFavorite={() =>
+                  dispatch(
+                    toggleFavorite({
+                      menuId: favoriteItem.menu_id,
+                      favorite: favoriteItem.favorite,
+                    }),
+                  )
+                } // 즐겨찾기 토글
+                isFavoritePage={true}
+                onAddMeal={() => handleMenuPress(favoriteItem)}
+              />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </View>
   );
