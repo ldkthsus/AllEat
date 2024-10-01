@@ -14,7 +14,7 @@ interface MonthlyWeightReportProps {
 }
 
 const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRecords, monthlyWeightRecords }) => {
-  const width = 300; // 그래프의 너비
+  const width = 330; // 그래프의 너비
   const height = 150; // 그래프의 높이
   const padding = 30; // 여백
   const dataPoints = monthlyCostRecords.length;
@@ -111,7 +111,7 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
           <Path d={costGradientPath} fill="url(#costGrad)" />
 
           {/* 꺾은선 그래프 */}
-          <Polyline points={costPoints} fill="none" stroke="#769BFF" strokeWidth="2" />
+          <Polyline points={costPoints} fill="none" />
 
           {/* x축 레이블 */}
           {[1, Math.ceil(dataPoints / 2), dataPoints].map((day, index) => {
@@ -158,7 +158,7 @@ const MonthlyWeightReport: React.FC<MonthlyWeightReportProps> = ({ monthlyCostRe
           <Path d={weightGradientPath} fill="url(#weightGrad)" />
 
           {/* 꺾은선 그래프 */}
-          <Polyline points={weightPoints} fill="none" stroke="#FF7F7F" strokeWidth="2" />
+          <Polyline points={weightPoints} fill="none" />
 
           {/* x축 레이블 */}
           {[1, Math.ceil(dataPoints / 2), dataPoints].map((day, index) => {

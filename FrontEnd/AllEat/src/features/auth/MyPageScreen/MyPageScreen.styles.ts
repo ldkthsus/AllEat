@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    height: 60,
+    height: 70,
   },
   myPageTitleText: {
     fontSize: 20,
