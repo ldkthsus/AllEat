@@ -11,6 +11,16 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  favorite: {
+    backgroundColor: '#B7CAFF',
+    flexDirection: 'row',
+    height: 56,
+    padding: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginBottom: 10,
+  },
   restaurantMenuTitle: {
     color: 'white',
     fontSize: 18,

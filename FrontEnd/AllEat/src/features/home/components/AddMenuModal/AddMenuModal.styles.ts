@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
   },
   modalIcon: {},
   searchBox: {
-    height: '300%',
+    height: '480%',
     top: '100%',
     width: '100%',
     position: 'absolute',
@@ -50,5 +50,25 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: '#3d3d3d',
     fontFamily: 'Pretendard-Bold',
+  },
+  bookmarkContainer: {
+    margin: 10,
+    padding: 12,
+    paddingTop: 20,
+    borderRadius: 10,
+    backgroundColor: '#B7CAFF',
+    maxHeight: 200,
+    width: '100%',
+  },
+  bookmarkTitleContainer: {
+    flexDirection: 'row',
+
+    justifyContent: 'space-between',
+  },
+  bookmarkTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    marginBottom: 10,
   },
 });

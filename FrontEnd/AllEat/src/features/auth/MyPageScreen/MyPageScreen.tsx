@@ -15,6 +15,8 @@ import api from '../../../utils/api';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
 import AlarmModal from '../components/AlarmModal/AlarmModal';
+import MenuCard from '../../../components/MenuCard/MenuCard';
+import {toggleFavorite} from '../../../redux/features/menuSlice';
 type MyPageScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPage'
@@ -130,6 +132,16 @@ const MyPageScreen: React.FC = () => {
     // 로그아웃 액션 디스패치
     dispatch(logout());
     navigation.navigate('Intro');
+  };
+  const [toggleBookmark, setToggleBookmark] = useState(false);
+  // 리덕스에서 favorite이 true인 메뉴만 필터링해서 가져오기
+  const favoriteMenus = useSelector((state: RootState) =>
+    state.menu.menus.filter(menu => menu.favorite),
+  );
+
+  // 즐겨찾기 토글 함수 (리덕스 액션 사용)
+  const handleToggleFavorite = (menuId: number, favorite: boolean) => {
+    dispatch(toggleFavorite({menuId, favorite}));
   };
   return (
     <ScrollView>
@@ -275,6 +287,40 @@ const MyPageScreen: React.FC = () => {
             onClose={() => setAlarmModalVisible(false)}
             onSave={handleAlarmSave}
           />
+          <View style={styles.bookmarkContainer}>
+            <View style={styles.bookmarkTitleContainer}>
+              <Text style={styles.bookmarkTitle}>즐겨찾기</Text>
+              {toggleBookmark ? (
+                <TouchableOpacity onPress={() => setToggleBookmark(false)}>
+                  <icons.arrowBackTopWhite height={20} width={20} />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => setToggleBookmark(true)}>
+                  <icons.arrowBackBottomWhite height={20} width={20} />
+                </TouchableOpacity>
+              )}
+            </View>
+            {toggleBookmark && (
+              <ScrollView>
+                {favoriteMenus.map(favoriteItem => (
+                  <MenuCard
+                    key={favoriteItem.menu_id} // menu_id를 키로 사용
+                    isFavorate={favoriteItem.favorite} // favorite 상태
+                    menu={favoriteItem.menu_name} // 메뉴 이름
+                    kcal={favoriteItem.menu_calories} // 칼로리
+                    price={favoriteItem.menu_price} // 가격
+                    onToggleFavorite={() =>
+                      handleToggleFavorite(
+                        favoriteItem.menu_id,
+                        favoriteItem.favorite,
+                      )
+                    } // 즐겨찾기 토글
+                    isFavoritePage={true}
+                  />
+                ))}
+              </ScrollView>
+            )}
+          </View>
           <CustomButton
             title="로그아웃"
             handlePress={handleLogout}

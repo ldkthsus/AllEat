@@ -10,7 +10,8 @@ type MenuCardProps = {
   kcal: number;
   price: number;
   onToggleFavorite: () => void;
-  onAddMeal: () => void;
+  onAddMeal?: () => void;
+  isFavoritePage?: boolean;
 };
 
 const MenuCard: React.FC<MenuCardProps> = ({
@@ -20,9 +21,10 @@ const MenuCard: React.FC<MenuCardProps> = ({
   price,
   onToggleFavorite,
   onAddMeal,
+  isFavoritePage = false,
 }) => {
   return (
-    <View style={styles.restaurantMenu}>
+    <View style={[isFavoritePage ? styles.favorite : styles.restaurantMenu]}>
       <TouchableOpacity style={styles.icons} onPress={onToggleFavorite}>
         {isFavorate ? (
           <icons.bookmark height={24} width={24} />
@@ -34,9 +36,11 @@ const MenuCard: React.FC<MenuCardProps> = ({
       <Text style={styles.restaurantMenuDetail}>
         {kcal}kcal · {price}원
       </Text>
-      <TouchableOpacity style={styles.icons} onPress={onAddMeal}>
-        <icons.plusWhite height={20} width={20} />
-      </TouchableOpacity>
+      {onAddMeal && (
+        <TouchableOpacity style={styles.icons} onPress={onAddMeal}>
+          <icons.plusWhite height={20} width={20} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
