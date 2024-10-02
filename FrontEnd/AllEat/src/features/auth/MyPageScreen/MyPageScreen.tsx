@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -51,7 +51,7 @@ const MyPageScreen: React.FC = () => {
     lunch_alarm,
     dinner_alarm,
   } = useSelector((state: RootState) => state.info);
-
+  const {menus} = useSelector((state: RootState) => state.menu);
   const handleWeightChange = async (
     currentWeight: string,
     goalWeight: string,
@@ -135,9 +135,9 @@ const MyPageScreen: React.FC = () => {
   };
   const [toggleBookmark, setToggleBookmark] = useState(false);
   // 리덕스에서 favorite이 true인 메뉴만 필터링해서 가져오기
-  const favoriteMenus = useSelector((state: RootState) =>
-    state.menu.menus.filter(menu => menu.favorite),
-  );
+  const favoriteMenus = useMemo(() => {
+    return menus.filter(menu => menu.favorite);
+  }, [menus]);
 
   // 즐겨찾기 토글 함수 (리덕스 액션 사용)
   const handleToggleFavorite = (menuId: number, favorite: boolean) => {
