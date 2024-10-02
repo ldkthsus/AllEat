@@ -17,7 +17,8 @@ import api from '../../../utils/api';
 import {AppDispatch} from '../../../redux/store';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import {RootState} from '../../../redux/store';
-
+import messaging from '@react-native-firebase/messaging';
+import axios from 'axios';
 
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -32,11 +33,37 @@ const InitialScreen: React.FC = () => {
     (state: RootState) => state.auth,
   );
 
+  
+  // const sendFcmTokenToServer = async (token: String) => {
+  //   try {
+  //     const response = await axios.put('https://your-spring-server.com/api/users/info', {
+  //       token: token,
+  //     });
+  //     console.log('Token sent successfully:', response.data);
+  //   } catch (error) {
+  //     console.error('Error sending token:', error);
+  //   }
+  // };
+
+  const getExistingFcmToken = async () => {
+    // Get the existing FCM token
+    const token = await messaging().getToken();
+    if (token) {
+      console.log('FCM Token:', token);
+      setFcmToken(token);
+      // Send the token to your Spring server
+      // sendFcmTokenToServer(token);
+    } else {
+      console.log('No token available');
+    }
+  };
+
   useEffect(()=>{
-    console.log(isSocial);
+    getExistingFcmToken();
 
-  })
+  },[])
 
+  const [fcmToken, setFcmToken] = useState('')
   const [weight, setWeight] = useState({
     weight: '',
   });
@@ -113,7 +140,8 @@ const InitialScreen: React.FC = () => {
         user_height: parseFloat(form.user_height),
         activity_amount: form.activity_amount,
         user_name: form.user_name,
-        social_login: isSocial
+        social_login: isSocial,
+        fcm_token: fcmToken,
       }),
       type: 'application/json',
     });
