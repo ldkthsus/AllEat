@@ -134,7 +134,7 @@ public class MenuService {
         List<MenuEntity> findMenus = menuRepository.findAll();
         List<MenuResponseDTO> menuResponseDTOList = new ArrayList<>();
         for (MenuEntity menuEntity : findMenus) {
-            FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuEntity.getId());
+            FavoriteEntity findFavorite = favoriteRepository.findByUserIdAndMenuId(requestUser.getId(), menuEntity.getId());
             boolean isFavorite = false;
             if(findFavorite != null) {
                 isFavorite = true;
@@ -167,7 +167,7 @@ public class MenuService {
             List<MenuEntity> nonFavoriteMenus = new ArrayList<>();
 
             for (MenuEntity menuEntity : findMenus) {
-                FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuEntity.getId());
+                FavoriteEntity findFavorite = favoriteRepository.findByUserIdAndMenuId(requestUser.getId(), menuEntity.getId());
                 if (findFavorite != null) {
                     favoriteMenus.add(menuEntity);
                 }
