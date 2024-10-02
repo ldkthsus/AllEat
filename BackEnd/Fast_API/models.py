@@ -12,12 +12,8 @@ class WeightRecord(BaseModel):
 
 
 class MenuRanking(BaseModel):
-    carbohydrates: float
     cost: float
-    fats: float
-    proteins: float
     menu_name: str
-    restaurant_type: str
     calories: float
 
 class CostWhere(BaseModel):
