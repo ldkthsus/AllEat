@@ -181,7 +181,7 @@ public class MenuService {
             finalMenuList.addAll(favoriteMenus);  // 즐겨찾기 메뉴 먼저 추가
             finalMenuList.addAll(nonFavoriteMenus);
 
-            MenuPossibleDTO menuPossibleDTO = new MenuPossibleDTO(findRestaurants, finalMenuList);
+            MenuPossibleDTO menuPossibleDTO = new MenuPossibleDTO(findRestaurants, finalMenuList, payTransactionEntity.getId());
             possibleMenu.add(menuPossibleDTO);
 
         }
