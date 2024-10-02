@@ -24,13 +24,17 @@ public class MenuPossibleDTO {
 
     private List<MenuConvertDTO> menus;
 
-    public MenuPossibleDTO(RestaurantsEntity restaurants, List<MenuEntity> menuList) {
+    @JsonProperty("pay_transaction_id")
+    private Integer payTransactionId;
+
+    public MenuPossibleDTO(RestaurantsEntity restaurants, List<MenuEntity> menuList, Integer payTransactionId) {
         this.restaurantsId = restaurants.getId();
         this.restaurantsName = restaurants.getRestaurantsName();
         this.menus = new ArrayList<>();
         for(MenuEntity menu : menuList){
             this.menus.add(new MenuConvertDTO(menu));
         }
+        this.payTransactionId = payTransactionId;
     }
 
     @Getter
@@ -41,6 +45,7 @@ public class MenuPossibleDTO {
         private Integer menuType;
         private Integer menuCalories;
         private boolean favorite;
+        private Integer payTransactionId;
 
         public MenuConvertDTO(MenuEntity menu) {
             this.menuId = menu.getId();
