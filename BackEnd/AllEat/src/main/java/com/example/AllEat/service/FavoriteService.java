@@ -14,6 +14,7 @@ import com.example.AllEat.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,9 +49,15 @@ public class FavoriteService {
         FavoriteResponseDTO favoriteResponse = new FavoriteResponseDTO(requestUser, findMenu, favorite);
         return favoriteResponse;
     }
+    @Transactional
     public void deleteFavorite(UserEntity requestUser, Integer menuId) {
-        FavoriteEntity findFavorite = favoriteRepository.findByUser_idAndMenu_id(requestUser.getId(), menuId);
-        favoriteRepository.delete(findFavorite);
+        System.out.println("userId : " + requestUser.getId());
+        System.out.println("menuId : " + menuId);
+        FavoriteEntity findFavorite = favoriteRepository.findByUserIdAndMenuId(requestUser.getId(), menuId);
+        System.out.println(findFavorite.getId());
+        if (findFavorite != null) {
+            favoriteRepository.delete(findFavorite);
+        }
     }
 
     // 해당 유저의 즐겨찾기 조회
