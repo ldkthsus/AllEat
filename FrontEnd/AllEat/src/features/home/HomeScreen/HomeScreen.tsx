@@ -52,6 +52,11 @@ const HomeScreen: React.FC = () => {
     setCurrentDate(addDays(currentDate, 1)); // 하루를 더함
   };
 
+  // 알림창 이동
+  const handleAlertNavigate = () => {
+    navigation.navigate('AlertScreen');
+  };
+
   // REPORT 버튼 클릭 시 다른 페이지로 이동하는 함수
   const handleReportNavigate = () => {
     navigation.navigate('Report'); // 'ReportScreen'은 이동할 페이지의 이름입니다.
@@ -244,14 +249,16 @@ const HomeScreen: React.FC = () => {
             width={30}
           />
         </TouchableOpacity>
-
-        <icons.notifications
-          style={styles.notificationIcon}
-          height={20}
-          width={20}
-        />
-        <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+              
+          <icons.notifications
+            onPress={handleAlertNavigate}
+            style={styles.notificationIcon}
+            height={20}
+            width={20}
+            />
+          <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
       </View>
+
 
       {/* 스크롤 가능한 콘텐츠 */}
       <ScrollView style={styles.scrollContainer}>

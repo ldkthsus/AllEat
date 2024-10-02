@@ -19,5 +19,6 @@ export type RootStackParamList = {
   Report: undefined;
   PaymoneyDetail: undefined;
   AllEatLog: undefined;
+  AlertScreen: undefined;
   // 다른 화면도 추가할 수 있습니다.
 };

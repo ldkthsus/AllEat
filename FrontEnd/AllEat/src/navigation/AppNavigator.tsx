@@ -17,6 +17,7 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store'; // Redux 스토어 타입
 import DiaryCreateScreen from '../features/home/DiaryCreateScreen/DiaryCreateScreen';
 import AllEatLog from '../features/alleatlog/AllEatLog'; 
+import AlertScreen from '../features/alert/AlertScreen';
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
@@ -105,6 +106,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="AllEatLog"
           component={AllEatLog}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AlertScreen"
+          component={AlertScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>
