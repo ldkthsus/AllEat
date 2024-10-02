@@ -8,6 +8,7 @@ import { RootState } from '../../../redux/store';
 import { styles } from './WeeklyReport.styles';
 import AIReport from '../components/AIReport';
 import api from '../../../utils/api';
+import { FAST_API_URL } from '@env';
 import WeeklyMealReport from './WeeklyMealReport';
 import WeeklyFeeReport from './WeeklyFeeReport';
 
@@ -38,7 +39,7 @@ const WeeklyReport: React.FC = () => {
         setReportData(data); // 서버로부터 받은 데이터를 상태에 저장
 
         // FastAPI에 요청 보내기
-        const aiResponse = await fetch('https://j11b104.p.ssafy.io/fast-api/fast-api/report/week', {
+        const aiResponse = await fetch(`${FAST_API_URL}/fast-api/report/week`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -61,9 +62,18 @@ const WeeklyReport: React.FC = () => {
     fetchData();
   }, [currentDate]); // currentDate를 의존성 배열로 사용
 
+
   // 날짜 변경 핸들러
   const handlePreviousDate = () => setCurrentDate(prevDate => subDays(prevDate, 7));
-  const handleNextDate = () => setCurrentDate(prevDate => addDays(prevDate, 7));
+  const handleNextDate = () => {
+    const today = new Date(); // 오늘 날짜
+    const nextDate = addDays(currentDate, 7); // 다음 주 날짜
+  
+  // 다음 주 날짜가 오늘 날짜 이후인지 확인
+  if (nextDate <= today) {
+    setCurrentDate(nextDate); // 다음 주 날짜가 오늘 날짜 이하면 변경
+  }
+};
 
   // 로딩 상태 관리
   useEffect(() => {
@@ -88,7 +98,7 @@ const WeeklyReport: React.FC = () => {
           <icons.arrowBackLeft height={27} width={27} />
         </TouchableOpacity>
         <Text style={styles.date}>{formattedDate}</Text>
-        <TouchableOpacity onPress={handleNextDate}>
+        <TouchableOpacity onPress={handleNextDate} disabled={addDays(currentDate, 7) > new Date()}>
           <icons.arrowBackRight height={27} width={27} />
         </TouchableOpacity>
       </View>

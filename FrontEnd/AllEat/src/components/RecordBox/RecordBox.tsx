@@ -22,7 +22,7 @@ const RecordBox: React.FC<RecordBoxProps> = ({
     <View style={styles.recordContainer}>
       {isRecorded ? (
         <TouchableOpacity onPress={onPress}>
-          <images.recordBox height={150} width={150} />
+          <images.recordBox height={120} width={165} />
           <View style={styles.overlay}>
             <Text style={styles.priceText}>{price}₩</Text>
             <Text style={styles.title}>{title}</Text>
@@ -35,7 +35,7 @@ const RecordBox: React.FC<RecordBoxProps> = ({
         </TouchableOpacity>
       ) : (
         <View>
-          <images.recordBox height={150} width={150} />
+          <images.recordBox height={120} width={165} />
           <View style={styles.overlay}>
             <Text style={styles.priceText}>{0}₩</Text>
             <Text style={styles.title}>{title}</Text>

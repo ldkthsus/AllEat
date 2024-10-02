@@ -43,11 +43,24 @@ export const styles = StyleSheet.create({
     paddingTop: 10,
   },
   box: {
-    backgroundColor: '#769BFF',
+    backgroundColor: '#F3F4F7',
     borderRadius: 10,
     padding: 5,
+    shadowColor: '#000', // 그림자 색상
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    }, // 그림자 위치 (x, y)
+    shadowOpacity: 0.25, // 그림자 불투명도
+    shadowRadius: 3.84, // 그림자 반경
+    elevation: 1, // 안드로이드 그림자 높이
   },
-  boxText: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  boxText: {
+    color: '#3D3D3D',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Regular',
+    letterSpacing: -0.3,
+  },
   boxIcon: {position: 'absolute', right: 20},
   titleBox: {
     gap: 10,
@@ -68,16 +81,17 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   noAlarm: {
-    color: 'white',
+    color: '#3D3D3D',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
     textAlign: 'left',
+    letterSpacing: -0.3,
   },
   text: {flexDirection: 'row', width: '50%', gap: 5},
   alarm: {flexDirection: 'row', width: '33%', gap: 5},
-  textTitle: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  textTitle: {color: '#3D3D3D', fontSize: 18, fontFamily: 'Pretendard-Regular'},
   textDiscription: {
-    color: 'white',
+    color: '#3D3D3D',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
   },
@@ -105,10 +119,17 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#B7CAFF',
     maxHeight: 500,
+    shadowColor: '#000', // 그림자 색상
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    }, // 그림자 위치 (x, y)
+    shadowOpacity: 0.25, // 그림자 불투명도
+    shadowRadius: 3.84, // 그림자 반경
+    elevation: 1, // 안드로이드 그림자 높이
   },
   bookmarkTitleContainer: {
     flexDirection: 'row',
-
     justifyContent: 'space-between',
   },
   bookmarkTitle: {

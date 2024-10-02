@@ -53,13 +53,14 @@ export const styles = StyleSheet.create({
     left: 67,
   },
   day: {
-    color: 'black',
+    color: '#3D3D3D',
     fontSize: 20,
     fontFamily: 'Pretendard-Bold',
   },
   mainbox: {
     flex: 1,
     width: '100%',
+    height: 335,
     backgroundColor: '#EAF0FF',
     alignItems: 'center',
     paddingBottom: 48,
@@ -68,12 +69,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   eatpay: {
-    fontSize: 15,
+    fontSize: 17,
     fontFamily: 'Pretendard-Light',
     marginTop: 10,
+    color: '#3D3D3D',
   },
   eatpayValue: {
-    fontSize: 15,
+    fontSize: 17,
     fontFamily: 'Pretendard-SemiBold',
     color: '#769BFF',
     marginTop: 10,
@@ -119,8 +121,9 @@ export const styles = StyleSheet.create({
   },
   nutrientText: {
     fontSize: 16,
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: 'Pretendard-Medium',
     marginBottom: 8,
+    color: '#3D3D3D'
   },
   nutrientCarb: {
     color: '#769BFF',
@@ -177,9 +180,12 @@ export const styles = StyleSheet.create({
   reportBtn: {
     flexDirection: 'row',
     marginLeft: '3%',
+    alignItems: 'center'
+
   },
   reportBtnText: {
     fontFamily: 'Pretendard-Bold',
+    color: '#3D3D3D',
     fontSize: 19,
   },
   recordBox: {
@@ -187,7 +193,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     backgroundColor: 'white',
-    paddingBottom: 30,
   },
   leftRecord: {
     backgroundColor: 'white',
@@ -200,15 +205,28 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   boxContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingTop: 10,
   },
   box: {
-    backgroundColor: '#769BFF',
+    backgroundColor: '#F3F4F7',
     borderRadius: 10,
     padding: 5,
+    shadowColor: '#000', // 그림자 색상
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    }, // 그림자 위치 (x, y)
+    shadowOpacity: 0.25, // 그림자 불투명도
+    shadowRadius: 3.84, // 그림자 반경
+    elevation: 1, // 안드로이드 그림자 높이
+    marginHorizontal: 4,
   },
-  boxText: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  boxText: {
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    color: '#3D3D3D',
+    },
   boxIcon: {position: 'absolute', right: 20},
   titleBox: {
     gap: 10,
@@ -216,6 +234,7 @@ export const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    
   },
   textBox: {
     display: 'flex',
@@ -223,9 +242,9 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {flexDirection: 'row', width: '50%', gap: 5},
-  textTitle: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  textTitle: {color: '#3D3D3D', fontSize: 18, fontFamily: 'Pretendard-Regular'},
   textDiscription: {
-    color: 'white',
+    color: '#3D3D3D',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
   },
