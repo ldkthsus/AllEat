@@ -18,6 +18,7 @@ import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
 import CalanderModal from '../components/CalanderModal/CalanderModel';
 
+
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Home'
@@ -134,7 +135,11 @@ const HomeScreen: React.FC = () => {
       });
     }
   };
+
+
   useEffect(() => {
+
+
     const fetchData = async () => {
       try {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
