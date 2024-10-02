@@ -52,6 +52,11 @@ export const styles = StyleSheet.create({
     color: '#3d3d3d',
     fontFamily: 'Pretendard-Bold',
   },
+  loadingText: {
+    fontFamily: 'Pretendard-Light',
+    fontSize: 14,
+    color: '#3d3d3d',
+  },
   bookmarkContainer: {
     margin: 4,
     padding: 12,
