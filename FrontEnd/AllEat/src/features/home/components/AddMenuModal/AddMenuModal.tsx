@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   Image,
   ScrollView,
   Keyboard,
+  Platform,
+  PermissionsAndroid,
 } from 'react-native';
 import {icons} from '../../../../constants';
 import {images} from '../../../../constants';
@@ -19,31 +21,76 @@ import {
 import FormField from '../../../../components/FormField/FormField';
 import MenuCard from '../../../../components/MenuCard/MenuCard';
 import {AppDispatch} from '../../../../redux/store';
-import {fetchMenus} from '../../../../redux/features/menuSlice';
-import api from '../../../../utils/api';
+import CameraModal from '../CameraModal/CameraModal';
+import {
+  launchCamera,
+  launchImageLibrary,
+  CameraOptions,
+  MediaType,
+} from 'react-native-image-picker';
+
 interface AddMenuModalProps {
   onClose: () => void;
   onOpenCustomMenuModal: () => void;
   onAddMeal: (menu: any) => void; // 메뉴를 추가할 때, 해당 메뉴를 넘겨줌
 }
-
+// 이미지 선택 옵션
+const imagePickerOptions: CameraOptions = {
+  mediaType: 'photo' as MediaType, // 'photo'를 MediaType으로 설정
+  maxWidth: 768,
+  maxHeight: 768,
+  includeBase64: Platform.OS === 'android', // Android에서 Base64 인코딩 포함
+};
 const AddMenuModal: React.FC<AddMenuModalProps> = ({
   onClose,
   onOpenCustomMenuModal,
   onAddMeal,
 }) => {
+  async function requestCameraPermission() {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: '카메라 사용 권한',
+            message: '앱에서 카메라를 사용하려면 권한이 필요합니다.',
+            buttonNeutral: '나중에',
+            buttonNegative: '취소',
+            buttonPositive: '허용',
+          },
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('카메라 권한 허용됨');
+        } else {
+          console.log('카메라 권한 거부됨');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  }
   const dispatch = useDispatch<AppDispatch>(); // AppDispatch로 타입 설정
 
   const {menus, searchQuery, loading, error} = useSelector(
     (state: RootState) => state.menu,
   );
+  const [toggleBookmark, setToggleBookmark] = useState(false);
 
-  // 검색어에 따른 메뉴 필터링
-  const filteredMenus = menus.filter(
-    menu =>
-      menu.menu_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      menu.restaurants_name?.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  // 즐겨찾기(favorite)인 메뉴 필터링 (useMemo로 메모이제이션)
+  const favoriteMenus = useMemo(() => {
+    return menus.filter(menu => menu.favorite);
+  }, [menus]);
+
+  // 검색어에 따른 메뉴 필터링 (useMemo로 메모이제이션)
+  const filteredMenus = useMemo(() => {
+    return menus.filter(
+      menu =>
+        menu.menu_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        menu.restaurants_name
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase()),
+    );
+  }, [menus, searchQuery]);
 
   // 검색어 변경 처리 함수
   const handleSearch = (text: string) => {
@@ -52,16 +99,51 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
 
   // 검색창 활성화 상태 관리
   const [isSearchBoxVisible, setSearchBoxVisible] = useState(false);
+  const [cameraModalVisible, setCameraModalVisible] = useState(false); // 카메라 모달 상태
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
   if (error) {
     return <Text>Error: {error}</Text>;
   }
+
   const handleMenuPress = (menu: any) => {
     onAddMeal(menu);
     Keyboard.dismiss(); // 메뉴 선택 후 키보드가 열려 있으면 닫음
     setSearchBoxVisible(false);
+  };
+  // 카메라 모달 관련 핸들러
+  const handleOpenCameraModal = () => {
+    requestCameraPermission();
+    setCameraModalVisible(true); // 카메라 모달 열기
+  };
+  const handleLaunchCamera = () => {
+    launchCamera(imagePickerOptions, response => {
+      if (response.didCancel) {
+        console.log('User cancelled camera picker');
+      } else if (response.errorMessage) {
+        console.log('Camera error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const {uri, fileName, type} = response.assets[0];
+        console.log('Camera Image:', uri, fileName, type);
+        // 이곳에서 이미지 URI나 파일을 저장하거나 처리할 수 있습니다.
+      }
+    });
+  };
+
+  const handleLaunchImageLibrary = () => {
+    launchImageLibrary(imagePickerOptions, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorMessage) {
+        console.log('Image Picker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const {uri, fileName, type} = response.assets[0];
+        console.log('Selected Image:', uri, fileName, type);
+        // 이곳에서 선택한 이미지를 저장하거나 처리할 수 있습니다.
+      }
+    });
   };
   return (
     <View style={styles.modalContent}>
@@ -105,7 +187,9 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         )}
       </View>
       <View style={styles.addMenu}>
-        <TouchableOpacity style={styles.addMenuContainer}>
+        <TouchableOpacity
+          style={styles.addMenuContainer}
+          onPress={handleOpenCameraModal}>
           <Image source={images.addMenuCamera} style={styles.addMenuImage} />
           <Text style={styles.addMenuContainerText}>사진으로 등록</Text>
         </TouchableOpacity>
@@ -116,6 +200,49 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           <Text style={styles.addMenuContainerText}>직접 등록</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.bookmarkContainer}>
+        <View style={styles.bookmarkTitleContainer}>
+          <Text style={styles.bookmarkTitle}>즐겨찾기</Text>
+          {toggleBookmark ? (
+            <TouchableOpacity onPress={() => setToggleBookmark(false)}>
+              <icons.arrowBackTopWhite height={20} width={20} />
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={() => setToggleBookmark(true)}>
+              <icons.arrowBackBottomWhite height={20} width={20} />
+            </TouchableOpacity>
+          )}
+        </View>
+        {toggleBookmark && (
+          <ScrollView>
+            {favoriteMenus.map(favoriteItem => (
+              <MenuCard
+                key={favoriteItem.menu_id} // menu_id를 키로 사용
+                isFavorate={favoriteItem.favorite} // favorite 상태
+                menu={favoriteItem.menu_name} // 메뉴 이름
+                kcal={favoriteItem.menu_calories} // 칼로리
+                price={favoriteItem.menu_price} // 가격
+                onToggleFavorite={() =>
+                  dispatch(
+                    toggleFavorite({
+                      menuId: favoriteItem.menu_id,
+                      favorite: favoriteItem.favorite,
+                    }),
+                  )
+                } // 즐겨찾기 토글
+                isFavoritePage={true}
+                onAddMeal={() => handleMenuPress(favoriteItem)}
+              />
+            ))}
+          </ScrollView>
+        )}
+      </View>
+      <CameraModal
+        visible={cameraModalVisible}
+        onClose={() => setCameraModalVisible(false)}
+        onLaunchCamera={handleLaunchCamera}
+        onLaunchImageLibrary={handleLaunchImageLibrary}
+      />
     </View>
   );
 };

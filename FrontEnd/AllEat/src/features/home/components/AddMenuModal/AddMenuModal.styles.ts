@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     // flexWrap: 'wrap',
     justifyContent: 'space-around',
+    position: 'relative',
   },
   modalTitle: {
     flexDirection: 'row',
@@ -29,8 +30,8 @@ export const styles = StyleSheet.create({
   },
   modalIcon: {},
   searchBox: {
-    height: '300%',
-    top: '100%',
+    height: '420%',
+    top: '110%',
     width: '100%',
     position: 'absolute',
     backgroundColor: 'white',
@@ -50,5 +51,25 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: '#3d3d3d',
     fontFamily: 'Pretendard-Bold',
+  },
+  bookmarkContainer: {
+    margin: 4,
+    padding: 12,
+    // paddingTop: 20,
+    borderRadius: 10,
+    backgroundColor: '#B7CAFF',
+    maxHeight: 200,
+    width: '100%',
+  },
+  bookmarkTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  bookmarkTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontFamily: 'Pretendard-Bold',
+    marginBottom: 2,
   },
 });
