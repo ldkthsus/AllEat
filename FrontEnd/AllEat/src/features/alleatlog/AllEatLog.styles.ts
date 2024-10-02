@@ -52,6 +52,14 @@ export const styles = StyleSheet.create({
   diarySection: {
     marginBottom: 15,
   },
+  diaryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center', // 아이콘과 텍스트를 세로로 정렬
+    marginBottom: 5,
+  },
+  diaryIcon: {
+    marginRight: 10, // 아이콘과 텍스트 사이 간격
+  },
   diaryTime: {
     fontSize: 14,
     fontWeight: 'bold',
