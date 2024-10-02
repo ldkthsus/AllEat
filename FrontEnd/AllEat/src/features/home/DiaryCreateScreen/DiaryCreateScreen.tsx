@@ -20,19 +20,7 @@ type DiaryCreateScreenNavigationProp = NativeStackNavigationProp<
   'DiaryCreate'
 >;
 type DiaryCreateRouteProp = RouteProp<RootStackParamList, 'DiaryCreate'>;
-const calculateNutrients = (
-  value: number,
-  carbPercentage: number,
-  proteinPercentage: number,
-  fatPercentage: number,
-) => {
-  const newCarbohydrate = (carbPercentage / 100) * value;
-  const newProtein = (proteinPercentage / 100) * value;
-  const newFat = (fatPercentage / 100) * value;
-  const newCalories = newFat * 9 + newCarbohydrate * 3 + newProtein * 3;
 
-  return {newCarbohydrate, newProtein, newFat, newCalories};
-};
 type Meal = {
   menu_id: number;
   restaurants_name: string;
@@ -40,6 +28,7 @@ type Meal = {
   menu_price: number;
   menu_calories: number;
   person_count: number;
+  pay_transaction_id: number;
 };
 interface DiaryIds {
   BREAKFAST: number | null;
@@ -81,6 +70,7 @@ const DiaryCreateScreen: React.FC = () => {
   const [form, setForm] = useState({
     restaurant_name: '',
     restaurant_type: '',
+    pay_transaction_id: 0,
     menu_name: '',
     menu_calories: 0,
     menu_carbohydrate: 0,
@@ -90,10 +80,6 @@ const DiaryCreateScreen: React.FC = () => {
     menu_price: 0,
     menu_value: 0,
   });
-  // totalNutrients 상태 추가
-  const [totalNutrients, setTotalNutrients] = useState(
-    form.menu_carbohydrate + form.menu_protein + form.menu_fat,
-  );
 
   // 탄단지 비율
   const [carbPercentage, setCardPercentage] = useState(33.33);
@@ -111,7 +97,7 @@ const DiaryCreateScreen: React.FC = () => {
       setProteinPercentage(33.33);
       setFatPercentage(33.33);
     } else {
-      setTotalNutrients(newTotalNutrients);
+      // setTotalNutrients(newTotalNutrients);
       setCardPercentage(
         Math.round((form.menu_carbohydrate / newTotalNutrients) * 100),
       );
@@ -122,34 +108,6 @@ const DiaryCreateScreen: React.FC = () => {
     }
   }, [form.menu_carbohydrate, form.menu_protein, form.menu_fat]);
 
-  // 용량을 변경할 때 탄단지 및 칼로리 업데이트
-  useEffect(() => {
-    const {newCarbohydrate, newProtein, newFat, newCalories} =
-      calculateNutrients(
-        totalNutrients,
-        carbPercentage,
-        proteinPercentage,
-        fatPercentage,
-      );
-
-    // 값이 변경될 때만 setForm을 호출하여 무한 루프 방지
-    if (
-      totalNutrients !== 0 &&
-      (form.menu_carbohydrate !== newCarbohydrate ||
-        form.menu_protein !== newProtein ||
-        form.menu_fat !== newFat ||
-        form.menu_calories !== newCalories)
-    ) {
-      setForm({
-        ...form,
-        menu_carbohydrate: newCarbohydrate,
-        menu_protein: newProtein,
-        menu_fat: newFat,
-        menu_calories: newCalories,
-      });
-    }
-  }, [totalNutrients]); // 용량 변경 시에만 실행되도록 의존성 배열 설정
-  // 다이어리 데이터 가져오기 (diaryId가 있을 때만)
   const [mealList, setMealList] = useState<Meal[]>([]);
   const mealKey = meals as MealType;
   useEffect(() => {
@@ -165,6 +123,7 @@ const DiaryCreateScreen: React.FC = () => {
             menus.map((menu: any) => ({
               menu_id: menu.menu_id,
               restaurants_name: menu.restaurants_name,
+              pay_transaction_id: 0,
               menu_name: menu.menu_name,
               menu_price: menu.menu_price,
               menu_calories: menu.menu_calories,
@@ -190,7 +149,7 @@ const DiaryCreateScreen: React.FC = () => {
       const roundedFat = Math.round(form.menu_fat);
 
       // 전체 영양소 값 계산 (탄단지 총합)
-      const total = roundedCarbohydrate + roundedProtein + roundedFat;
+      // const total = roundedCarbohydrate + roundedProtein + roundedFat;
 
       // 메뉴 데이터 구성
       const requestData = {
@@ -203,7 +162,7 @@ const DiaryCreateScreen: React.FC = () => {
         menu_fat: roundedFat, // 지방 반올림
         menu_price: form.menu_price,
         menu_type: form.menu_type,
-        menu_value: total, // 영양소 총합 값
+        menu_value: form.menu_value, // 영양소 총합 값
       };
 
       console.log('메뉴 추가 요청 데이터:', requestData);
@@ -223,6 +182,9 @@ const DiaryCreateScreen: React.FC = () => {
           menu_price: form.menu_price,
           menu_calories: form.menu_calories,
           person_count: 1,
+          pay_transaction_id:
+            restaurants.find(res => res.restaurants_name === restaurantValue)
+              ?.pay_transaction_id || 0, // 해당 식당의 pay_transaction_id를 찾음,
         },
       ]);
 
@@ -242,12 +204,14 @@ const DiaryCreateScreen: React.FC = () => {
     {
       restaurants_id: number;
       restaurants_name: string;
+      pay_transaction_id: number;
       menus: {
         menuId: number;
         menuName: string;
         price: number;
         menuCalories: number;
         favorite: boolean;
+        pay_transaction_id: number;
       }[];
     }[]
   >([]);
@@ -364,8 +328,9 @@ const DiaryCreateScreen: React.FC = () => {
   const translatedTitle = titleMapping[meals] || meals;
   // 메뉴 추가 함수
   const addMeal = (menuIdx: number) => {
-    const selectedMenu = restaurants[restaurantIndex].menus[menuIdx];
-
+    const selectedMenu = restaurants[restaurantIndex].menus.find(
+      menu => menu.menuId === menuIdx,
+    );
     setMealList(prevMealList => [
       ...prevMealList,
       {
@@ -375,6 +340,7 @@ const DiaryCreateScreen: React.FC = () => {
         menu_price: selectedMenu.price,
         menu_calories: selectedMenu.menuCalories,
         person_count: 1,
+        pay_transaction_id: restaurants[restaurantIndex].pay_transaction_id,
       },
     ]);
   };
@@ -409,6 +375,43 @@ const DiaryCreateScreen: React.FC = () => {
         response = await api.post('/AllEat/record/menu', diaryData);
       }
       console.log('다이어리 추가 성공:', response.data);
+      // 성공 시 홈 화면으로 돌아가기 전에 mealList에 대해 post 요청
+      await Promise.all(
+        mealList.map(async meal => {
+          if (meal.pay_transaction_id !== 0) {
+            const paymentData = {
+              transaction_id: meal.pay_transaction_id,
+              amount: meal.menu_price,
+            };
+
+            try {
+              // POST 요청
+              await api.post('/AllEat/record/meal-pay', paymentData);
+              console.log(
+                `Payment success for transaction: ${meal.pay_transaction_id}`,
+              );
+            } catch (error) {
+              console.error(
+                `Error in POST request for transaction: ${meal.pay_transaction_id}`,
+                error,
+              );
+
+              // POST 실패 시 PUT 요청
+              try {
+                await api.put('/AllEat/record/meal-pay', paymentData);
+                console.log(
+                  `Payment updated with PUT for transaction: ${meal.pay_transaction_id}`,
+                );
+              } catch (putError) {
+                console.error(
+                  `Error in PUT request for transaction: ${meal.pay_transaction_id}`,
+                  putError,
+                );
+              }
+            }
+          }
+        }),
+      );
 
       // 성공 시 홈 화면으로 돌아가기
       navigation.navigate('Home', {isUpdated: true});
@@ -542,10 +545,12 @@ const DiaryCreateScreen: React.FC = () => {
                     menu_price: menu.menu_price,
                     menu_calories: menu.menu_calories,
                     person_count: 1,
+                    pay_transaction_id: menu.pay_transaction_id,
                   },
                 ])
               }
               onOpenCustomMenuModal={openCustomMenuModal}
+              setForm={menu => setForm(menu)}
             />
           ) : (
             <CustomMenuModal
@@ -559,8 +564,6 @@ const DiaryCreateScreen: React.FC = () => {
               carbPercentage={carbPercentage}
               proteinPercentage={proteinPercentage}
               fatPercentage={fatPercentage}
-              totalNutrients={totalNutrients}
-              setTotalNutrients={setTotalNutrients}
               onClose={closeModal}
               addMealToList={addMealToList}
               isHomeMade={isHomeMade}

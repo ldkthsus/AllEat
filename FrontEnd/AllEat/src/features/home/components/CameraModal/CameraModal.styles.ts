@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   whiteBox: {
-    width: 300,
+    width: '88%',
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 2,

@@ -1,4 +1,4 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {
   View,
   Text,
@@ -28,11 +28,13 @@ import {
   CameraOptions,
   MediaType,
 } from 'react-native-image-picker';
-
+import {FAST_API_URL} from '@env';
+import {Alert} from 'react-native';
 interface AddMenuModalProps {
   onClose: () => void;
   onOpenCustomMenuModal: () => void;
   onAddMeal: (menu: any) => void; // 메뉴를 추가할 때, 해당 메뉴를 넘겨줌
+  setForm: (menu: any) => void;
 }
 // 이미지 선택 옵션
 const imagePickerOptions: CameraOptions = {
@@ -45,6 +47,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   onClose,
   onOpenCustomMenuModal,
   onAddMeal,
+  setForm,
 }) => {
   async function requestCameraPermission() {
     if (Platform.OS === 'android') {
@@ -74,8 +77,10 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const {menus, searchQuery, loading, error} = useSelector(
     (state: RootState) => state.menu,
   );
+  const token = useSelector((state: RootState) => state.auth.token);
   const [toggleBookmark, setToggleBookmark] = useState(false);
-
+  const [isUploading, setIsUploading] = useState(false); // 로딩 상태 추가
+  const [imageIndex, setImageIndex] = useState(0);
   // 즐겨찾기(favorite)인 메뉴 필터링 (useMemo로 메모이제이션)
   const favoriteMenus = useMemo(() => {
     return menus.filter(menu => menu.favorite);
@@ -91,7 +96,14 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           .includes(searchQuery.toLowerCase()),
     );
   }, [menus, searchQuery]);
+  // 이미지 변경 로직
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setImageIndex(prevIndex => (prevIndex + 1) % 2);
+    }, 500);
 
+    return () => clearInterval(intervalId);
+  }, []);
   // 검색어 변경 처리 함수
   const handleSearch = (text: string) => {
     dispatch(setSearchQuery(text)); // 검색어 업데이트
@@ -118,33 +130,170 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     requestCameraPermission();
     setCameraModalVisible(true); // 카메라 모달 열기
   };
-  const handleLaunchCamera = () => {
-    launchCamera(imagePickerOptions, response => {
+  const handleLaunchCamera = async () => {
+    launchCamera(imagePickerOptions, async response => {
       if (response.didCancel) {
         console.log('User cancelled camera picker');
       } else if (response.errorMessage) {
         console.log('Camera error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
         const {uri, fileName, type} = response.assets[0];
-        console.log('Camera Image:', uri, fileName, type);
-        // 이곳에서 이미지 URI나 파일을 저장하거나 처리할 수 있습니다.
+
+        const formData = new FormData();
+        formData.append('file', {
+          uri,
+          name: fileName || 'photo.jpg',
+          type: type || 'image/jpeg',
+        });
+
+        try {
+          setIsUploading(true); // 로딩 상태 활성화
+          const cameraResponse = await fetch(`${FAST_API_URL}/fast-api/image`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
+
+          const jsonResponse = await cameraResponse.json();
+          console.log('Server Response:', jsonResponse);
+
+          setIsUploading(false); // 로딩 상태 비활성화
+
+          if (!jsonResponse.foods || jsonResponse.foods.length === 0) {
+            Alert.alert(
+              '인식 실패',
+              '음식이 인식되지 않았습니다. 다시 시도해주세요.',
+              [{text: '확인'}],
+            );
+          } else {
+            const totalData = calculateTotalNutrients(
+              jsonResponse.foods,
+              jsonResponse,
+            );
+            setForm({
+              menu_name: totalData.menu_name || '',
+              menu_calories: totalData.menu_calories || 0,
+              menu_carbohydrate: totalData.menu_carbohydrate || 0,
+              menu_protein: totalData.menu_protein || 0,
+              menu_fat: totalData.menu_fat || 0,
+              menu_price: totalData.menu_price || 0,
+              menu_type: 1,
+              menu_value: totalData.menu_weight || 0,
+            });
+            onOpenCustomMenuModal();
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          setIsUploading(false); // 로딩 상태 비활성화
+        }
       }
     });
   };
 
-  const handleLaunchImageLibrary = () => {
-    launchImageLibrary(imagePickerOptions, response => {
+  const handleLaunchImageLibrary = async () => {
+    launchImageLibrary(imagePickerOptions, async response => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.errorMessage) {
         console.log('Image Picker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
         const {uri, fileName, type} = response.assets[0];
-        console.log('Selected Image:', uri, fileName, type);
-        // 이곳에서 선택한 이미지를 저장하거나 처리할 수 있습니다.
+
+        const formData = new FormData();
+        formData.append('file', {
+          uri,
+          name: fileName || 'photo.jpg',
+          type: type || 'image/jpeg',
+        });
+
+        try {
+          setIsUploading(true); // 로딩 상태 활성화
+          const imageResponse = await fetch(`${FAST_API_URL}/fast-api/image`, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          });
+
+          const jsonResponse = await imageResponse.json();
+          console.log('Server Response:', jsonResponse);
+
+          setIsUploading(false); // 로딩 상태 비활성화
+
+          if (!jsonResponse.foods || jsonResponse.foods.length === 0) {
+            Alert.alert(
+              '인식 실패',
+              '음식이 인식되지 않았습니다. 다시 시도해주세요.',
+              [{text: '확인'}],
+            );
+          } else {
+            const totalData = calculateTotalNutrients(
+              jsonResponse.foods,
+              jsonResponse,
+            );
+            setForm({
+              menu_name: totalData.menu_name || '',
+              menu_calories: totalData.menu_calories || 0,
+              menu_carbohydrate: totalData.menu_carbohydrate || 0,
+              menu_protein: totalData.menu_protein || 0,
+              menu_fat: totalData.menu_fat || 0,
+              menu_price: totalData.menu_price || 0,
+              menu_type: 1,
+              menu_value: totalData.menu_weight || 0,
+            });
+            onOpenCustomMenuModal();
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          setIsUploading(false); // 로딩 상태 비활성화
+        }
       }
     });
   };
+
+  // 음식 데이터를 합산하는 함수
+  const calculateTotalNutrients = (foods: string[], data: any) => {
+    let totalCalories = 0;
+    let totalCarbohydrate = 0;
+    let totalFat = 0;
+    let totalProtein = 0;
+    let totalWeight = 0;
+
+    foods.forEach(food => {
+      const foodData = data[food];
+      totalCalories += foodData.menu_calories;
+      totalCarbohydrate += foodData.menu_carbohydrate;
+      totalFat += foodData.menu_fat;
+      totalProtein += foodData.menu_protein;
+      totalWeight += foodData.menu_weight;
+    });
+
+    return {
+      menu_name: foods.join(', '), // 모든 음식 이름을 결합
+      menu_calories: totalCalories,
+      menu_carbohydrate: totalCarbohydrate,
+      menu_fat: totalFat,
+      menu_protein: totalProtein,
+      menu_weight: totalWeight,
+      menu_price: 0, // 가격은 0으로 설정 (추가 가능)
+    };
+  };
+
+  const kikiImages = [images.kikiRunning1, images.kikiRunning2];
+  if (isUploading === true) {
+    return (
+      <View style={styles.modalContent}>
+        {React.createElement(kikiImages[imageIndex], {width: 200, height: 200})}
+        <Text style={styles.loadingText}>
+          키키가 데이터를 가져오는 중이에요!
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.modalContent}>
       <View style={styles.modalTitle}>

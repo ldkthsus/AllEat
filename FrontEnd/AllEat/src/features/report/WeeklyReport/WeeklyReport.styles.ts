@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   weeklyReportContainer: {
@@ -14,13 +14,13 @@ export const styles = StyleSheet.create({
   date: {
     color: 'black',
     fontFamily: 'Pretendard-Bold',
-    fontSize: 19
+    fontSize: 19,
   },
   ReportContainer: {
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    marginTop: 15
+    marginTop: 15,
   },
   loadingContainer: {
     flex: 1,
@@ -49,5 +49,5 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Light',
     fontSize: 14,
     color: 'black',
-  }
+  },
 });

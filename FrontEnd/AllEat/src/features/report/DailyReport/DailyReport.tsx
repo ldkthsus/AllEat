@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import AIReport from '../components/AIReport';
 import api from '../../../utils/api';
+import {FAST_API_URL} from '@env';
 import DailyMealReport from './DailyMealReport';
 import DailyFeeReport from './DailyFeeReport';
 
@@ -24,6 +25,7 @@ const DailyReport: React.FC = () => {
   const goalWeight = useSelector((state: RootState) => state.info.goal_weight);
   const recentWeight = useSelector((state: RootState) => state.info.weights);
   const firstWeight = recentWeight && recentWeight.length > 0 ? recentWeight[0].weight : null;
+  
 
   const token = useSelector((state: RootState) => state.auth.token);
 
@@ -32,7 +34,13 @@ const DailyReport: React.FC = () => {
   };
 
   const handleNextDate = () => {
-    setCurrentDate(prevDate => addDays(prevDate, 1));
+    const today = new Date(); // 오늘 날짜
+    const nextDate = addDays(currentDate, 1); // 다음 날짜
+    
+    // 다음 날짜가 오늘 날짜 이후인지 확인
+    if (nextDate <= today) {
+      setCurrentDate(nextDate); // 다음 날짜가 오늘 날짜 이하면 변경
+    }
   };
 
   // 데이터를 가져오는 useEffect
@@ -52,7 +60,7 @@ const DailyReport: React.FC = () => {
           recent_weight: firstWeight,
         };
 
-        const aiResponse = await fetch('https://j11b104.p.ssafy.io/fast-api/fast-api/report/day', {
+        const aiResponse = await fetch(`${FAST_API_URL}/fast-api/report/day`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -98,7 +106,7 @@ const DailyReport: React.FC = () => {
           <icons.arrowBackLeft height={27} width={27} />
         </TouchableOpacity>
         <Text style={styles.date}>{formattedDate}</Text>
-        <TouchableOpacity onPress={handleNextDate}>
+        <TouchableOpacity onPress={handleNextDate} disabled={currentDate >= new Date()}>
           <icons.arrowBackRight height={27} width={27} />
         </TouchableOpacity>
       </View>

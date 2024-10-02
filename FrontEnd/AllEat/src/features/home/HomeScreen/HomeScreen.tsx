@@ -17,6 +17,8 @@ import {useDispatch, useSelector} from 'react-redux'; // Redux에서 액션을 �
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
 import CalanderModal from '../components/CalanderModal/CalanderModel';
+import RecordBox2 from '../../../components/RecordBox/RecordBox2';
+
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -28,6 +30,16 @@ const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<HomeRouteProp>();
   const {isUpdated = false} = route.params || {};
+
+  // 움직이는 키키 이미지
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const kikiImages = [
+      images.happyKiki1,
+      images.happyKiki2,
+      images.happyKiki3,
+    ];
+  
 
   // 캘린더 모달
   const [isCalanderModalVisible, setIsCalanderModalVisible] = useState(false);
@@ -134,7 +146,11 @@ const HomeScreen: React.FC = () => {
       });
     }
   };
+
+
   useEffect(() => {
+
+
     const fetchData = async () => {
       try {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
@@ -145,11 +161,22 @@ const HomeScreen: React.FC = () => {
         console.error('Error fetching data:', error);
       }
     };
+
+    // 데이터 가져오기
     fetchData();
-    if (isUpdated) {
-      fetchData();
-    }
-  }, [currentDate, isUpdated]); // currentDate가 변경될 때마다 데이터 다시 가져오기
+
+    // 일정 시간마다 이미지를 변경하는 인터벌 설정
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex(prevIndex => (prevIndex + 1) % kikiImages.length);
+    }, 500); // 500ms마다 이미지 변경
+
+    // 컴포넌트 언마운트 시 인터벌 클리어
+    return () => {
+      clearInterval(intervalId); // 인터벌 클리어
+    };
+
+  }, [currentDate, isUpdated, kikiImages.length]); // 의존성 배열에 currentDate, isUpdated, kikiImages.length 추가
+
 
   // 모달 닫기 함수
   const closeModal = () => {
@@ -249,16 +276,15 @@ const HomeScreen: React.FC = () => {
             width={30}
           />
         </TouchableOpacity>
-              
-          <icons.notifications
-            onPress={handleAlertNavigate}
-            style={styles.notificationIcon}
-            height={20}
-            width={20}
-            />
-          <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
-      </View>
 
+        <icons.notifications
+          onPress={handleAlertNavigate}
+          style={styles.notificationIcon}
+          height={20}
+          width={20}
+        />
+        <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+      </View>
 
       {/* 스크롤 가능한 콘텐츠 */}
       <ScrollView style={styles.scrollContainer}>
@@ -305,7 +331,7 @@ const HomeScreen: React.FC = () => {
                 />
               ) : (
                 // 그 외의 경우 기본 kiki 이미지
-                <images.kiki style={styles.kiki} height={120} width={120} />
+                React.createElement(kikiImages[currentImageIndex], { width: 120, height: 120 })
               )}
             </View>
 
@@ -347,7 +373,7 @@ const HomeScreen: React.FC = () => {
                     styles.gaugeSegment,
                     {
                       width: `${carbRatio * 100}%`, // 탄수화물 비율
-                      backgroundColor: '#B0C5FF', // 탄수화물 색상
+                      backgroundColor: '#AEC3FE', // 탄수화물 색상
                       borderTopLeftRadius: 7,
                       borderBottomLeftRadius: 7,
                     },
@@ -359,7 +385,7 @@ const HomeScreen: React.FC = () => {
                     styles.gaugeSegment,
                     {
                       width: `${proteinRatio * 100}%`, // 단백질 비율
-                      backgroundColor: '#769BFF', // 단백질 색상
+                      backgroundColor: '#EEA9A9', // 단백질 색상
                     },
                   ]}
                 />
@@ -369,7 +395,7 @@ const HomeScreen: React.FC = () => {
                     styles.gaugeSegment,
                     {
                       width: `${fatRatio * 100}%`, // 지방 비율
-                      backgroundColor: '#D3DFFF', // 지방 색상
+                      backgroundColor: '#FFD2A4', // 지방 색상
                       borderTopRightRadius: 7,
                       borderBottomRightRadius: 7,
                     },
@@ -385,14 +411,36 @@ const HomeScreen: React.FC = () => {
               <CircularProgress
                 progress={
                   dayData?.day_cost && goal_cost
-                    ? Math.min(dayData.day_cost / goal_cost, 1)
+                    ? Math.min(
+                        dayData.day_cost /
+                          Math.round(
+                            goal_cost /
+                              new Date(
+                                currentDate.getFullYear(),
+                                currentDate.getMonth() + 1,
+                                0,
+                              ).getDate(),
+                          ),
+                        1,
+                      )
                     : 0
                 } // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
-                total={goal_cost || 0} // 총 금액
+                total={
+                  goal_cost
+                    ? Math.round(
+                        goal_cost /
+                          new Date(
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() + 1,
+                            0,
+                          ).getDate(),
+                      )
+                    : 0
+                } // 총 금액
                 current={dayData?.day_cost ? dayData.day_cost : 0} // 현재 소비한 금액
                 progressColor="#769BFF"
                 currentTextColor="#769BFF" // 첫 번째 그래프의 현재 텍스트 색상
-                totalTextColor="black" // 첫 번째 그래프의 총 텍스트 색상
+                totalTextColor="black" // 첫 번째 그래프..의 총 텍스트 색상
                 unit="₩" // 단위
               />
               <images.Subtract
@@ -410,8 +458,8 @@ const HomeScreen: React.FC = () => {
                 } // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
                 total={goal_kcal || 0} // 총 칼로리
                 current={dayData?.day_kcal ? dayData.day_kcal : 0} // 현재 섭취한 칼로리
-                progressColor="#93AAE7"
-                currentTextColor="#93AAE7" // 두 번째 그래프의 현재 텍스트 색상
+                progressColor="#84A4FB"
+                currentTextColor="#84A4FB" // 두 번째 그래프의 현재 텍스트 색상
                 totalTextColor="black" // 두 번째 그래프의 총 텍스트 색상
                 unit="kcal" // 단위
               />
@@ -425,7 +473,6 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <View style={styles.whiteBox}>
-          {/* REPORT 버튼에 네비게이션 연결 */}
           <TouchableOpacity
             style={styles.reportBtn}
             onPress={handleReportNavigate}>
@@ -435,7 +482,7 @@ const HomeScreen: React.FC = () => {
         </View>
 
         <View style={styles.recordBox}>
-          <RecordBox
+          <RecordBox2
             title="아침"
             kcal={
               String(
@@ -465,7 +512,7 @@ const HomeScreen: React.FC = () => {
               )
             }
           />
-          <RecordBox
+          <RecordBox2
             title="점심"
             kcal={
               String(
@@ -491,7 +538,7 @@ const HomeScreen: React.FC = () => {
               )
             }
           />
-          <RecordBox
+          <RecordBox2
             title="저녁"
             kcal={
               String(
@@ -521,7 +568,7 @@ const HomeScreen: React.FC = () => {
               )
             }
           />
-          <RecordBox
+          <RecordBox2
             title="간식"
             kcal={
               String(

@@ -18,8 +18,6 @@ interface CustomMenuModalProps {
   carbPercentage: number;
   proteinPercentage: number;
   fatPercentage: number;
-  totalNutrients: number;
-  setTotalNutrients: (value: number) => void;
   onClose: () => void;
   addMealToList: () => void;
   isHomeMade: boolean;
@@ -37,8 +35,6 @@ const CustomMenuModal: React.FC<CustomMenuModalProps> = ({
   carbPercentage,
   proteinPercentage,
   fatPercentage,
-  totalNutrients,
-  setTotalNutrients,
   onClose,
   addMealToList,
   isHomeMade,
@@ -168,9 +164,11 @@ const CustomMenuModal: React.FC<CustomMenuModalProps> = ({
         />
         <FormField
           title="용량"
-          value={String(Math.round(totalNutrients))}
+          value={String(Math.round(form.menu_value))}
           unit="g"
-          handleChangeText={text => setTotalNutrients(Number(text))}
+          handleChangeText={text =>
+            setForm({...form, menu_value: Number(text)})
+          }
           placeholder="0"
           isNumeric={true}
           isDecimal={false}

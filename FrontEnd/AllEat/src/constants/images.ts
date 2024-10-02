@@ -28,6 +28,9 @@ import recordBox from '../assets/images/recordBox.svg';
 import kikiRunning1 from '../assets/images/kikiRunning1.svg';
 import kikiRunning2 from '../assets/images/kikiRunning2.svg';
 import kikiRunning3 from '../assets/images/kikiRunning3.svg';
+import happyKiki1 from '../assets/images/happyKiki1.svg';
+import happyKiki2 from '../assets/images/happyKiki2.svg';
+import happyKiki3 from '../assets/images/happyKiki3.svg';
 
 
 const images = {
@@ -60,7 +63,10 @@ const images = {
   recordBox,
   kikiRunning1,
   kikiRunning2,
-  kikiRunning3
+  kikiRunning3,
+  happyKiki1,
+  happyKiki2,
+  happyKiki3
 };
 
 export default images;
