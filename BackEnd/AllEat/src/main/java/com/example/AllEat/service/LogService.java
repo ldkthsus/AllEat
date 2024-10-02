@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -29,7 +30,7 @@ public class LogService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public List<LogResponseDTO> getMealPayLogs(String startDate, HttpServletRequest request) {
+    public List<LogResponseDTO> getMealPayLogs(String yearMonth, HttpServletRequest request) {
         // JWT 토큰을 사용하여 사용자 식별
         String token = request.getHeader("Authorization").substring(7);
         String email = jwtUtil.getEmail(token);
@@ -38,14 +39,15 @@ public class LogService {
             throw new RuntimeException("User not found");
         }
 
-        // startDate를 LocalDate로 변환하고 현재 날짜를 계산
-        LocalDate start = LocalDate.parse(startDate);
-        LocalDate today = LocalDate.now();  // 오늘 날짜까지
+        // yearMonth를 YearMonth로 변환하여 해당 월의 첫날과 마지막 날을 계산
+        YearMonth month = YearMonth.parse(yearMonth);
+        LocalDate firstDayOfMonth = month.atDay(1);
+        LocalDate lastDayOfMonth = LocalDate.now().isBefore(month.atEndOfMonth()) ? LocalDate.now() : month.atEndOfMonth();
 
-        // startDate부터 오늘까지의 다이어리 데이터를 가져옴
-        List<DailyDiaryEntity> dailyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, start, today);
+        // 해당 월의 데이터를 가져옴
+        List<DailyDiaryEntity> dailyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, firstDayOfMonth, lastDayOfMonth);
 
-        // 일정을 오늘부터 과거로 내림차순 정렬
+        // 일정을 마지막 날부터 첫날까지 내림차순 정렬
         dailyDiaries.sort(Comparator.comparing(DailyDiaryEntity::getDate).reversed());
 
         // 반환할 LogResponseDTO 리스트 생성
