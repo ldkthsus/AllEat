@@ -17,7 +17,7 @@ class MenuRanking(BaseModel):
     fats: Optional[float] = None
     proteins: Optional[float] = None
     menu_name: str
-    restaurant_type: str 
+    restaurant_type: Optional[str] = None
     calories: float
 
 class CostWhere(BaseModel):
