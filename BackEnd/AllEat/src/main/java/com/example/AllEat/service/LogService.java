@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class LogService {
@@ -38,12 +38,15 @@ public class LogService {
             throw new RuntimeException("User not found");
         }
 
-        // startDate를 LocalDate로 변환하고 30일 기간 계산
+        // startDate를 LocalDate로 변환하고 현재 날짜를 계산
         LocalDate start = LocalDate.parse(startDate);
-        LocalDate end = start.plusDays(29);
+        LocalDate today = LocalDate.now();  // 오늘 날짜까지
 
-        // 30일 동안의 다이어리 데이터를 가져옴
-        List<DailyDiaryEntity> dailyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, start, end);
+        // startDate부터 오늘까지의 다이어리 데이터를 가져옴
+        List<DailyDiaryEntity> dailyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, start, today);
+
+        // 일정을 오늘부터 과거로 내림차순 정렬
+        dailyDiaries.sort(Comparator.comparing(DailyDiaryEntity::getDate).reversed());
 
         // 반환할 LogResponseDTO 리스트 생성
         List<LogResponseDTO> logResponseList = new ArrayList<>();
