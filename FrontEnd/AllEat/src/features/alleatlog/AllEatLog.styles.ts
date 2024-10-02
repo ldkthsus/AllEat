@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   day: {
     fontSize: 18,
     fontWeight: 'bold',
-    fontFamily: 'pre'
+    fontFamily: 'pre',
   },
   arrowBackLeft: {
     marginRight: 20,
@@ -22,14 +22,55 @@ export const styles = StyleSheet.create({
   arrowBackRight: {
     marginLeft: 20,
   },
-  notificationIcon: {
-    position: 'absolute',
-    right: 40,
-    zIndex:-1
+  scrollView: {
+    paddingHorizontal: 20,
   },
-  notiBadge: {
-    position: 'absolute',
-    right: 35,
-    top: 5,
+  allText: {
+    flexDirection: 'row',
+    marginLeft: 20,
+    marginBottom: 20,
+  },
+  textBlack: {
+    fontSize: 18,
+    fontFamily: 'Pretendard-SemiBold',
+    marginTop: 10,
+  },
+  textBlue: {
+    fontSize: 18,
+    fontFamily: 'Pretendard-SemiBold',
+    color: '#769BFF',
+    marginTop: 10,
+  },
+  dayLog: {
+    marginBottom: 20,
+  },
+  dateHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  diarySection: {
+    marginBottom: 15,
+  },
+  diaryTime: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  diaryInfo: {
+    fontSize: 14,
+    color: '#555',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  menuText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  menuCost: {
+    fontSize: 14,
+    color: '#555',
   },
 });
