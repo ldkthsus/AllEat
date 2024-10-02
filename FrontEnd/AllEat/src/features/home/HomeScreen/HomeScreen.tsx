@@ -254,16 +254,15 @@ const HomeScreen: React.FC = () => {
             width={30}
           />
         </TouchableOpacity>
-              
-          <icons.notifications
-            onPress={handleAlertNavigate}
-            style={styles.notificationIcon}
-            height={20}
-            width={20}
-            />
-          <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
-      </View>
 
+        <icons.notifications
+          onPress={handleAlertNavigate}
+          style={styles.notificationIcon}
+          height={20}
+          width={20}
+        />
+        <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+      </View>
 
       {/* 스크롤 가능한 콘텐츠 */}
       <ScrollView style={styles.scrollContainer}>
@@ -390,14 +389,36 @@ const HomeScreen: React.FC = () => {
               <CircularProgress
                 progress={
                   dayData?.day_cost && goal_cost
-                    ? Math.min(dayData.day_cost / goal_cost, 1)
+                    ? Math.min(
+                        dayData.day_cost /
+                          Math.round(
+                            goal_cost /
+                              new Date(
+                                currentDate.getFullYear(),
+                                currentDate.getMonth() + 1,
+                                0,
+                              ).getDate(),
+                          ),
+                        1,
+                      )
                     : 0
                 } // 비율을 1로 제한하여 그래프가 꽉 차게 보이도록 처리
-                total={goal_cost || 0} // 총 금액
+                total={
+                  goal_cost
+                    ? Math.round(
+                        goal_cost /
+                          new Date(
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() + 1,
+                            0,
+                          ).getDate(),
+                      )
+                    : 0
+                } // 총 금액
                 current={dayData?.day_cost ? dayData.day_cost : 0} // 현재 소비한 금액
                 progressColor="#769BFF"
                 currentTextColor="#769BFF" // 첫 번째 그래프의 현재 텍스트 색상
-                totalTextColor="black" // 첫 번째 그래프의 총 텍스트 색상
+                totalTextColor="black" // 첫 번째 그래프..의 총 텍스트 색상
                 unit="₩" // 단위
               />
               <images.Subtract
