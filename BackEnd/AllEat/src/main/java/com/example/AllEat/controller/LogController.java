@@ -6,30 +6,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@RequestMapping("/AllEat")
 public class LogController {
 
-    private final LogService logService;
-
     @Autowired
-    public LogController(LogService logService) {
-        this.logService = logService;
-    }
+    private LogService logService;
 
-    // GET 요청 처리
-    @GetMapping("/AllEat/mealpay")
+    @GetMapping("/mealpay")
     public ResponseEntity<List<LogResponseDTO>> getMealPayLogs(
-            @RequestParam("start_date") String startDate,
+            @RequestParam("date") String date, // YYYY-MM 형식의 date 파라미터를 받음
             HttpServletRequest request) {
 
-        // 서비스에서 30일치 데이터를 가져옴
-        List<LogResponseDTO> mealPayLogs = logService.getMealPayLogs(startDate, request);
+        // 해당 월의 데이터를 반환
+        List<LogResponseDTO> logs = logService.getMealPayLogsByMonth(date, request);
 
-        return ResponseEntity.ok(mealPayLogs);
+        return ResponseEntity.ok(logs);
     }
 }

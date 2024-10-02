@@ -30,25 +30,22 @@ public class LogService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    public List<LogResponseDTO> getMealPayLogs(String yearMonth, HttpServletRequest request) {
+    public List<LogResponseDTO> getMealPayLogsByMonth(String yearMonth, HttpServletRequest request) {
         // JWT 토큰을 사용하여 사용자 식별
         String token = request.getHeader("Authorization").substring(7);
         String email = jwtUtil.getEmail(token);
         UserEntity user = userRepository.findByEmail(email);
+
         if (user == null) {
             throw new RuntimeException("User not found");
         }
 
-        // yearMonth를 YearMonth로 변환하여 해당 월의 첫날과 마지막 날을 계산
-        YearMonth month = YearMonth.parse(yearMonth);
-        LocalDate firstDayOfMonth = month.atDay(1);
-        LocalDate lastDayOfMonth = LocalDate.now().isBefore(month.atEndOfMonth()) ? LocalDate.now() : month.atEndOfMonth();
+        // yearMonth를 기준으로 해당 월의 시작일과 마지막 날 계산
+        LocalDate startDate = LocalDate.parse(yearMonth + "-01");
+        LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-        // 해당 월의 데이터를 가져옴
-        List<DailyDiaryEntity> dailyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, firstDayOfMonth, lastDayOfMonth);
-
-        // 일정을 마지막 날부터 첫날까지 내림차순 정렬
-        dailyDiaries.sort(Comparator.comparing(DailyDiaryEntity::getDate).reversed());
+        // 해당 월의 일일 데이터를 내림차순으로 정렬하여 가져옴
+        List<DailyDiaryEntity> dailyDiaries = dailyDiaryRepository.findByUserAndDateBetween(user, startDate, endDate);
 
         // 반환할 LogResponseDTO 리스트 생성
         List<LogResponseDTO> logResponseList = new ArrayList<>();
@@ -106,6 +103,10 @@ public class LogService {
             logResponseList.add(logResponse);
         }
 
+        // 날짜를 내림차순으로 정렬
+        logResponseList.sort((log1, log2) -> log2.getDate().compareTo(log1.getDate()));
+
         return logResponseList;
     }
+
 }
