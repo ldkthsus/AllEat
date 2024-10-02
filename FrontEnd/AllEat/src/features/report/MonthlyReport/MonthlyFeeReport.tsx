@@ -31,6 +31,7 @@ interface MonthlyFeeReportProps {
   paymoneyCost: number;
 }
 
+
 const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, costRanking, costWhere, paymoneyCost, totalCost}) => {
   const [isExpanded, setIsExpanded] = useState(false); // 메뉴 표시 여부
 
@@ -53,6 +54,8 @@ const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, c
   const homePercentage = totalCount > 0 ? (homeCount / totalCount) * 100 : 0;
   const deliveryPercentage = totalCount > 0 ? (deliveryCount / totalCount) * 100 : 0;
 
+  // console.log(costRanking)
+  
   return (
     <View style={styles.dailyFeeReportContainer}>
       <Text style={styles.dailyFeeReportTitle}>
@@ -85,27 +88,27 @@ const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, c
           식비 정보
         </Text>
         <View style={styles.feeDetailContainer}>
-            {(isExpanded ? costRanking : costRanking.slice(0, 3)).map((item, index) => (
+          {(isExpanded ? costRanking.filter(item => item.cost > 0) : costRanking.filter(item => item.cost > 0).slice(0, 3)).map((item, index) => (
               <View key={index}>
-                <View style={styles.feeTitleContainer}>
-                  <icons.passwordCheck style={styles.feeIcon} width={18} height={18}/>
-                  <Text style={styles.feeMenuText}>{item.menu_name}</Text>
-                  <Text style={styles.feePriceText}>₩{item.cost}</Text>
-                </View>
+                  <View style={styles.feeTitleContainer}>
+                      <icons.passwordCheck style={styles.feeIcon} width={18} height={18}/>
+                      <Text style={styles.feeMenuText}>{item.menu_name}</Text>
+                      <Text style={styles.feePriceText}>₩{item.cost.toLocaleString()}</Text>
+                  </View>
               </View>
-            ))}
-            <View style={styles.iconConatiner}>
-            {costRanking.length > 3 && (
-              <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
-                {isExpanded ? (
-                  <icons.arrowTop width={18} height={18} />
-                ) : (
-                  <icons.arrowBottom width={18} height={18} />
-                )}
-              </TouchableOpacity>
-            )}
-            </View>
-        </View>
+          ))}
+          <View style={styles.iconConatiner}>
+              {costRanking.filter(item => item.cost > 0).length > 3 && (
+                  <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+                      {isExpanded ? (
+                          <icons.arrowTop width={18} height={18} />
+                      ) : (
+                          <icons.arrowBottom width={18} height={18} />
+                      )}
+                  </TouchableOpacity>
+              )}
+          </View>
+      </View>
       </View>
       <View style={styles.feeContainer}>
         <Text style={styles.feeTitle}>

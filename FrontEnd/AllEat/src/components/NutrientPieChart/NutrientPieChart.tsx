@@ -33,16 +33,16 @@ const NutrientPieChart: React.FC<NutrientPieChartProps> = ({
   const angles = [];
 
   if (carbPercentage === 100) {
-    angles.push({ startAngle: 0, endAngle: 360, color: '#B0C5FF', label: '탄수화물', percentage: carbPercentage.toFixed(1) });
+    angles.push({ startAngle: 0, endAngle: 360, color: '#AEC3FE', label: '탄수화물', percentage: carbPercentage.toFixed(1) });
   } else if (proteinPercentage === 100) {
-    angles.push({ startAngle: 0, endAngle: 360, color: '#769BFF', label: '단백질', percentage: proteinPercentage.toFixed(1) });
+    angles.push({ startAngle: 0, endAngle: 360, color: '#EEA9A9', label: '단백질', percentage: proteinPercentage.toFixed(1) });
   } else if (fatPercentage === 100) {
-    angles.push({ startAngle: 0, endAngle: 360, color: '#D3DFFF', label: '지방', percentage: fatPercentage.toFixed(1) });
+    angles.push({ startAngle: 0, endAngle: 360, color: '#FFD2A4', label: '지방', percentage: fatPercentage.toFixed(1) });
   } else {
     // 일반적인 경우
-    angles.push({ startAngle: startAngle, endAngle: startAngle += carbAngle, color: '#B0C5FF', label: '탄수화물', percentage: carbPercentage.toFixed(1) });
-    angles.push({ startAngle: startAngle, endAngle: startAngle += proteinAngle, color: '#769BFF', label: '단백질', percentage: proteinPercentage.toFixed(1) });
-    angles.push({ startAngle: startAngle, endAngle: startAngle += fatAngle, color: '#D3DFFF', label: '지방', percentage: fatPercentage.toFixed(1) });
+    angles.push({ startAngle: startAngle, endAngle: startAngle += carbAngle, color: '#AEC3FE', label: '탄수화물', percentage: carbPercentage.toFixed(1) });
+    angles.push({ startAngle: startAngle, endAngle: startAngle += proteinAngle, color: '#EEA9A9', label: '단백질', percentage: proteinPercentage.toFixed(1) });
+    angles.push({ startAngle: startAngle, endAngle: startAngle += fatAngle, color: '#FFD2A4', label: '지방', percentage: fatPercentage.toFixed(1) });
   }
 
   // 각 영역의 Path를 생성하는 함수

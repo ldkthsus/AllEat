@@ -27,6 +27,7 @@ const DailyFeeReport: React.FC<DailyFeeReportProps> = ({ goalFee, totalPrice, fo
 
   // goalFee 대비 소비 금액 비율 계산
   const feePercentage = (totalPrice / goalFee) * 100;
+  // console.log('정보 확인', foodDetails)
 
   return (
     <View style={styles.dailyFeeReportContainer}>
@@ -60,29 +61,31 @@ const DailyFeeReport: React.FC<DailyFeeReportProps> = ({ goalFee, totalPrice, fo
           식비 정보
         </Text>
         <View>
-            {(isExpanded ? foodDetails : foodDetails.slice(0, 3)).map((item, index) => (
-              <View key={index}>
-                <View style={styles.feeTitleContainer}>
-                  <icons.passwordCheck style={styles.feeIcon} width={18} height={18}/>
-                  <Text style={styles.feeMenuText}>{item.menu_name}</Text>
-                  <Text style={styles.feePriceText}>₩{item.menu_price.toLocaleString()}</Text>
-                </View>
-                <View style={styles.feeDetailContainer}>
-                  <Text style={styles.feeDetailText}>{item.restaurant_name}</Text>
-                </View>
-              </View>
-            ))}
-            <View style={styles.iconConatiner}>
-            {foodDetails.length > 3 && (
-              <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
-                {isExpanded ? (
-                  <icons.arrowTop width={18} height={18} />
-                ) : (
-                  <icons.arrowBottom width={18} height={18} />
-                )}
-              </TouchableOpacity>
-            )}
-            </View>
+  {(isExpanded ? foodDetails.filter(item => item.menu_price > 0) : foodDetails.filter(item => item.menu_price > 0).slice(0, 3))
+    .map((item, index) => (
+      <View key={index}>
+        <View style={styles.feeTitleContainer}>
+          <icons.passwordCheck style={styles.feeIcon} width={18} height={18}/>
+          <Text style={styles.feeMenuText}>{item.menu_name}</Text>
+          <Text style={styles.feePriceText}>₩{item.menu_price.toLocaleString()}</Text>
+        </View>
+        <View style={styles.feeDetailContainer}>
+          <Text style={styles.feeDetailText}>{item.restaurant_name}</Text>
+        </View>
+      </View>
+    ))}
+  
+  <View style={styles.iconConatiner}>
+    {foodDetails.filter(item => item.menu_price > 0).length > 3 && (
+      <TouchableOpacity onPress={() => setIsExpanded(!isExpanded)}>
+        {isExpanded ? (
+          <icons.arrowTop width={18} height={18} />
+        ) : (
+          <icons.arrowBottom width={18} height={18} />
+        )}
+      </TouchableOpacity>
+    )}
+  </View>
         </View>
       </View>
     </View>
