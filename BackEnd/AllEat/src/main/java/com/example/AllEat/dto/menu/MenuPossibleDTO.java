@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 public class MenuPossibleDTO {
 
+    @JsonProperty("restaurants_id")
     private Integer restaurantsId;
 
+    @JsonProperty("restaurants_name")
     private String restaurantsName;
 
     private List<MenuConvertDTO> menus;

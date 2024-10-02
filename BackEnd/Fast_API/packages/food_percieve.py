@@ -14,7 +14,7 @@ def percieve(filename) :
     os.makedirs(output_folder, exist_ok=True)
 
     # wiehgt를 포함한 모델 불러오기(path 수정 필요할수도)
-    model = YOLO('weights/yolov10x.pt')
+    model = YOLO('weights/best.pt')
 
     image_path = f"images/upload/{filename}"
     img = cv2.imread(image_path)

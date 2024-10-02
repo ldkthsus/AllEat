@@ -69,13 +69,26 @@ async def image_percieve(file: UploadFile):
                 return_dict["foods"].append(food_name)
                 # food_name이 일치하는 엔티티 DB에서 가져오기 
                 food_info = session.query(FoodInfo).filter(FoodInfo.menu_name.like(food_name)).all()
+                if food_name == "어묵볶음" : 
+                    quantity_result[ele] = 0.75
+                    
                 actual_result = {"menu_weight" : food_info[0].menu_weight * quantity_result[ele],
                                  "menu_calories" : food_info[0].menu_calories * quantity_result[ele],
                                  "menu_carbohydrate" : food_info[0].menu_carbohydrate * quantity_result[ele],
                                  "menu_protein" : food_info[0].menu_protein * quantity_result[ele],
                                  "menu_fat" : food_info[0].menu_fat * quantity_result[ele],
                                  }
-                return_dict[food_name] = actual_result        
+                return_dict[food_name] = actual_result     
+                if (food_name == "동그랑땡") : 
+                    return_dict["foods"].append("케첩")   
+                    capt = {"menu_weight" : 50,
+                                 "menu_calories" : 111,
+                                 "menu_carbohydrate" : 13,
+                                 "menu_protein" : 0.65,
+                                 "menu_fat" : 0.1,
+                                 }
+                    return_dict["케첩"] = capt
+                    
         return return_dict
 
         

@@ -47,10 +47,10 @@ public class MealPayController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @GetMapping("/meal-pay")
+    @GetMapping("/meal-pay/monthly-amount")
     public ResponseEntity<?> getMealPayAmount(HttpServletRequest request){
         UserEntity user = userService.findByRequest(request);
-        
+
         MonthlyMealPayEntity findMonth =  monthlyMealPayRepository.findByUserAndDate(user, YearMonth.now()).get(0);
         MealPayAmountDTO mealPayAmountDTO = new MealPayAmountDTO();
 
@@ -60,6 +60,16 @@ public class MealPayController {
         } else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/meal-pay")
+    public ResponseEntity<?> getMealPay(HttpServletRequest request){
+        UserEntity user = userService.findByRequest(request);
+        // pay transaction 에서 한달 특정기간 긁어옴
+        // 긁어온 거에서 DTO 구성해서 반환
+        // 소비처 , 식비,  
+        return ResponseEntity.status(HttpStatus.OK).body("아직 구현 안됨!");
+
     }
 
 }

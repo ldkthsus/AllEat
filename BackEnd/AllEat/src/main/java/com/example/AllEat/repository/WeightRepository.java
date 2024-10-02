@@ -28,5 +28,8 @@ public interface WeightRepository extends JpaRepository<WeightEntity, Integer> {
     @Query("SELECT w FROM WeightEntity w WHERE w.user = :user ORDER BY w.createdAt DESC LIMIT 1")
     WeightEntity findRecent(@Param("user") UserEntity user);
 
+    @Query("SELECT new com.example.AllEat.dto.weight.WeightResponseDTO(w.id, w.createdAt, w.weight) FROM WeightEntity w WHERE FUNCTION('DATE', w.createdAt) = :exactDate AND w.user = :user")
+    List<WeightResponseDTO> findByUserEntityAndExactDate(@Param("user") UserEntity user, @Param("exactDate") Date exactDate);
+
     Optional<WeightEntity> findTopByUserOrderByCreatedAtDesc(UserEntity user);
 }

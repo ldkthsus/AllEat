@@ -1,46 +1,71 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List, Optional, Dict
 from datetime import date
 from sqlalchemy import Column, TEXT, INT, BIGINT, FLOAT
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
-class DayDiaryRequest(BaseModel):
-    total_carbohydrates: Optional[float] = None
-    total_proteins: Optional[float] = None
-    total_fats: Optional[float] = None
-    total_calories: Optional[int] = None
-    total_cost: Optional[int] = None
-    goal_weight: Optional[float] = None  # 추가된 목표 체중
-    goal_cost: Optional[int] = None      # 추가된 목표 식비
-    recent_weight: Optional[float] = None  # 추가된 현재 체중
-
 class WeightRecord(BaseModel):
-    date: date
+    date: str
     weight: float
 
-class WeekDiaryRequest(BaseModel):
+
+class MenuRanking(BaseModel):
+    carbohydrates: float
+    cost: float
+    fats: float
+    proteins: float
+    menu_name: str
+    restaurant_type: str
+    calories: float
+
+class CostWhere(BaseModel):
+    count: int
+    restaurant_type: str
+
+class WeekReportRequest(BaseModel):
+    fat_ranking: List[MenuRanking]
+    protein_ranking: List[MenuRanking]
+    carb_ranking: List[MenuRanking]
+    menu_kcal: List[MenuRanking]
+    cost_ranking: List[MenuRanking]
+    cost_where: List[CostWhere]
+    protein_avg: float
+    total_cost: float
+    goal_cost: Optional[float] = None
+    carb_avg: float
+    goal_weight: Optional[float] = None
+    kcal_average: float
+    cost_avg: float
+    current_weight: Optional[float] = None
+    fat_avg: float
+
+class FoodDetail(BaseModel):
+    menu_fat: float
+    menu_price: float
+    menu_carbohydrate: float
+    menu_protein: float
+    menu_name: str
+    restaurant_type: str
+    menu_calories: float
+    restaurant_name: str
+
+class DayReportRequest(BaseModel):
+    food_details: List[FoodDetail]
     goal_weight: Optional[float] = None  # 목표 체중
     goal_cost: Optional[int] = None      # 목표 식비
     recent_weight: Optional[float] = None  # 현재 체중
-    average_carbohydrates: Optional[float] = None  # 평균 탄수화물
-    average_proteins: Optional[float] = None       # 평균 단백질
-    average_fats: Optional[float] = None           # 평균 지방
-    average_calories: Optional[float] = None       # 평균 칼로리
-    total_cost: Optional[int] = None               # 총 사용한 식비
-    most_common_restaurant_type: Optional[dict] = None  # 레스토랑 타입 순위
 
-class MonthDiaryRequest(BaseModel):
-    goal_weight: Optional[float] = None
-    goal_cost: Optional[int] = None
-    weight_records: List[WeightRecord] = []  # 리스트 초기화
-    average_carbohydrates: Optional[float] = None
-    average_proteins: Optional[float] = None
-    average_fats: Optional[float] = None
-    average_calories: Optional[float] = None
-    total_cost: Optional[int] = None
-    most_common_restaurant_type: Optional[str] = None
+class MonthlyReportRequest(BaseModel):
+    cost_avg: float
+    total_cost: float
+    restaurant_type_count: Dict[str, int]
+    monthly_cost_records: List[float]
+    average_calories: float
+    monthly_weight_records: List[WeightRecord]
+    kcal_ranking: List[MenuRanking]
+    cost_ranking: List[MenuRanking]
 
 class FoodInfo(Base):
     __tablename__ = "food_info"

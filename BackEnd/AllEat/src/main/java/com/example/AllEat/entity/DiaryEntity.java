@@ -63,7 +63,7 @@ public class DiaryEntity {
         this.mealCalories = calories;
         this.dailyPrice = price;
     }
-//
+
 //    @OneToMany(mappedBy = "diary", orphanRemoval = true, fetch = FetchType.LAZY)
 //    private List<MealPayEntity> mealpay;
 
