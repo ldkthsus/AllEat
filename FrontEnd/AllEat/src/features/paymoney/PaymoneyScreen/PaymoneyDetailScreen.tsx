@@ -13,6 +13,8 @@ import {icons} from '../../../constants';
 import {styles} from './PaymoneyDetailScreen.styles'; // 분리된 스타일을 임포트
 import api from '../../../utils/api';
 import DateSection from '../../../components/DateSection/DateSection';
+import {format} from 'date-fns';
+import {ko} from 'date-fns/locale';
 type PaymoneyDetailScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'PaymoneyDetail'
@@ -77,13 +79,11 @@ const PaymoneyDetailScreen: React.FC = () => {
   // 날짜별로 데이터를 그룹화하는 함수
   const groupByDate = (transactionList: Transaction[]) => {
     return transactionList.reduce((grouped, transaction) => {
-      const date = new Date(transaction.transaction_date).toLocaleDateString(
-        'ko-KR',
+      const date = format(
+        new Date(transaction.transaction_date),
+        'yyyy. MM. dd EEEE',
         {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          weekday: 'long', // 요일 표시
+          locale: ko,
         },
       );
 

@@ -17,20 +17,75 @@ interface Transaction {
   transaction_type: number;
   transaction_date: string;
 }
-
-interface DateSectionProps {
-  date: string;
-  transactions: Transaction[];
+interface Menu {
+  menu_name: string;
+  restaurant_name: string;
+  menu_kcal: number;
+  menu_cost: number;
 }
 
-const DateSection: React.FC<DateSectionProps> = ({date, transactions}) => {
+interface Diary {
+  diary_cost: number;
+  diary_kcal: number;
+  diary_time: string;
+  menus: Menu[]; // Menu 객체 배열로 정의
+}
+interface DateSectionProps {
+  date: string;
+  transactions?: Transaction[];
+  diaries?: Diary[];
+}
+const timeTranslations: {
+  [key: string]: {label: string; icon: React.FC<any>};
+} = {
+  BREAKFAST: {label: '아침', icon: icons.logMorning},
+  LUNCH: {label: '점심', icon: icons.logLunch},
+  DINNER: {label: '저녁', icon: icons.logDinner},
+  SNACK: {label: '간식', icon: icons.logSnack},
+};
+
+const DateSection: React.FC<DateSectionProps> = ({
+  date,
+  transactions,
+  diaries,
+}) => {
   return (
     <View style={styles.dateSection}>
-      <icons.dan width={24} height={24} style={styles.dateIcon} />
+      <icons.logIcon width={24} height={24} style={styles.dateIcon} />
       <Text style={styles.dateText}>{date}</Text>
-      {transactions.map(transaction => (
+      {transactions?.map(transaction => (
         <TransactionItem key={transaction.id} transaction={transaction} />
       ))}
+      {diaries?.map(diary => {
+        const IconComponent = timeTranslations[diary.diary_time].icon; // 아이콘 컴포넌트를 변수에 할당
+
+        return (
+          <View style={styles.diaryContainer} key={diary.diary_time}>
+            <View style={styles.diaryTitleContainer}>
+              <IconComponent width={24} height={24} />
+              <Text style={styles.diaryTitle}>
+                {timeTranslations[diary.diary_time].label}
+              </Text>
+              <Text style={styles.diaryTitle}>
+                {diary.diary_kcal}kcal · ₩{diary.diary_cost}
+              </Text>
+            </View>
+            {diary.menus.map(menu => {
+              return (
+                <View style={styles.menuContainer}>
+                  <Text style={styles.menuTitle}>{menu.menu_name}</Text>
+                  <Text style={styles.menuRestaurant}>
+                    {menu.restaurant_name}
+                  </Text>
+                  <Text style={styles.menuDetail}>
+                    {menu.menu_kcal}kcal · ₩{menu.menu_cost}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
+        );
+      })}
     </View>
   );
 };
