@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
+  body: {paddingBottom: 100, backgroundColor: 'white'},
   topbar: {
     height: 70,
     flexDirection: 'row',
@@ -23,7 +24,8 @@ export const styles = StyleSheet.create({
     marginLeft: 20,
   },
   scrollView: {
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
+    marginBottom: 100,
   },
   allText: {
     flexDirection: 'row',
@@ -40,45 +42,5 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
     color: '#769BFF',
     marginTop: 10,
-  },
-  dayLog: {
-    marginBottom: 20,
-  },
-  dateHeader: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  diarySection: {
-    marginBottom: 15,
-  },
-  diaryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center', // 아이콘과 텍스트를 세로로 정렬
-    marginBottom: 5,
-  },
-  diaryIcon: {
-    marginRight: 10, // 아이콘과 텍스트 사이 간격
-  },
-  diaryTime: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  diaryInfo: {
-    fontSize: 14,
-    color: '#555',
-  },
-  menuItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  menuText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  menuCost: {
-    fontSize: 14,
-    color: '#555',
   },
 });
