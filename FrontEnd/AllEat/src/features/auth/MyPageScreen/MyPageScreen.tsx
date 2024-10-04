@@ -307,6 +307,7 @@ const MyPageScreen: React.FC = () => {
                     key={favoriteItem.menu_id} // menu_id를 키로 사용
                     isFavorate={favoriteItem.favorite} // favorite 상태
                     menu={favoriteItem.menu_name} // 메뉴 이름
+                    restaurantName={favoriteItem.restaurants_name}
                     kcal={favoriteItem.menu_calories} // 칼로리
                     price={favoriteItem.menu_price} // 가격
                     onToggleFavorite={() =>

@@ -8,14 +8,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
   day: {
     fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'pre',
+    color: '#3d3d3d',
+    fontFamily: 'Pretendard-SemiBold',
   },
   arrowBackLeft: {
     marginRight: 20,
@@ -26,6 +26,7 @@ export const styles = StyleSheet.create({
   scrollView: {
     // paddingHorizontal: 20,
     marginBottom: 100,
+    minHeight: 500,
   },
   allText: {
     flexDirection: 'row',
