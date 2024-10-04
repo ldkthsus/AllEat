@@ -11,7 +11,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
     // TODO(developer): Handle FCM messages here.
     // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-    Log.d("MyFirebaseMessagingService", "From: ${remoteMessage.from}")
+    Log.d("FCM", "From: ${remoteMessage.from}")
+    Log.d("FCM", "===========================================메시지받음=========================================")
 
     // Check if message contains a data payload.
     if (remoteMessage.data.isNotEmpty()) {
