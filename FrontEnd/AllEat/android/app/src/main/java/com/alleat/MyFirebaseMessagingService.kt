@@ -12,7 +12,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     // TODO(developer): Handle FCM messages here.
     // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
     Log.d("MyFirebaseMessagingService", "From: ${remoteMessage.from}")
-
+    Log.d("FCM", "===========================================메시지받음=========================================")
+    Log.d("FCM", remoteMessage.notification)
     // Check if message contains a data payload.
     if (remoteMessage.data.isNotEmpty()) {
         Log.d("MyFirebaseMessagingServiceHasData", "Message data payload: ${remoteMessage.data}")
