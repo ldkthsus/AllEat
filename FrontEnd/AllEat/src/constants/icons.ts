@@ -54,6 +54,7 @@ import logLunch from '../assets/icons/logLunch.svg';
 import logMorning from '../assets/icons/logMorning.svg';
 import logSnack from '../assets/icons/logSnack.svg';
 import logIcon from '../assets/icons/logIcon.svg';
+import logMart from '../assets/icons/logMart.svg';
 
 const icons = {
   settings,
@@ -112,5 +113,6 @@ const icons = {
   logMorning,
   logSnack,
   logIcon,
+  logMart,
 };
 export default icons;

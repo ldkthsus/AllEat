@@ -31,6 +31,14 @@ import kikiRunning3 from '../assets/images/kikiRunning3.svg';
 import happyKiki1 from '../assets/images/happyKiki1.svg';
 import happyKiki2 from '../assets/images/happyKiki2.svg';
 import happyKiki3 from '../assets/images/happyKiki3.svg';
+import splash1 from '../assets/images/splash1.svg';
+import splash2 from '../assets/images/splash2.svg';
+import splash3 from '../assets/images/splash3.svg';
+import splash4 from '../assets/images/splash4.svg';
+import splash5 from '../assets/images/splash5.svg';
+import splash6 from '../assets/images/splash6.svg';
+import splash7 from '../assets/images/splash7.svg';
+import splash8 from '../assets/images/splash8.svg';
 
 
 const images = {
@@ -66,7 +74,15 @@ const images = {
   kikiRunning3,
   happyKiki1,
   happyKiki2,
-  happyKiki3
+  happyKiki3,
+  splash1,
+  splash2,
+  splash3,
+  splash4,
+  splash5,
+  splash6,
+  splash7,
+  splash8,
 };
 
 export default images;
