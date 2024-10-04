@@ -25,6 +25,7 @@ const PaymoneyScreen: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [isPlus, setIsPlus] = useState(true);
   const [body, setBody] = useState("");
+  const [isAllEat, setIsAlleat] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
   
@@ -62,6 +63,10 @@ const PaymoneyScreen: React.FC = () => {
         console.log(data);
         if (data.title == "결제 알림"){
           setIsPlus(false);
+          
+        }else if (data.title == "송금 알림"){
+          setIsPlus(false);
+          setIsAlleat(true);
         }else{
           setIsPlus(true);
         }
@@ -79,10 +84,10 @@ const PaymoneyScreen: React.FC = () => {
     try {
       if (transactionType === 0) {
         await dispatch(chargePaymoney(amount)).unwrap(); 
-        Alert.alert('충전 성공', `충전이 완료되었습니다.`);
+        // Alert.alert('충전 성공', `충전이 완료되었습니다.`);
       } else {
         await dispatch(transferPaymoney({ amount, restaurant_id: 1 })).unwrap();
-        Alert.alert('송금 성공', `송금이 완료되었습니다.`);
+        // Alert.alert('송금 성공', `송금이 완료되었습니다.`);
       }
       // 잔액 및 사용 금액 업데이트
       fetchCurrentMonthUsedAmount();
@@ -115,7 +120,7 @@ const PaymoneyScreen: React.FC = () => {
   return (
     
     <LinearGradient style={[styles.gradientBackground]} locations={[0,1]} colors={['#769bff','#b7caff']} useAngle={true} angle={257.3}>
-      <NotificationModal isPlus={isPlus} body={body} visible={visible} onClose={()=>{setVisible(false)}} onRecord={()=>{record}} />
+      <NotificationModal  isPlus={isPlus} body={body} visible={visible} onClose={()=>{setVisible(false)}} isAllEat={isAllEat} />
       <View style={styles.bodyContainer}>
         <Text style={styles.payTitle}>AllEat Pay</Text>
         <Text style={styles.amountText}>{(balance ?? 0).toLocaleString()}원</Text>

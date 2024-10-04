@@ -5,9 +5,9 @@ import {icons} from '../../../../constants';
 interface NotificationModalProps {
   visible: boolean;
   isPlus:boolean;
+  isAllEat:boolean;
   body:String;
   onClose: () => void;
-  onRecord: () => void;
 }
 
 const NotificationModal: React.FC<NotificationModalProps> = ({
@@ -15,7 +15,7 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
   isPlus,
   body,
   onClose,
-  onRecord,
+  isAllEat
 }) => {
   return (
     <Modal
@@ -26,8 +26,9 @@ const NotificationModal: React.FC<NotificationModalProps> = ({
       <Pressable style={styles.background} onPress={onClose}>
         <View style={styles.whiteBox}>
           <View style={styles.titleBox}>
-            <icons.camera height={24} width={24} />
-            {!isPlus && <Text style={styles.titleBoxText}>결제가 완료되었습니다!</Text>}
+            <icons.wallet height={24} width={24} />
+            {isAllEat && !isPlus && <Text style={styles.titleBoxText}>송금이 완료되었습니다!</Text>}
+            {!isAllEat && !isPlus && <Text style={styles.titleBoxText}>결제가 완료되었습니다!</Text>}
             {isPlus && <Text style={styles.titleBoxText}>충전이 완료되었습니다!</Text>}
           </View>
           <View style={styles.contentBox}>
