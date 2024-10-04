@@ -87,7 +87,7 @@ public class NotificationService {
 
         if (balance > 0){
             title="충전 알림";
-            body="AllEat pay에"+balance+"원이 충전되었습니다.";
+            body="AllEat pay에 "+balance+"원이 충전되었습니다.";
         } else{
             title="결제 알림";
             body=restaurantName+"에서 "+-balance+"원이 결제되었습니다.";
