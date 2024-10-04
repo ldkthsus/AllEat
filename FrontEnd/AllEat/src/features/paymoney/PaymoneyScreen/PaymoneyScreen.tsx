@@ -10,9 +10,24 @@ import InoutModal from './components/InoutModal';
 import { styles } from './PaymoneyScreen.styles';
 import LinkButton from '../../../components/linkButton';
 import { images } from '../../../constants';
+import {RootStackParamList} from '../../../types/navigation';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import NotificationModal from '../../home/components/NotificationModal/NotificationModal';
+import { NativeEventEmitter, NativeModules } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
+const { MyFirebaseMessagingService } = NativeModules;
+const eventEmitter = new NativeEventEmitter(MyFirebaseMessagingService);
+type PaymoneyScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Paymoney'>;
 
 const PaymoneyScreen: React.FC = () => {
+  const navigation = useNavigation<PaymoneyScreenNavigationProp>();
+  const [visible, setVisible] = useState(false);
+  const [isPlus, setIsPlus] = useState(true);
+  const [body, setBody] = useState("");
+
   const dispatch = useDispatch<AppDispatch>();
+  
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [placeholderText, setPlaceholderText] = useState<string>(''); 
@@ -35,9 +50,30 @@ const PaymoneyScreen: React.FC = () => {
 
   useEffect(() => {
     // 화면이 처음 렌더링될 때 잔액과 현재 월의 사용 금액을 가져옴
+
     dispatch(fetchPaymoneyBalance());
     fetchCurrentMonthUsedAmount();
   }, [dispatch]);
+
+  
+  useEffect(() => {
+    const subscription = eventEmitter.addListener('onNotificationReceived', (data) => {
+        
+        console.log(data);
+        if (data.title == "결제 알림"){
+          setIsPlus(false);
+        }else{
+          setIsPlus(true);
+        }
+        setBody(data.body);
+        setVisible(true);
+
+    });
+
+    return () => {
+        subscription.remove();
+    };
+}, [visible]);
 
   const handleConfirm = async (amount: number) => {
     try {
@@ -70,9 +106,16 @@ const PaymoneyScreen: React.FC = () => {
     setGuideText('얼마를 송금할까요?');
     setModalVisible(true);
   };
+  
+  const record = ()=>{
+    navigation.replace("PaymoneyDetail");
+
+  }
 
   return (
+    
     <LinearGradient style={[styles.gradientBackground]} locations={[0,1]} colors={['#769bff','#b7caff']} useAngle={true} angle={257.3}>
+      <NotificationModal isPlus={isPlus} body={body} visible={visible} onClose={()=>{setVisible(false)}} onRecord={()=>{record}} />
       <View style={styles.bodyContainer}>
         <Text style={styles.payTitle}>AllEat Pay</Text>
         <Text style={styles.amountText}>{(balance ?? 0).toLocaleString()}원</Text>
