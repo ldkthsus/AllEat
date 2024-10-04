@@ -123,7 +123,7 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Pretendard-Medium',
     marginBottom: 8,
-    color: '#3D3D3D'
+    color: '#3D3D3D',
   },
   nutrientCarb: {
     color: '#769BFF',
@@ -180,8 +180,7 @@ export const styles = StyleSheet.create({
   reportBtn: {
     flexDirection: 'row',
     marginLeft: '3%',
-    alignItems: 'center'
-
+    alignItems: 'center',
   },
   reportBtnText: {
     fontFamily: 'Pretendard-Bold',
@@ -226,7 +225,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
     color: '#3D3D3D',
-    },
+  },
   boxIcon: {position: 'absolute', right: 20},
   titleBox: {
     gap: 10,
@@ -234,7 +233,41 @@ export const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    
+  },
+  alarmTitleBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    marginBottom: 10,
+  },
+  alarmWhiteBox: {
+    width: '100%',
+    backgroundColor: 'white',
+    elevation: 2,
+    padding: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  titleBoxText: {fontSize: 16, color: '#3d3d3d', fontFamily: 'Pretendard-Bold'},
+  actionButton: {
+    margin: 4,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '46%',
+    borderRadius: 10,
+  },
+  isRecord: {backgroundColor: '#DB8989'},
+  later: {backgroundColor: '#EBC5C5'},
+  icon: {
+    marginRight: 8,
+  },
+  actionText: {
+    fontSize: 12,
+    color: 'white',
+    fontFamily: 'Pretendard-Bold',
   },
   textBox: {
     display: 'flex',

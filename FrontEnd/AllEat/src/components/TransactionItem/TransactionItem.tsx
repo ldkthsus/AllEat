@@ -25,7 +25,7 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transaction}) => {
     <View style={styles.transactionItem}>
       <View style={styles.transactionTitle}>
         <Text style={styles.transactionDetailTitle}>
-          {transaction.restaurant.restaurantsName !== 'AllEat'
+          {transaction.restaurant.restaurantsName !== 'ALL EAT'
             ? transaction.restaurant.restaurantsName
             : '올잇페이'}
         </Text>
@@ -45,10 +45,10 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transaction}) => {
           |{' '}
         </Text>
         <Text style={styles.transactionDetailText}>
-          {transaction.restaurant.restaurantsName === 'AllEat' &&
+          {transaction.restaurant.restaurantsName === 'ALL EAT' &&
           transaction.transaction_type === 0
             ? '충전'
-            : transaction.restaurant.restaurantsName !== 'AllEat' &&
+            : transaction.restaurant.restaurantsName !== 'ALL EAT' &&
               transaction.transaction_type === 1
             ? '소비'
             : '송금'}
