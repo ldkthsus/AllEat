@@ -39,13 +39,15 @@ public class LogPayService {
 
         // "restaurantsType"이 "MART"인 데이터만 필터링하여 LogPayResponseDTO로 변환
         return transactions.stream()
-                .filter(transaction -> "MART".equals(transaction.getRestaurant().getRestaurantsType().getType()))
+                .filter(transaction -> "MART".equals(transaction.getRestaurant().getRestaurantsType().getType()))  // 레스토랑 타입이 MART인 경우만 필터링
                 .map(transaction -> {
                     LogPayResponseDTO response = new LogPayResponseDTO();
                     response.setDate(transaction.getTransactionDate().toString());
-                    response.setRestaurantsName(transaction.getRestaurant().getRestaurantsName());
-                    response.setRestaurantsType(transaction.getRestaurant().getRestaurantsType().getType());
-                    response.setAmount(transaction.getAmount());
+                    response.setRestaurantsName(transaction.getRestaurant().getRestaurantsName()); // 레스토랑 이름
+                    response.setRestaurantsType(transaction.getRestaurant().getRestaurantsType().getType()); // 레스토랑 타입
+
+                    // MealPayEntity의 amount 필드에서 금액을 가져옴
+                    response.setAmount(transaction.getMealpay().getAmount());  // 결제 금액
                     return response;
                 })
                 .collect(Collectors.toList());
