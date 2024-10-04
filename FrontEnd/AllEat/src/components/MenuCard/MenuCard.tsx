@@ -12,6 +12,7 @@ type MenuCardProps = {
   onToggleFavorite: () => void;
   onAddMeal?: () => void;
   isFavoritePage?: boolean;
+  restaurantName?: string;
 };
 
 const MenuCard: React.FC<MenuCardProps> = ({
@@ -22,6 +23,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
   onToggleFavorite,
   onAddMeal,
   isFavoritePage = false,
+  restaurantName,
 }) => {
   return (
     <View style={[isFavoritePage ? styles.favorite : styles.restaurantMenu]}>
@@ -32,7 +34,12 @@ const MenuCard: React.FC<MenuCardProps> = ({
           <icons.bookmarkDisabled height={24} width={24} />
         )}
       </TouchableOpacity>
-      <Text style={styles.restaurantMenuTitle}>{menu}</Text>
+      <View style={styles.restaurantMenuBox}>
+        <Text style={styles.restaurantMenuTitle}>{menu}</Text>
+        {restaurantName && (
+          <Text style={styles.restaurantName}>{restaurantName}</Text>
+        )}
+      </View>
       <Text style={styles.restaurantMenuDetail}>
         {kcal}kcal · {price}원
       </Text>

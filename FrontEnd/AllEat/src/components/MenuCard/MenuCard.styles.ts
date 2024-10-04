@@ -21,11 +21,16 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
+  restaurantMenuBox: {width: '45%'},
   restaurantMenuTitle: {
     color: 'white',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
-    width: '45%',
+  },
+  restaurantName: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: 'Pretendard-Regular',
   },
   restaurantMenuDetail: {
     color: 'white',

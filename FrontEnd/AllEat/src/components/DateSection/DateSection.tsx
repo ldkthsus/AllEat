@@ -42,6 +42,7 @@ const timeTranslations: {
   LUNCH: {label: '점심', icon: icons.logLunch},
   DINNER: {label: '저녁', icon: icons.logDinner},
   SNACK: {label: '간식', icon: icons.logSnack},
+  MART: {label: '장보기', icon: icons.logMart},
 };
 
 const DateSection: React.FC<DateSectionProps> = ({

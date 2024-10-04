@@ -11,7 +11,7 @@ import {styles} from './AllEatLog.styles';
 import {format, addMonths, subMonths} from 'date-fns';
 import api from '../../utils/api';
 import DateSection from '../../components/DateSection/DateSection'; // DateSection을 가져옴
-import ko from 'date-fns/locale/ko'; // 한국어 로케일 추가
+import {ko} from 'date-fns/locale'; // 한국어 로케일 가져오기
 
 interface Menu {
   menu_name: string;
@@ -104,7 +104,7 @@ const AllEatLog: React.FC = () => {
           <DateSection
             key={dayLog.date}
             date={format(new Date(dayLog.date), 'yyyy.MM.dd EEEE', {
-              locale: ko,
+              locale: ko, // 올바른 로케일 사용
             })}
             diaries={dayLog.diaries}
           />
