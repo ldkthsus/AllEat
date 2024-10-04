@@ -1,7 +1,9 @@
 package com.example.AllEat.controller;
 
 import com.example.AllEat.dto.log.LogResponseDTO;
+import com.example.AllEat.dto.log.LogPayResponseDTO;
 import com.example.AllEat.service.LogService;
+import com.example.AllEat.service.LogPayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +20,12 @@ public class LogController {
 
     @Autowired
     private LogService logService;
+    @Autowired
+    private LogPayService logPayService;
 
     @GetMapping("/mealpay")
     public ResponseEntity<List<LogResponseDTO>> getMealPayLogs(
-            @RequestParam("date") String date, // YYYY-MM 형식의 date 파라미터를 받음
+            @RequestParam("date") String date,
             HttpServletRequest request) {
 
         // 해당 월의 데이터를 반환
@@ -29,4 +33,16 @@ public class LogController {
 
         return ResponseEntity.ok(logs);
     }
+
+    @GetMapping("/paylog")
+    public ResponseEntity<List<LogPayResponseDTO>> getPayMoneyLogs(
+            @RequestParam("date") String date,
+            HttpServletRequest request) {
+
+        // 해당 월의 데이터를 반환
+        List<LogPayResponseDTO> logs = logPayService.getMealPayLogsByMonth(date, request);
+
+        return ResponseEntity.ok(logs);
+    }
+
 }

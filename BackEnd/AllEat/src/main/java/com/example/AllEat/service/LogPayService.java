@@ -1,0 +1,53 @@
+package com.example.AllEat.service;
+
+import com.example.AllEat.dto.log.LogPayResponseDTO;
+import com.example.AllEat.entity.PayTransactionEntity;
+import com.example.AllEat.entity.UserEntity;
+import com.example.AllEat.jwt.JwtUtil;
+import com.example.AllEat.repository.LogPayRepository;
+import com.example.AllEat.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class LogPayService {
+
+    @Autowired
+    private LogPayRepository logPayRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public List<LogPayResponseDTO> getMealPayLogsByMonth(String yearMonth, HttpServletRequest request) {
+        // JWT 토큰을 통해 사용자 식별
+        String token = request.getHeader("Authorization").substring(7);
+        String email = jwtUtil.getEmail(token);
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // 특정 월에 대한 트랜잭션을 가져옴
+        List<PayTransactionEntity> transactions = logPayRepository.findTransactionsByUserAndMonth(user, yearMonth);
+
+        // "restaurantsType"이 "MART"인 데이터만 필터링하여 LogPayResponseDTO로 변환
+        return transactions.stream()
+                .filter(transaction -> "MART".equals(transaction.getRestaurant().getRestaurantsType().getType()))
+                .map(transaction -> {
+                    LogPayResponseDTO response = new LogPayResponseDTO();
+                    response.setDate(transaction.getTransactionDate().toString());
+                    response.setRestaurantsName(transaction.getRestaurant().getRestaurantsName());
+                    response.setRestaurantsType(transaction.getRestaurant().getRestaurantsType().getType());
+                    response.setAmount(transaction.getAmount());
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+}
