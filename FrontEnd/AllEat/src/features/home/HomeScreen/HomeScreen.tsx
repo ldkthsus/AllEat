@@ -18,7 +18,7 @@ import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
 import CalanderModal from '../components/CalanderModal/CalanderModel';
 import RecordBox2 from '../../../components/RecordBox/RecordBox2';
-
+import FormField from '../../../components/FormField/FormField';
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Home'
@@ -166,6 +166,85 @@ const HomeScreen: React.FC = () => {
       clearInterval(intervalId); // 인터벌 클리어
     };
   }, [currentDate, isUpdated, kikiImages.length]); // 의존성 배열에 currentDate, isUpdated, kikiImages.length 추가
+  const [lastNotification, setLastNotification] = useState<{
+    id: number;
+    body: string;
+    title: string;
+    isChecked: boolean;
+    transaction: {
+      id: number;
+      amount: number;
+      record: boolean;
+      restaurant: {
+        id: number;
+        restaurantsName: string;
+        restaurantsType: string;
+      };
+      mealpay: any;
+      transaction_type: number;
+      transaction_date: string;
+    };
+  } | null>(null); // 마지막 결제 알림을 저장할 상태
+
+  useEffect(() => {
+    const fetchNotificationData = async () => {
+      try {
+        const response = await api.get('/AllEat/notification');
+        const notifications = response.data || [];
+
+        // '결제 알림'인 알림 중에서 마지막 알림만 찾기
+        const paymentNotifications = notifications.filter(
+          (notification: {title: string}) => notification.title === '결제 알림',
+        );
+
+        if (paymentNotifications.length > 0) {
+          setLastNotification(
+            paymentNotifications[paymentNotifications.length - 1],
+          ); // 마지막 결제 알림 저장
+        }
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+      }
+    };
+
+    fetchNotificationData();
+  }, []); // 컴포넌트가 마운트될 때만 실행
+
+  const handleRecordMealPay = async () => {
+    if (lastNotification && lastNotification.transaction) {
+      const {amount, id} = lastNotification.transaction;
+      console.log(`ID: ${id}`);
+      console.log(`Amount: ${amount}`);
+
+      try {
+        // POST 요청 시도
+        const postResponse = await api.post('/AllEat/record/meal-pay', {
+          transaction_id: id,
+          amount: amount,
+        });
+        console.log('POST 요청 성공:', postResponse.data);
+      } catch (error) {
+        console.error('POST 요청 실패:', error);
+        try {
+          // POST 실패 시 PUT 요청 시도
+          const putResponse = await api.put('/AllEat/record/meal-pay', {
+            transaction_id: id,
+            amount: amount,
+          });
+          console.log('PUT 요청 성공:', putResponse.data);
+        } catch (putError) {
+          console.error('PUT 요청 실패:', putError);
+        }
+      }
+      if (!editMartAmount) {
+        setEditMartAmount(false);
+      }
+    } else {
+      console.log(
+        'lastNotification이나 transaction 데이터가 존재하지 않습니다.',
+      );
+    }
+  };
 
   // 모달 닫기 함수
   const closeModal = () => {
@@ -232,7 +311,7 @@ const HomeScreen: React.FC = () => {
     dispatch(fetchUserInfo());
     setWeightModalVisible(false); // 모달을 닫음
   };
-
+  const [editMartAmount, setEditMartAmount] = useState(false);
   return (
     <View style={{flex: 1}}>
       {/* 고정된 상단 바 */}
@@ -277,6 +356,99 @@ const HomeScreen: React.FC = () => {
 
       {/* 스크롤 가능한 콘텐츠 */}
       <ScrollView style={styles.scrollContainer}>
+        {lastNotification &&
+          (lastNotification.transaction.restaurant.restaurantsType ===
+          'MART' ? (
+            <View style={styles.alarmWhiteBox}>
+              <View style={styles.alarmTitleBox}>
+                <icons.recordAlarm height={24} width={24} />
+                <Text style={styles.titleBoxText}>
+                  마트/편의점에 다녀오셨네요! 식비로 기록할까요?
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.isRecord]}
+                onPress={() => handleRecordMealPay()}>
+                <Text style={styles.actionText}>기록할래요!</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.later]}
+                onPress={() => {
+                  setEditMartAmount(true);
+                }}>
+                <Text style={styles.actionText}>수정할래요</Text>
+              </TouchableOpacity>
+              {editMartAmount && (
+                <View style={styles.alarmTitleBox}>
+                  <FormField
+                    value={String(lastNotification?.transaction?.amount || '')}
+                    handleChangeText={text =>
+                      setLastNotification(prevState => {
+                        if (!prevState) {
+                          // prevState가 null일 경우 기본값을 설정합니다.
+                          return {
+                            id: 0, // 적절한 초기 값으로 설정
+                            body: '',
+                            title: '',
+                            isChecked: false,
+                            transaction: {
+                              id: 0,
+                              amount: Number(text), // 초기 값을 설정한 후 입력된 값을 사용
+                              record: false,
+                              restaurant: {
+                                id: 0,
+                                restaurantsName: '',
+                                restaurantsType: '',
+                              },
+                              mealpay: null,
+                              transaction_type: 0,
+                              transaction_date: '',
+                            },
+                          };
+                        }
+
+                        // prevState가 null이 아닐 경우, 기존 상태를 유지하면서 amount를 업데이트
+                        return {
+                          ...prevState,
+                          transaction: {
+                            ...prevState.transaction,
+                            amount: Number(text), // amount만 업데이트
+                          },
+                        };
+                      })
+                    }
+                  />
+                  <TouchableOpacity onPress={handleRecordMealPay}>
+                    <icons.editAmount height={24} width={24} />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          ) : (
+            <View style={styles.alarmWhiteBox}>
+              <View style={styles.alarmTitleBox}>
+                <icons.recordAlarm height={24} width={24} />
+                <Text style={styles.titleBoxText}>
+                  결제내역이 있어요! 기록하시겠어요?
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.isRecord]}
+                onPress={() => {
+                  // onLaunchCamera();
+                  // onClose();
+                }}>
+                <Text style={styles.actionText}>기록할래요!</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionButton, styles.later]}
+                onPress={() => {
+                  setLastNotification(null);
+                }}>
+                <Text style={styles.actionText}>나중에</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
         <View style={styles.mainbox}>
           <View style={styles.allText}>
             <icons.re_check
