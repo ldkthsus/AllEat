@@ -340,7 +340,8 @@ const DiaryCreateScreen: React.FC = () => {
         menu_price: selectedMenu.price,
         menu_calories: selectedMenu.menuCalories,
         person_count: 1,
-        pay_transaction_id: restaurants[restaurantIndex].pay_transaction_id,
+        pay_transaction_id:
+          restaurants[restaurantIndex].pay_transaction_id || 0,
       },
     ]);
   };
@@ -545,7 +546,7 @@ const DiaryCreateScreen: React.FC = () => {
                     menu_price: menu.menu_price,
                     menu_calories: menu.menu_calories,
                     person_count: 1,
-                    pay_transaction_id: menu.pay_transaction_id,
+                    pay_transaction_id: menu.pay_transaction_id || 0,
                   },
                 ])
               }

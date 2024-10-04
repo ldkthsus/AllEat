@@ -24,9 +24,9 @@ const RecordBox: React.FC<RecordBoxProps> = ({
         <TouchableOpacity onPress={onPress}>
           <images.recordBox height={120} width={165} />
           <View style={styles.overlay}>
-            <Text style={styles.priceText}>{price}₩</Text>
+            <Text style={styles.priceText}>{price.toLocaleString()}₩</Text>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.kcal}>{kcal}kcal</Text>
+            <Text style={styles.kcal}>{kcal.toLocaleString()}kcal</Text>
           </View>
 
           <View style={styles.iconWrapper}>

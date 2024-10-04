@@ -317,6 +317,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                 <MenuCard
                   key={menu.menu_id}
                   menu={menu.menu_name}
+                  restaurantName={menu.restaurants_name}
                   isFavorate={menu.favorite}
                   kcal={menu.menu_calories}
                   price={menu.menu_price}
