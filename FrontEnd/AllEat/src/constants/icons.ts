@@ -49,6 +49,14 @@ import arrowDropDown from '../assets/icons/arrowDropDown.svg';
 import arrowBackTopWhite from '../assets/icons/arrowBackTopWhite.svg';
 import arrowBackBottomWhite from '../assets/icons/arrowBackBottomWhite.svg';
 import camera from '../assets/icons/camera.svg';
+<<<<<<< HEAD
+=======
+import logDinner from '../assets/icons/logDinner.svg';
+import logLunch from '../assets/icons/logLunch.svg';
+import logMorning from '../assets/icons/logMorning.svg';
+import logSnack from '../assets/icons/logSnack.svg';
+import logIcon from '../assets/icons/logIcon.svg';
+>>>>>>> 1701d903383d65f70522e331ed6e9c5f303d7104
 
 const icons = {
   settings,
@@ -98,9 +106,17 @@ const icons = {
   arrowBackBottomWhite,
   arrowBackTopWhite,
   camera,
+<<<<<<< HEAD
   homeDisabled,
   payDisabled,
   logDisabled,
   mypageDisabled
+=======
+  logDinner,
+  logLunch,
+  logMorning,
+  logSnack,
+  logIcon,
+>>>>>>> 1701d903383d65f70522e331ed6e9c5f303d7104
 };
 export default icons;

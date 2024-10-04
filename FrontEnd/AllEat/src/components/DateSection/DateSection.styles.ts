@@ -14,4 +14,34 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Pretendard-Bold',
   },
+  diaryContainer: {marginVertical: 3},
+  diaryTitleContainer: {
+    flexDirection: 'row',
+    textAlign: 'center',
+    alignItems: 'center',
+    gap: 8,
+    marginVertical: 10,
+  },
+  diaryTitle: {
+    color: 'gray',
+    fontSize: 16,
+    fontFamily: 'Pretendard-SemiBold',
+  },
+  menuContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    textAlign: 'center',
+    gap: 8,
+  },
+  menuTitle: {color: '#3d3d3d', fontSize: 18, fontFamily: 'Pretendard-Bold'},
+  menuRestaurant: {
+    color: '#3d3d3d',
+    fontSize: 15,
+    fontFamily: 'Pretendard-Regular',
+  },
+  menuDetail: {
+    color: 'gray',
+    fontSize: 15,
+    fontFamily: 'Pretendard-Regular',
+  },
 });
