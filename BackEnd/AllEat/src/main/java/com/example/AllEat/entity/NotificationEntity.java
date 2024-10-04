@@ -31,4 +31,9 @@ public class NotificationEntity {
     @Column(name = "is_checked")
     private Boolean isChecked;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "transaction_id", nullable = false)
+    private PayTransactionEntity transaction;
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.AllEat.service;
 
 import com.example.AllEat.entity.NotificationEntity;
+import com.example.AllEat.entity.PayTransactionEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.repository.NotificationRepository;
 import com.google.firebase.messaging.*;
@@ -79,7 +80,7 @@ public class NotificationService {
 
 
     // 결제 알림 전송 메서드
-    public String sendNotification(String token, Integer balance, String restaurantName, UserEntity user) throws FirebaseMessagingException {
+    public String sendNotification(Integer balance, String restaurantName, UserEntity user, PayTransactionEntity payTransaction) throws FirebaseMessagingException {
 
         Message message;
         String title;
@@ -98,7 +99,7 @@ public class NotificationService {
                         .setTitle(title)
                         .setBody(body)
                         .build())
-                .setToken(token)
+                .setToken(user.getFcmToken())
                 .build();
 
         NotificationEntity notificationEntity = new NotificationEntity();
@@ -106,6 +107,7 @@ public class NotificationService {
         notificationEntity.setTitle(title);
         notificationEntity.setIsChecked(false);
         notificationEntity.setUser(user);
+        notificationEntity.setTransaction(payTransaction);
 
         notificationRepository.save(notificationEntity);
 

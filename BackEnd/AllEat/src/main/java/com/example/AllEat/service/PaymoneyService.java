@@ -21,9 +21,6 @@ public class PaymoneyService {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private NotificationService notificationService;
-
     public PaymoneyEntity createPaymoney(HttpServletRequest request) {
         UserEntity user = userService.findByRequest(request);
 
@@ -34,14 +31,11 @@ public class PaymoneyService {
         return paymoneyRepository.save(paymoneyEntity);
     }
 
-    public PaymoneyEntity modifyPaymoneyBalance(Integer balance, String restaurantName, HttpServletRequest request) throws FirebaseMessagingException {
+    public PaymoneyEntity modifyPaymoneyBalance(Integer balance, HttpServletRequest request) {
         UserEntity user = userService.findByRequest(request);
 
         PaymoneyEntity paymoney = paymoneyRepository.findByUser(user);
         paymoney.setBalance(paymoney.getBalance() + balance);
-
-        String response = notificationService.sendNotification(user.getFcmToken(), balance, restaurantName, user);
-        System.out.println(response);
 
         return paymoneyRepository.save(paymoney);
 

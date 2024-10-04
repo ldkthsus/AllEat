@@ -3,6 +3,7 @@ package com.example.AllEat.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class PayTransactionEntity {
     @Column(name = "id")
     private Integer id;
 
-    @JoinColumn(name = "user_id", nullable = false)
+    @Column(name = "amount", nullable = false)
     private Integer amount;
 
     @JoinColumn(name = "transaction_type", nullable = false)
@@ -36,7 +37,7 @@ public class PayTransactionEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonIgnore
     private UserEntity user;
 
     @ManyToOne(cascade = CascadeType.ALL)
