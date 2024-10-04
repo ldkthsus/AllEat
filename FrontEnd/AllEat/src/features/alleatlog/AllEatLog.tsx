@@ -36,6 +36,7 @@ interface PayLog {
   restaurants_name: string;
   amount: number;
 }
+
 const AllEatLog: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
@@ -57,31 +58,44 @@ const AllEatLog: React.FC = () => {
       // 로그 데이터 저장하기
       const updatedLogData = [...mealPayData];
       console.log(payLogResponse.data, date);
+
       // payLogData를 MART로 변환해서 해당 날짜에 추가
       payLogData.forEach((payLog: PayLog) => {
         const {restaurants_name, amount} = payLog;
         const paydate = payLog.date.substring(0, 10);
         console.log(paydate);
+
         // 해당 날짜의 로그를 찾음
         const existingDayLog = updatedLogData.find(log => log.date === paydate);
+
+        const martMenu = {
+          menu_name: '마트 장보기',
+          restaurant_name: restaurants_name,
+          menu_kcal: 0,
+          menu_cost: amount,
+        };
 
         const martDiary = {
           diary_kcal: 0, // 마트에서 섭취한 칼로리가 없으므로 0
           diary_cost: amount,
           diary_time: 'MART',
-          menus: [
-            {
-              menu_name: '마트 장보기',
-              restaurant_name: restaurants_name,
-              menu_kcal: 0,
-              menu_cost: amount,
-            },
-          ],
+          menus: [martMenu],
         };
 
         if (existingDayLog) {
-          // 해당 날짜가 이미 존재하면 diaries에 MART 추가
-          existingDayLog.diaries.push(martDiary);
+          // 해당 날짜가 이미 존재하면 MART 항목을 찾음
+          const existingMartDiary = existingDayLog.diaries.find(
+            diary => diary.diary_time === 'MART',
+          );
+
+          if (existingMartDiary) {
+            // MART 항목이 이미 존재하면 그 안에 새로운 메뉴 추가
+            existingMartDiary.menus.push(martMenu);
+            existingMartDiary.diary_cost += amount; // 기존 비용에 추가된 금액 더하기
+          } else {
+            // MART 항목이 없으면 새로 추가
+            existingDayLog.diaries.push(martDiary);
+          }
         } else {
           // 해당 날짜가 없으면 새로운 날짜 추가
           updatedLogData.push({
