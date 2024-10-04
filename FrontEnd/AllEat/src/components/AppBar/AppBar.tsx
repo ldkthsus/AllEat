@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {Text, View, Pressable, Animated, Dimensions} from 'react-native';
 import {styles} from './AppBar.styles'; // 스타일 파일 임포트
 import {icons} from '../../constants';
@@ -51,8 +51,8 @@ const AppBar: React.FC = () => {
   };
 
   return (
-    <View>
-      {/* 원형 애니메이션 영역을 appBar 밖에 위치시킴 */}
+    <View style={styles.container}>
+      {/* 원형 애니메이션 영역을 appBar 뒤에 위치시킴 */}
       <Animated.View
         style={[
           styles.circle,
@@ -61,7 +61,7 @@ const AppBar: React.FC = () => {
           },
         ]}
       />
-  
+
       {/* appBar */}
       <View style={styles.appBar}>
         {/* 홈 아이콘 */}
@@ -80,7 +80,7 @@ const AppBar: React.FC = () => {
           </Animated.View>
           <Text style={styles.text}>홈</Text>
         </Pressable>
-  
+
         {/* 페이머니 아이콘 */}
         <Pressable
           style={styles.icon}
@@ -96,7 +96,7 @@ const AppBar: React.FC = () => {
           </Animated.View>
           <Text style={styles.text}>페이머니</Text>
         </Pressable>
-  
+
         {/* 로그 아이콘 */}
         <Pressable
           style={styles.icon}
@@ -112,7 +112,7 @@ const AppBar: React.FC = () => {
           </Animated.View>
           <Text style={styles.text}>로그</Text>
         </Pressable>
-  
+
         {/* 마이페이지 아이콘 */}
         <Pressable
           style={styles.icon}
@@ -131,7 +131,6 @@ const AppBar: React.FC = () => {
       </View>
     </View>
   );
-  
 };
 
 export default AppBar;
