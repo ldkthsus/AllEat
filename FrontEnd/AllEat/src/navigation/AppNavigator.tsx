@@ -43,7 +43,7 @@ const AppNavigator = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
-    }, 1600); // SplashScreen을 1.6초 동안 보여줌
+    }, 2200); // SplashScreen을 1.6초 동안 보여줌
     return () => clearTimeout(timer);
   }, []);
 

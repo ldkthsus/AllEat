@@ -39,6 +39,14 @@ import splash5 from '../assets/images/splash5.svg';
 import splash6 from '../assets/images/splash6.svg';
 import splash7 from '../assets/images/splash7.svg';
 import splash8 from '../assets/images/splash8.svg';
+import splash9 from '../assets/images/splash9.svg';
+import splash10 from '../assets/images/splash10.svg';
+import splash11 from '../assets/images/splash11.svg';
+import splash12 from '../assets/images/splash12.svg';
+import splash13 from '../assets/images/splash13.svg';
+import splash14 from '../assets/images/splash14.svg';
+import splash15 from '../assets/images/splash15.svg';
+import splash16 from '../assets/images/splash16.svg';
 
 
 const images = {
@@ -83,6 +91,14 @@ const images = {
   splash6,
   splash7,
   splash8,
+  splash9,
+  splash10,
+  splash11,
+  splash12,
+  splash13,
+  splash14,
+  splash15,
+  splash16,
 };
 
 export default images;
