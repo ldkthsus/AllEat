@@ -1,11 +1,15 @@
 import home from '../assets/icons/home.svg';
+import homeDisabled from '../assets/icons/homeDisabled.svg';
 import log from '../assets/icons/log.svg';
+import logDisabled from '../assets/icons/logDisabled.svg';
 import man from '../assets/icons/man.svg';
 import manDisabled from '../assets/icons/manDisabled.svg';
 import mypage from '../assets/icons/mypage.svg';
+import mypageDisabled from '../assets/icons/mypageDisabled.svg';
 import notifications from '../assets/icons/notifications.svg';
 import passwordCheck from '../assets/icons/passwordCheck.svg';
 import pay from '../assets/icons/pay.svg';
+import payDisabled from '../assets/icons/payDisabled.svg';
 import socialGoogle from '../assets/icons/socialGoogle.svg';
 import socialKakao from '../assets/icons/socialKakao.svg';
 import woman from '../assets/icons/woman.svg';
@@ -45,6 +49,7 @@ import arrowDropDown from '../assets/icons/arrowDropDown.svg';
 import arrowBackTopWhite from '../assets/icons/arrowBackTopWhite.svg';
 import arrowBackBottomWhite from '../assets/icons/arrowBackBottomWhite.svg';
 import camera from '../assets/icons/camera.svg';
+
 const icons = {
   settings,
   home,
@@ -93,5 +98,9 @@ const icons = {
   arrowBackBottomWhite,
   arrowBackTopWhite,
   camera,
+  homeDisabled,
+  payDisabled,
+  logDisabled,
+  mypageDisabled
 };
 export default icons;

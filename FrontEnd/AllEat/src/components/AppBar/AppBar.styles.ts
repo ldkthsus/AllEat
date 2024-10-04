@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     width: '25%',
     display: 'flex',
     alignItems: 'center',
+    zIndex: 2, // 아이콘이 원형 위에 있도록 zIndex 조정
   },
   appBar: {
     shadowColor: 'black', // iOS 그림자 색상
@@ -31,5 +32,18 @@ export const styles = StyleSheet.create({
     bottom: 0,
     paddingBottom: 15,
     paddingTop: 10,
+  },
+  circle: {
+    position: 'absolute',
+    width: 105,
+    height: 100,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 100, // 완전한 원형으로 만들기
+    bottom: -7,
+    left: -8,
+    zIndex: -2, // 아이콘 아래에 위치
+    elevation: 10, // 안드로이드에서 그림자 높이
+    shadowColor: '#000000', // 그림자 색상 (iOS에서도 사용 가능)
+    shadowOffset: { width: 0, height: 4 }, // 그림자 위치
   },
 });
