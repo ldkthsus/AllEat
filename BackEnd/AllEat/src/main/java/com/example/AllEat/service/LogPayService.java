@@ -39,7 +39,7 @@ public class LogPayService {
 
         // "restaurantsType"이 "MART"인 데이터만 필터링하여 LogPayResponseDTO로 변환
         return transactions.stream()
-                .filter(transaction -> "MART".equals(transaction.getRestaurant().getRestaurantsType().getType()))  // 레스토랑 타입이 MART인 경우만 필터링
+                .filter(transaction -> "mart".equals(transaction.getRestaurant().getRestaurantsType().getType()))  // 레스토랑 타입이 MART인 경우만 필터링
                 .map(transaction -> {
                     LogPayResponseDTO response = new LogPayResponseDTO();
                     response.setDate(transaction.getTransactionDate().toString());
