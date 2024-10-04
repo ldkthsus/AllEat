@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PaymoneyRepository extends JpaRepository<PaymoneyEntity, Integer> {
+
     PaymoneyEntity findByUser(UserEntity userEntity);
 
 }

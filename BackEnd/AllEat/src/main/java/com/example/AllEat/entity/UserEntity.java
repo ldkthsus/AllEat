@@ -62,6 +62,9 @@ public class UserEntity {
     @Column(name = "activity_amount")
     private Integer activityAmount;
 
+    @Column(name = "fcm_token")
+    private String fcmToken;
+
     @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<WeightEntity> weights;
 
@@ -109,7 +112,14 @@ public class UserEntity {
         if (updateRequest.getSocialLogin() != null){
             this.socialLogin = updateRequest.getSocialLogin();
         }
-        this.profileUrl = profileUrl;
+
+        if (updateRequest.getFcmToken() != null){
+            this.fcmToken = updateRequest.getFcmToken();
+        }
+
+        if (profileUrl != null){
+            this.profileUrl = profileUrl;
+        }
     }
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
