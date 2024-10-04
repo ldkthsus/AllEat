@@ -2,6 +2,7 @@ package com.example.AllEat.service;
 
 import com.example.AllEat.entity.NotificationEntity;
 import com.example.AllEat.entity.PayTransactionEntity;
+import com.example.AllEat.entity.RestaurantsEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.repository.NotificationRepository;
 import com.google.firebase.messaging.*;
@@ -80,18 +81,26 @@ public class NotificationService {
 
 
     // 결제 알림 전송 메서드
-    public String sendNotification(Integer balance, String restaurantName, UserEntity user, PayTransactionEntity payTransaction) throws FirebaseMessagingException {
+    public String sendNotification(UserEntity user, PayTransactionEntity payTransaction) throws FirebaseMessagingException {
 
         Message message;
+        Integer balance = payTransaction.getAmount();
+        RestaurantsEntity restaurant = payTransaction.getRestaurant();
+        String restaurantName = restaurant.getRestaurantsName();
+        Integer restaurantId = restaurant.getId();
+
         String title;
         String body;
 
         if (balance > 0){
             title="충전 알림";
             body="AllEat pay에 "+balance+"원이 충전되었습니다.";
-        } else{
+        } else if (balance < 0 && restaurantId != 1){
             title="결제 알림";
             body=restaurantName+"에서 "+-balance+"원이 결제되었습니다.";
+        } else{
+            title="송금 알림";
+            body="본인 계좌로 "+-balance+"원이 송금되었습니다.";
         }
 
         message = Message.builder()

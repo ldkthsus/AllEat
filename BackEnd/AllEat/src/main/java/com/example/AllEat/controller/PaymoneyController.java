@@ -86,7 +86,7 @@ public class PaymoneyController {
             PayTransactionEntity payTransaction = payTransactionService.payTransactionCreate(payTransactionDTO, request);
 
             UserEntity user = userService.findByRequest(request);
-            String response = notificationService.sendNotification(payTransactionDTO.getAmount(), restaurant.getRestaurantsName(), user, payTransaction);
+            String response = notificationService.sendNotification(user, payTransaction);
             System.out.println(response);
 
             return ResponseEntity.ok(payTransaction);
