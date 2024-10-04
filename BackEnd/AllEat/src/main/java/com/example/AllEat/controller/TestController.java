@@ -31,7 +31,6 @@ public class TestController {
 //    // 토큰 조회
     @PostMapping("/tokens")
     public ResponseEntity<?> test() throws FirebaseMessagingException {
-        String response = notificationService.sendNotification("dGNsq41qT86OFRme8iY_hc:APA91bG8-yWdUpgaRizEsexb04pXmFVmKJTI3ZpTV_mFcSrm7jk5NvhujbzL4-j3SubXXGkjpoZlvBRmAuwmtECl_k0XD1HwGAresEL9oA6tPz1zQR30rGyinrxXWTveT1vDQY2BE-Uj","test","test");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
