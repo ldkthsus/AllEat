@@ -36,7 +36,11 @@ const AppBar: React.FC = () => {
   };
 
   // 클릭 후 원래 크기로 복원하고 원형 이동 애니메이션 적용
-  const handlePressOut = (scaleValue: Animated.Value, icon: string, index: number) => {
+  const handlePressOut = (
+    scaleValue: Animated.Value,
+    icon: string,
+    index: number,
+  ) => {
     Animated.spring(scaleValue, {
       toValue: 1.3, // 원래 크기로 복원
       useNativeDriver: true,
@@ -52,42 +56,43 @@ const AppBar: React.FC = () => {
 
   return (
     <View>
-      {/* 원형 애니메이션 영역을 appBar 밖에 위치시킴 */}
-      <Animated.View
-        style={[
-          styles.circle,
-          {
-            transform: [{ translateX: animatedValue }], // 원형의 X 위치 애니메이션
-          },
-        ]}
-      />
-  
       {/* appBar */}
       <View style={styles.appBar}>
+        {/* 원형 애니메이션 영역을 appBar 밖에 위치시킴 */}
+        <Animated.View
+          style={[
+            styles.circle,
+            {
+              transform: [{translateX: animatedValue}], // 원형의 X 위치 애니메이션
+            },
+          ]}
+        />
         {/* 홈 아이콘 */}
         <Pressable
           style={styles.icon}
           onPressIn={() => handlePressIn(homeScale)}
           onPressOut={() => handlePressOut(homeScale, 'Home', 0)} // 0번 위치
           onPress={() => navigation.navigate('Home', {})}>
-          <Animated.View style={{ transform: [{ scale: homeScale }] }}>
+          <Animated.View
+            style={[{transform: [{scale: homeScale}]}, styles.icon]}>
             {/* 선택 여부에 따라 아이콘 변경 */}
             {selectedIcon === 'Home' ? (
               <icons.home height={30} width={30} />
             ) : (
               <icons.homeDisabled height={30} width={30} />
             )}
+            {/* {selectedIcon !== 'Home' && <Text style={styles.text}>홈</Text>} */}
           </Animated.View>
           <Text style={styles.text}>홈</Text>
         </Pressable>
-  
+
         {/* 페이머니 아이콘 */}
         <Pressable
           style={styles.icon}
           onPressIn={() => handlePressIn(payScale)}
           onPressOut={() => handlePressOut(payScale, 'Paymoney', 1)} // 1번 위치
           onPress={() => navigation.navigate('Paymoney')}>
-          <Animated.View style={{ transform: [{ scale: payScale }] }}>
+          <Animated.View style={{transform: [{scale: payScale}]}}>
             {selectedIcon === 'Paymoney' ? (
               <icons.pay height={30} width={30} />
             ) : (
@@ -96,14 +101,14 @@ const AppBar: React.FC = () => {
           </Animated.View>
           <Text style={styles.text}>페이머니</Text>
         </Pressable>
-  
+
         {/* 로그 아이콘 */}
         <Pressable
           style={styles.icon}
           onPressIn={() => handlePressIn(logScale)}
           onPressOut={() => handlePressOut(logScale, 'AllEatLog', 2)} // 2번 위치
           onPress={() => navigation.navigate('AllEatLog')}>
-          <Animated.View style={{ transform: [{ scale: logScale }] }}>
+          <Animated.View style={{transform: [{scale: logScale}]}}>
             {selectedIcon === 'AllEatLog' ? (
               <icons.log height={30} width={30} />
             ) : (
@@ -112,14 +117,14 @@ const AppBar: React.FC = () => {
           </Animated.View>
           <Text style={styles.text}>로그</Text>
         </Pressable>
-  
+
         {/* 마이페이지 아이콘 */}
         <Pressable
           style={styles.icon}
           onPressIn={() => handlePressIn(mypageScale)}
           onPressOut={() => handlePressOut(mypageScale, 'MyPage', 3)} // 3번 위치
           onPress={() => navigation.navigate('MyPage')}>
-          <Animated.View style={{ transform: [{ scale: mypageScale }] }}>
+          <Animated.View style={{transform: [{scale: mypageScale}]}}>
             {selectedIcon === 'MyPage' ? (
               <icons.mypage height={30} width={30} />
             ) : (
@@ -131,7 +136,6 @@ const AppBar: React.FC = () => {
       </View>
     </View>
   );
-  
 };
 
 export default AppBar;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import Svg, { Path, Circle } from 'react-native-svg';
-import { styles } from './CircularProgress.styles';
+import {View, Text} from 'react-native';
+import Svg, {Path, Circle} from 'react-native-svg';
+import {styles} from './CircularProgress.styles';
 
 interface CircularProgressProps {
   size?: number;
@@ -68,12 +68,12 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
         {/* 진행된 부분 (피자 형태) */}
         <Path d={pathData} fill={progressColor} />
       </Svg>
-      <Text style={[styles.currentText, { color: currentTextColor }]}>
-        {current}
+      <Text style={[styles.currentText, {color: currentTextColor}]}>
+        {current.toLocaleString()}
         {unit}
       </Text>
-      <Text style={[styles.totalText, { color: totalTextColor }]}>
-        /{total}
+      <Text style={[styles.totalText, {color: totalTextColor}]}>
+        /{total.toLocaleString()}
         {unit}
       </Text>
     </View>

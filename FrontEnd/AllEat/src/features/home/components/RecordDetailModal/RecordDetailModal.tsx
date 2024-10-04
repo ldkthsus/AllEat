@@ -93,7 +93,7 @@ const RecordDetailModal: React.FC<RecordDetailProps> = ({
       </View>
       <View style={styles.modalBody}>
         <Text style={styles.modalKcalPrice}>
-          {kcal}·{price}
+          {kcal.toLocaleString()}·{price.toLocaleString()}
         </Text>
       </View>
       <View style={styles.tandanjiContainer}>

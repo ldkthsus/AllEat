@@ -4,8 +4,9 @@ export const styles = StyleSheet.create({
   text: {
     color: '#3d3d3d',
     fontFamily: 'Pretendard-Regular',
-    fontSize: 14,
+    fontSize: 12,
     marginTop: 3,
+    textAlign: 'center',
   },
   icon: {
     width: '25%',
@@ -29,13 +30,13 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     width: 100,
     height: 100,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'white',
     borderRadius: 100, // 완전한 원형으로 만들기
     bottom: -11,
-    left: -7,
+    left: -2,
     zIndex: -2, // 아이콘 아래에 위치
     elevation: 12, // 안드로이드에서 그림자 높이
-    shadowColor: '#000000', // 그림자 색상 (iOS에서도 사용 가능)
-    shadowOffset: { width: 0, height: 4 }, // 그림자 위치
+    shadowColor: '#769BFF', // 그림자 색상 (iOS에서도 사용 가능)
+    shadowOffset: {width: 0, height: 4}, // 그림자 위치
   },
 });

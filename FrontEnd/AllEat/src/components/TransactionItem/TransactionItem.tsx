@@ -31,8 +31,8 @@ const TransactionItem: React.FC<TransactionItemProps> = ({transaction}) => {
         </Text>
         <Text style={styles.transactionDetailTitle}>
           {transaction.amount > 0
-            ? `+${transaction.amount}₩`
-            : `-${Math.abs(transaction.amount)}₩`}
+            ? `+${transaction.amount.toLocaleString()}₩`
+            : `-${Math.abs(transaction.amount).toLocaleString()}₩`}
         </Text>
       </View>
       <View style={styles.transactionDetails}>

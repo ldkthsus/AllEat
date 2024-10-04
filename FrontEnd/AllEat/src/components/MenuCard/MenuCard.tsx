@@ -41,7 +41,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
         )}
       </View>
       <Text style={styles.restaurantMenuDetail}>
-        {kcal}kcal · {price}원
+        {kcal.toLocaleString()}kcal · {price.toLocaleString()}원
       </Text>
       {onAddMeal && (
         <TouchableOpacity style={styles.icons} onPress={onAddMeal}>

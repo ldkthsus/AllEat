@@ -46,9 +46,11 @@ const DiaryCard: React.FC<DiaryCardProps> = ({
       </View>
       <View style={styles.mainRecordDetail}>
         <Text style={styles.cardDescription}>
-          {pricePerPerson.toFixed(0)}원
+          {pricePerPerson.toFixed(0).toLocaleString()}원
         </Text>
-        <Text style={styles.cardTitle}>{kcalPerPerson.toFixed(0)}kcal</Text>
+        <Text style={styles.cardTitle}>
+          {kcalPerPerson.toFixed(0).toLocaleString()}kcal
+        </Text>
       </View>
       {isEdit && (
         <View style={styles.mainRecordPeople}>

@@ -19,7 +19,6 @@ import FormModal from '../../../components/FormModal/FormModal';
 import CalanderModal from '../components/CalanderModal/CalanderModel';
 import RecordBox2 from '../../../components/RecordBox/RecordBox2';
 
-
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Home'
@@ -34,12 +33,7 @@ const HomeScreen: React.FC = () => {
   // 움직이는 키키 이미지
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-    const kikiImages = [
-      images.happyKiki1,
-      images.happyKiki2,
-      images.happyKiki3,
-    ];
-  
+  const kikiImages = [images.happyKiki1, images.happyKiki2, images.happyKiki3];
 
   // 캘린더 모달
   const [isCalanderModalVisible, setIsCalanderModalVisible] = useState(false);
@@ -147,10 +141,7 @@ const HomeScreen: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
-
-
     const fetchData = async () => {
       try {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
@@ -174,9 +165,7 @@ const HomeScreen: React.FC = () => {
     return () => {
       clearInterval(intervalId); // 인터벌 클리어
     };
-
   }, [currentDate, isUpdated, kikiImages.length]); // 의존성 배열에 currentDate, isUpdated, kikiImages.length 추가
-
 
   // 모달 닫기 함수
   const closeModal = () => {
@@ -301,7 +290,9 @@ const HomeScreen: React.FC = () => {
             </Text>
             <Text style={styles.eatpay}> 섭취, </Text>
             <Text style={styles.eatpayValue}>
-              {dayData?.day_cost ? `${dayData.day_cost}원` : '0원'}
+              {dayData?.day_cost
+                ? `${dayData.day_cost.toLocaleString()}원`
+                : '0원'}
             </Text>
             <Text style={styles.eatpay}> 소비했어요!</Text>
           </View>
@@ -331,7 +322,10 @@ const HomeScreen: React.FC = () => {
                 />
               ) : (
                 // 그 외의 경우 기본 kiki 이미지
-                React.createElement(kikiImages[currentImageIndex], { width: 120, height: 120 })
+                React.createElement(kikiImages[currentImageIndex], {
+                  width: 120,
+                  height: 120,
+                })
               )}
             </View>
 
