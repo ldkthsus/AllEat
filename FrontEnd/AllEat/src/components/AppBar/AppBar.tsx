@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef} from 'react';
 import {Text, View, Pressable, Animated, Dimensions} from 'react-native';
 import {styles} from './AppBar.styles'; // 스타일 파일 임포트
 import {icons} from '../../constants';

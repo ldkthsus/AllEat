@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import SplashScreen from '../features/splash/splashScreen';
 import IntroScreen from '../features/auth/IntroScreen/IntroScreen';
 import MyPageScreen from '../features/auth/MyPageScreen/MyPageScreen';
 import MyPageUpdateScreen from '../features/auth/MyPageUpdateScreen/MyPageUpdateScreen';
@@ -18,32 +19,43 @@ import {RootState} from '../redux/store'; // Redux 스토어 타입
 import DiaryCreateScreen from '../features/home/DiaryCreateScreen/DiaryCreateScreen';
 import AllEatLog from '../features/alleatlog/AllEatLog'; 
 import AlertScreen from '../features/alert/AlertScreen';
+
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   const navigationState = useNavigationState(state => state);
 
-  // 현재 네비게이션 상태가 없으면 기본적으로 AppBar를 숨깁니다
+  // 현재 네비게이션 상태에 따른 AppBar 표시 여부
   const currentRouteName = navigationState
     ? navigationState.routes[navigationState.index].name
     : null;
-
-  // 특정 화면에서는 AppBar를 숨기고 싶은 경우
+  
   const shouldShowAppBar =
     currentRouteName &&
-    !['Intro', 'SignUp', 'SignIn', 'Initial', 'Agreement'].includes(
-      currentRouteName,
-    );
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  ); // Redux에서 로그인 상태 확인
-  // 초기 경로를 조건에 따라 설정
-  const initialRoute = isAuthenticated ? 'Home' : 'Intro'; // 조건에 따라 초기 경로 설정
+    !['Intro', 'SignUp', 'SignIn', 'SplashScreen'].includes(currentRouteName);
+
+  // Redux에서 인증 상태 확인
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+
+  const [showSplash, setShowSplash] = useState(true);
+
+  // SplashScreen을 1.6초 동안 보여주고 나서 인증 상태에 따라 화면 전환
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false);
+    }, 1600); // SplashScreen을 1.6초 동안 보여줌
+    return () => clearTimeout(timer);
+  }, []);
+
+  // SplashScreen이 끝난 후 인증 여부에 따라 Home 또는 Intro로 이동
+  if (showSplash) {
+    return <SplashScreen />;
+  }
 
   return (
     <>
-      <Stack.Navigator initialRouteName={initialRoute}>
-        <Stack.Screen
+      <Stack.Navigator initialRouteName={isAuthenticated ? 'Home' : 'Intro'}>
+      <Stack.Screen
           name="Intro"
           component={IntroScreen}
           options={{headerShown: false}}
@@ -113,6 +125,12 @@ const AppNavigator = () => {
           component={AlertScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
+        
       </Stack.Navigator>
       {shouldShowAppBar && <AppBar />}
     </>
