@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -99,6 +101,12 @@ public class UserService {
             return false;
         }
         return true;
+    }
+
+    public List<String> getAllUserTokens(){
+
+        return userRepository.findAllWithFCM();
+
     }
 
 }
