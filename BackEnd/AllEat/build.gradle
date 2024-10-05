@@ -21,6 +21,8 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }  // Selenium 스냅샷 저장소
+	maven { url "https://repo1.maven.org/maven2/" }  // 추가 저장소
 }
 
 dependencies {
