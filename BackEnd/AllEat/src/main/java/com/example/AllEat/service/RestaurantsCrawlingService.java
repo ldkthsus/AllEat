@@ -1,9 +1,5 @@
 package com.example.AllEat.service;
 
-import com.example.AllEat.entity.MenuEntity;
-import com.example.AllEat.entity.RestaurantsEntity;
-import com.example.AllEat.repository.MenuRepository;
-import com.example.AllEat.repository.RestaurantsRepository;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,16 +10,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CrawlingService {
-
-    private final RestaurantsRepository restaurantsRepository;
-    private final MenuRepository menuRepository;
+public class RestaurantsCrawlingService {
 
     public void startCrawling() {
         WebDriverManager.chromedriver().setup();
@@ -35,14 +32,14 @@ public class CrawlingService {
         try {
             driver.get("https://map.kakao.com/");
             WebElement searchBox = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("input#search\\.keyword\\.query")));
-            searchBox.sendKeys("대전 유성구 봉명동 카페");
+            searchBox.sendKeys("대전 유성구 봉명동 음식점");
             searchBox.sendKeys(Keys.ENTER);
             System.out.println("검색어 입력 완료");
 
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("li.PlaceItem.clickArea")));
-            System.out.println("첫 번째 카페 리스트 로드 완료");
+            System.out.println("첫 번째 음식점 리스트 로드 완료");
 
-            // 첫 화면의 카페 리스트 크롤링
+            // 첫 화면의 음식점 리스트 크롤링
             crawlCurrentCafeList(driver, wait, actions);
 
             // 장소 더보기 버튼이 있을 때까지 클릭하여 리스트 크롤링
@@ -67,7 +64,7 @@ public class CrawlingService {
             try {
                 String cafeName = cafeLink.findElement(By.cssSelector("div.head_item.clickArea > strong.tit_name")).getText();
                 cafeName = cafeName.replaceAll("^[A-Z]\\s+", "");
-                System.out.println("전처리된 카페 이름: " + cafeName);
+                System.out.println("전처리된 음식점 이름: " + cafeName);
 
                 ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cafeLink);
                 actions.moveToElement(cafeLink).perform();
@@ -93,7 +90,7 @@ public class CrawlingService {
                 System.out.println("원래 창으로 전환 완료");
 
             } catch (Exception e) {
-                System.out.println("카페 정보 수집 중 오류 발생: " + e.getMessage());
+                System.out.println("음식점 정보 수집 중 오류 발생: " + e.getMessage());
                 driver.switchTo().window(driver.getWindowHandles().toArray()[0].toString());
             }
         }
@@ -185,27 +182,32 @@ public class CrawlingService {
         }
     }
 
-    // 기존의 JDBC 방식에서 Spring Data JPA를 사용하도록 변경
     private void saveCafeAndMenuData(String cafeName, List<String> menuList) {
-        RestaurantsEntity restaurant = new RestaurantsEntity();
-        restaurant.setRestaurantsName(cafeName);
-        restaurant.setRestaurantsType(RestaurantsEntity.RestaurantsType.RESTAURANTS);
-        restaurantsRepository.save(restaurant);
+        File csvFile = new File("crawled_data.csv");
+        boolean isNewFile = !csvFile.exists();
 
-        for (String menu : menuList) {
-            String[] menuParts = menu.split(": ");
-            if (menuParts.length == 2) {
-                String menuPriceStr = menuParts[1].replaceAll("[^\\d]", "");
-                int menuPrice = menuPriceStr.isEmpty() ? 0 : Integer.parseInt(menuPriceStr);
+        try (FileWriter fileWriter = new FileWriter(csvFile, true);
+             PrintWriter writer = new PrintWriter(fileWriter)) {
 
-                MenuEntity menuEntity = new MenuEntity();
-                menuEntity.setRestaurants(restaurant);
-                menuEntity.setMenuName(menuParts[0]);
-                menuEntity.setMenuPrice(menuPrice);
-                menuEntity.setMenuType(0);
-                menuEntity.setMenuValue(1);
-                menuRepository.save(menuEntity);
+            // 새 파일일 경우 헤더 추가
+            if (isNewFile) {
+                writer.println("음식점 이름, 메뉴 이름, 메뉴 가격, 에너지, 탄수화물, 단백질, 지방");
             }
+
+            for (String menu : menuList) {
+                String[] menuParts = menu.split(": ");
+                if (menuParts.length == 2) {
+                    String menuPriceStr = menuParts[1].replaceAll("[^\\d]", "");
+                    int menuPrice = menuPriceStr.isEmpty() ? 0 : Integer.parseInt(menuPriceStr);
+
+                    // CSV 파일에 빈 영양 성분 항목 추가
+                    writer.printf("%s, %s, %d, , , , \n", cafeName, menuParts[0], menuPrice);
+                }
+            }
+            System.out.printf("음식점 '%s' 정보와 메뉴를 CSV에 저장 완료\n", cafeName);
+
+        } catch (IOException e) {
+            System.out.println("CSV 파일 저장 중 오류 발생: " + e.getMessage());
         }
     }
 }
