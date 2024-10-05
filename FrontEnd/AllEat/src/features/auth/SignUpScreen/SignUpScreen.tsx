@@ -51,17 +51,17 @@ const SignUp: React.FC = () => {
       navigation.navigate('Initial');
     }
     GoogleSignin.configure({
-      webClientId: "63668378347-461lhh603fihl1qri0ikdn759lbnvdub.apps.googleusercontent.com",
+      webClientId:
+        '63668378347-461lhh603fihl1qri0ikdn759lbnvdub.apps.googleusercontent.com',
     });
-
   }, [isAuthenticated, navigation]);
 
-  // 구글 로그인 가입 버튼 
+  // 구글 로그인 가입 버튼
   const onPressGoogleBtn = async () => {
     try {
       // Google Play Services 체크
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      
+
       // Google 로그인
 
       const token = await GoogleSignin.getTokens();
@@ -69,19 +69,22 @@ const SignUp: React.FC = () => {
 
       const userInfoOfGoogle = await GoogleSignin.signIn();
 
-      // db에서 이메일 찾아보기 
+      // db에서 이메일 찾아보기
       const email = {
-        email : userInfoOfGoogle.data?.user.email
-      }
-      const isNewResponse = await axios.post(`${BACK_URL}/AllEat/users/social-login`,email);
+        email: userInfoOfGoogle.data?.user.email,
+      };
+      const isNewResponse = await axios.post(
+        `${BACK_URL}/AllEat/users/social-login`,
+        email,
+      );
       const isNew = isNewResponse.data.is_new;
 
-      if (isNew){
+      if (isNew) {
         // 새로운 계정이면 회원 가입 진행
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
         const res = await auth().signInWithCredential(googleCredential);
 
-        if (res.user.email != null){
+        if (res.user.email != null) {
           const signupData = {
             email: res.user.email,
             password: AUTH_LOGIN_PASSWORD,
@@ -90,13 +93,12 @@ const SignUp: React.FC = () => {
           // console.log(loginData);
           await dispatch(signupUser(signupData));
         }
-
-      }else {
+      } else {
         // 이미 있는 계정이면 로그인
         setIdToken(idToken);
         const googleCredential = auth.GoogleAuthProvider.credential(idToken);
         const res = await auth().signInWithCredential(googleCredential);
-        if (res.user.email != null){
+        if (res.user.email != null) {
           const loginData = {
             email: res.user.email,
             password: AUTH_LOGIN_PASSWORD,
@@ -134,7 +136,6 @@ const SignUp: React.FC = () => {
       email: form.email,
       password: form.password,
       isSocial: false,
-      
     };
 
     try {

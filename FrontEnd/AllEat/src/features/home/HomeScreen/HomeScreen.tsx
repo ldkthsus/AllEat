@@ -8,7 +8,7 @@ import {images} from '../../../constants';
 import {styles} from './HomeScreen.styles';
 import {format, addDays, subDays} from 'date-fns'; // 날짜 형식을 위해 date-fns 사용
 import CircularProgress from '../../../components/CircularProgress/CircularProgress';
-import RecordBox from '../../../components/RecordBox/RecordBox';
+// import RecordBox from '../../../components/RecordBox/RecordBox';
 import RecordDetailModal from '../components/RecordDetailModal/RecordDetailModal';
 import {formatDate} from '../../../utils/dateUtils'; // formatDate 유틸리티 함수 가져오기
 import api from '../../../utils/api';
@@ -194,13 +194,23 @@ const HomeScreen: React.FC = () => {
 
         // '결제 알림'인 알림 중에서 마지막 알림만 찾기
         const paymentNotifications = notifications.filter(
-          (notification: {title: string}) => notification.title === '결제 알림',
+          (notification: {title: string; isChecked: boolean}) =>
+            notification.title === '결제 알림' &&
+            notification.isChecked === false,
         );
 
         if (paymentNotifications.length > 0) {
-          setLastNotification(
-            paymentNotifications[paymentNotifications.length - 1],
-          ); // 마지막 결제 알림 저장
+          const lastPaymentNotification =
+            paymentNotifications[paymentNotifications.length - 1];
+
+          // transaction의 amount가 음수일 경우 양수로 변환
+          if (lastPaymentNotification.transaction.amount < 0) {
+            lastPaymentNotification.transaction.amount = Math.abs(
+              lastPaymentNotification.transaction.amount,
+            );
+          }
+
+          setLastNotification(lastPaymentNotification); // 마지막 결제 알림 저장
         }
       } catch (error) {
         console.error('Failed to fetch notifications:', error);
@@ -236,9 +246,14 @@ const HomeScreen: React.FC = () => {
           console.error('PUT 요청 실패:', putError);
         }
       }
-      if (!editMartAmount) {
+      if (editMartAmount) {
         setEditMartAmount(false);
       }
+      const response = await api.post('/AllEat/notification', {
+        id: lastNotification.id,
+      });
+      console.log(response.data);
+      setLastNotification(null);
     } else {
       console.log(
         'lastNotification이나 transaction 데이터가 존재하지 않습니다.',
@@ -351,7 +366,9 @@ const HomeScreen: React.FC = () => {
           height={20}
           width={20}
         />
-        <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+        {lastNotification && (
+          <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
+        )}
       </View>
 
       {/* 스크롤 가능한 콘텐츠 */}
@@ -382,6 +399,10 @@ const HomeScreen: React.FC = () => {
                 <View style={styles.alarmTitleBox}>
                   <FormField
                     value={String(lastNotification?.transaction?.amount || '')}
+                    otherStyles={styles.editMartAmountForm}
+                    isNumeric={true}
+                    isDecimal={false}
+                    unit="원"
                     handleChangeText={text =>
                       setLastNotification(prevState => {
                         if (!prevState) {
@@ -419,7 +440,7 @@ const HomeScreen: React.FC = () => {
                     }
                   />
                   <TouchableOpacity onPress={handleRecordMealPay}>
-                    <icons.editAmount height={24} width={24} />
+                    <icons.editAmount height={36} width={36} />
                   </TouchableOpacity>
                 </View>
               )}
@@ -432,18 +453,58 @@ const HomeScreen: React.FC = () => {
                   결제내역이 있어요! 기록하시겠어요?
                 </Text>
               </View>
+              {/* 기록할래요 버튼 */}
               <TouchableOpacity
                 style={[styles.actionButton, styles.isRecord]}
-                onPress={() => {
-                  // onLaunchCamera();
-                  // onClose();
+                onPress={async () => {
+                  try {
+                    await api.post('/AllEat/notification', {
+                      id: lastNotification.id,
+                    });
+                    setLastNotification(null);
+                    // day_diaries 배열의 길이에 따라 title을 결정
+                    let title = 'BREAKFAST'; // 기본값을 아침으로 설정
+                    if (dayData?.day_diaries) {
+                      const diariesLength = dayData.day_diaries.length;
+                      switch (diariesLength) {
+                        case 1:
+                          title = 'LUNCH'; // 점심
+                          break;
+                        case 2:
+                          title = 'DINNER'; // 저녁
+                          break;
+                        case 3:
+                        default:
+                          title = 'SNACK'; // 간식
+                          break;
+                      }
+                    }
+
+                    // DiaryCreate 페이지로 이동하며, 결정된 title 값을 전달
+                    navigation.navigate('DiaryCreate', {
+                      diaryId: DiaryIds,
+                      date: format(currentDate, 'yyyy-MM-dd'),
+                      meals: title, // 결정된 title을 전달
+                    });
+                  } catch (error) {
+                    console.error('Notification 처리 중 오류:', error);
+                  }
                 }}>
                 <Text style={styles.actionText}>기록할래요!</Text>
               </TouchableOpacity>
+
+              {/* 나중에 버튼 */}
               <TouchableOpacity
                 style={[styles.actionButton, styles.later]}
-                onPress={() => {
-                  setLastNotification(null);
+                onPress={async () => {
+                  try {
+                    await api.post('/AllEat/notification', {
+                      id: lastNotification.id,
+                    });
+                    setLastNotification(null);
+                  } catch (error) {
+                    console.error('Notification 처리 중 오류:', error);
+                  }
                 }}>
                 <Text style={styles.actionText}>나중에</Text>
               </TouchableOpacity>
