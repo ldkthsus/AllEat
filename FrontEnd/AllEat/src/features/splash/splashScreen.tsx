@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 import Splash6 from '../../assets/images/splash6.svg';
 import Splash7 from '../../assets/images/splash7.svg';
 import Splash8 from '../../assets/images/splash8.svg';
@@ -13,42 +13,49 @@ import Splash15 from '../../assets/images/splash15.svg';
 import Splash16 from '../../assets/images/splash16.svg';
 
 const SplashScreen = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Splash6부터 시작
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // 화면 크기를 가져오기 위한 Dimensions 사용
   const { width, height } = Dimensions.get('window');
 
-  // 교체할 이미지 목록 (SVG 컴포넌트 6~16)
   const imageList = [
-    <Splash6 width={width} height={height} />, 
-    <Splash7 width={width} height={height} />,
-    <Splash8 width={width} height={height} />,
-    <Splash9 width={width} height={height} />,
-    <Splash10 width={width} height={height} />,
-    <Splash11 width={width} height={height} />,
-    <Splash12 width={width} height={height} />,
-    <Splash13 width={width} height={height} />,
-    <Splash14 width={width} height={height} />,
-    <Splash15 width={width} height={height} />,
-    <Splash16 width={width} height={height} />,
+    <Splash6 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash7 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash8 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash9 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash10 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash11 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash12 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash13 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash14 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash15 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash16 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
   ];
 
-  // 이미지 교체 및 1.6초 동안 이미지 순차적으로 교체
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) =>
         prevIndex < imageList.length - 1 ? prevIndex + 1 : prevIndex
       );
-    }, 50); // 각 이미지가 70ms 동안 표시됨
+    }, 50); 
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       {imageList[currentImageIndex]}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+  },
+});
 
 export default SplashScreen;
