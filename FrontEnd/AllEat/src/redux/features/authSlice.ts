@@ -24,7 +24,7 @@ const initialState: AuthState = {
   loading: false,
   error: null,
   token: null,
-  isSocial: false
+  isSocial: false,
 };
 
 // 비동기 회원가입 액션 생성
@@ -44,13 +44,26 @@ export const signupUser = createAsyncThunk(
         password: signupData.password,
       });
 
-      
       console.log('로그인도 성공!');
       const token = loginResponse.headers.authorization.split(' ')[1]; // Bearer 토큰 형식에서 'Bearer '를 제외한 실제 토큰만 추출
 
+      const addStoreResponse = await axios.post(
+        `${BACK_URL}/AllEat/record/add-store`,
+        {
+          restaurants_name: signupData.email, // useremail을 restaurants_name으로
+          restaurants_type: 'HOME',
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // 로그인에서 얻은 JWT 토큰을 헤더에 추가
+          },
+        },
+      );
+
+      console.log('가게 추가 성공!', addStoreResponse);
 
       // 헤더에서 JWT 토큰 추출
-      return {token, isSocial : signupData.isSocial}; // 토큰 반환
+      return {token, isSocial: signupData.isSocial}; // 토큰 반환
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || '회원가입 실패');
     }
@@ -60,7 +73,7 @@ export const signupUser = createAsyncThunk(
 // 비동기 로그인 액션 생성 (소셜 로그인 부분 제거)
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async (loginData: AuthData, { rejectWithValue }) => {
+  async (loginData: AuthData, {rejectWithValue}) => {
     try {
       if (!loginData.email || !loginData.password) {
         throw new Error('로그인 정보가 부족합니다.');
@@ -74,15 +87,13 @@ export const loginUser = createAsyncThunk(
 
       console.log('로그인 성공!');
       const token = response.headers.authorization.split(' ')[1]; // 토큰 추출
-      return {token, isSocial : loginData.isSocial}; // 토큰 반환
+      return {token, isSocial: loginData.isSocial}; // 토큰 반환
     } catch (error: any) {
       console.error(error);
       return rejectWithValue(error.response?.data?.message || '로그인 실패');
     }
-  }
+  },
 );
-
-
 
 // 인증 상태 관리를 위한 Slice 생성
 const authSlice = createSlice({
@@ -103,7 +114,7 @@ const authSlice = createSlice({
       })
       .addCase(
         signupUser.fulfilled,
-        (state, action: PayloadAction<{token: string, isSocial: boolean}>) => {
+        (state, action: PayloadAction<{token: string; isSocial: boolean}>) => {
           state.isAuthenticated = true;
           state.loading = false;
           state.token = action.payload.token; // 토큰 저장
@@ -123,7 +134,7 @@ const authSlice = createSlice({
       })
       .addCase(
         loginUser.fulfilled,
-        (state, action: PayloadAction<{token: string, isSocial:boolean}>) => {
+        (state, action: PayloadAction<{token: string; isSocial: boolean}>) => {
           state.isAuthenticated = true;
           state.loading = false;
           state.token = action.payload.token; // 토큰 저장

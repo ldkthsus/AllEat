@@ -18,22 +18,17 @@ import {AppDispatch} from '../../../redux/store';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import {RootState} from '../../../redux/store';
 import messaging from '@react-native-firebase/messaging';
-import axios from 'axios';
 
 type InitialScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Initial'
 >;
 
-
 const InitialScreen: React.FC = () => {
   const navigation = useNavigation<InitialScreenNavigationProp>();
 
-  const {isSocial} = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const {isSocial} = useSelector((state: RootState) => state.auth);
 
-  
   // const sendFcmTokenToServer = async (token: String) => {
   //   try {
   //     const response = await axios.put('https://your-spring-server.com/api/users/info', {
@@ -58,12 +53,11 @@ const InitialScreen: React.FC = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getExistingFcmToken();
+  }, []);
 
-  },[])
-
-  const [fcmToken, setFcmToken] = useState('')
+  const [fcmToken, setFcmToken] = useState('');
   const [weight, setWeight] = useState({
     weight: '',
   });
