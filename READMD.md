@@ -1,6 +1,6 @@
 # AllEat : 식단 식비 통합 자동관리 서비스
 
-![Happyre](readmeimg/main.png)
+![AllEat](readmeimg/main.png)
 
 ## 🚩 목차
 
@@ -131,6 +131,7 @@
 
 
 ### API 명세서
+- url : https://ring-barracuda-ca0.notion.site/API-fb4d9e04b25e4ef3a6ddb387e7ef43be
 ![API명세서0](./readmeimg/api0.png)
 ![API명세서1](./readmeimg/api1.png)
 ![API명세서2](./readmeimg/api2.png)
