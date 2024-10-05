@@ -29,7 +29,7 @@ public class MenuEntity {
     @Column(name = "menu_price", nullable = false)
     private Integer menuPrice;
 
-    @Column(name = "menu_calories", nullable = false)
+    @Column(name = "menu_calories")
     private Integer menuCalories;
 
     @Column(name = "menu_carbohydrate", nullable = true)
