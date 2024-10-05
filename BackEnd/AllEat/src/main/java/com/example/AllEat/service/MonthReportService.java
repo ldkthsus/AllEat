@@ -1,5 +1,5 @@
 package com.example.AllEat.service;
-
+import java.util.stream.Collectors;
 import com.example.AllEat.dto.weight.WeightResponseDTO;
 import com.example.AllEat.entity.*;
 import com.example.AllEat.jwt.JwtUtil;
@@ -145,15 +145,32 @@ public class MonthReportService {
         // collectMonthReport에서 필요한 데이터 추출
         List<Map<String, Object>> menuEntries = (List<Map<String, Object>>) collectedData.get("menuEntries");
 
-        List<Map<String, Object>> kcalRanking = menuEntries.stream()
+        // 메뉴 이름으로 그룹화하고 칼로리와 비용 합산
+        Map<String, Map<String, Object>> groupedMenuEntries = menuEntries.stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.get("menu_name").toString(),
+                        entry -> new HashMap<>(Map.of(
+                                "menu_name", entry.get("menu_name"),
+                                "calories", entry.get("calories") != null ? ((Number) entry.get("calories")).doubleValue() : 0.0,
+                                "cost", entry.get("cost") != null ? ((Number) entry.get("cost")).doubleValue() : 0.0
+                        )),
+                        (existing, newEntry) -> {
+                            existing.put("calories", ((Number) existing.get("calories")).doubleValue() + ((Number) newEntry.get("calories")).doubleValue());
+                            existing.put("cost", ((Number) existing.get("cost")).doubleValue() + ((Number) newEntry.get("cost")).doubleValue());
+                            return existing;
+                        }
+                ));
+
+        // 그룹화된 데이터를 리스트로 변환하여 칼로리와 비용으로 각각 정렬
+        List<Map<String, Object>> kcalRanking = groupedMenuEntries.values().stream()
                 .sorted(Comparator.comparingDouble(entry -> ((Number) ((Map<String, Object>) entry).get("calories")).doubleValue()).reversed())
                 .limit(10)
-                .toList();
+                .collect(Collectors.toList());
 
-        List<Map<String, Object>> costRanking = menuEntries.stream()
+        List<Map<String, Object>> costRanking = groupedMenuEntries.values().stream()
                 .sorted(Comparator.comparingDouble(entry -> ((Number) ((Map<String, Object>) entry).get("cost")).doubleValue()).reversed())
                 .limit(10)
-                .toList();
+                .collect(Collectors.toList());
 
         Map<String, Integer> restaurantTypeCount = (Map<String, Integer>) collectedData.get("restaurantTypeCount");
 

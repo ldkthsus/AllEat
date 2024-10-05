@@ -7,18 +7,23 @@ import com.example.AllEat.dto.weight.WeightDTO;
 import com.example.AllEat.dto.weight.WeightResponseDTO;
 import com.example.AllEat.entity.PayTransactionEntity;
 import com.example.AllEat.entity.PaymoneyEntity;
+import com.example.AllEat.entity.RestaurantsEntity;
 import com.example.AllEat.entity.UserEntity;
 import com.example.AllEat.repository.PayTransactionRepository;
 import com.example.AllEat.repository.PaymoneyRepository;
+import com.example.AllEat.repository.RestaurantsRepository;
+import com.example.AllEat.service.NotificationService;
 import com.example.AllEat.service.PayTransactionService;
 import com.example.AllEat.service.PaymoneyService;
 import com.example.AllEat.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDate;
 import java.sql.Date;
 import java.util.List;
@@ -39,6 +44,12 @@ public class PaymoneyController {
     private PaymoneyRepository paymoneyRepository;
     @Autowired
     private PayTransactionRepository payTransactionRepository;
+
+    @Autowired
+    private RestaurantsRepository restaurantsRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @PostMapping("")
     public ResponseEntity<?> createPaymoney(HttpServletRequest request) {
@@ -69,8 +80,15 @@ public class PaymoneyController {
     @PutMapping("")
     public ResponseEntity<?> payTransactionCreate(HttpServletRequest request, @RequestBody PayTransactionDTO payTransactionDTO) {
         try{
-            paymoneyService.modifyPaymoneyBalance(payTransactionDTO.getAmount(), request);
+            RestaurantsEntity restaurant = restaurantsRepository.findById(payTransactionDTO.getRestaurantId()).orElse(null);
+
+            paymoneyService.modifyPaymoneyBalance(payTransactionDTO.getAmount(),request);
             PayTransactionEntity payTransaction = payTransactionService.payTransactionCreate(payTransactionDTO, request);
+
+            UserEntity user = userService.findByRequest(request);
+            String response = notificationService.sendNotification(user, payTransaction);
+            System.out.println(response);
+
             return ResponseEntity.ok(payTransaction);
 
         } catch (Exception e){

@@ -36,5 +36,7 @@ public class UpdateRequestDTO {
     @JsonProperty("social_login")
     private String socialLogin;
 
+    @JsonProperty("fcm_token")
+    private String fcmToken;
 
 }

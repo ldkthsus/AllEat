@@ -12,12 +12,12 @@ class WeightRecord(BaseModel):
 
 
 class MenuRanking(BaseModel):
-    carbohydrates: float
+    carbohydrates: Optional[float] = None
     cost: float
-    fats: float
-    proteins: float
+    fats: Optional[float] = None
+    proteins: Optional[float] = None
     menu_name: str
-    restaurant_type: str
+    restaurant_type: Optional[str] = None
     calories: float
 
 class CostWhere(BaseModel):

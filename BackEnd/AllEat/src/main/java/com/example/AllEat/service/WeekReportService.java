@@ -152,10 +152,29 @@ public class WeekReportService {
     }
 
     private List<Map<String, Object>> getRanking(List<Map<String, Object>> menuEntries, String key, int limit) {
-        return menuEntries.stream()
-                .sorted((entry1, entry2) -> Double.compare(((Number) entry2.get(key)).doubleValue(), ((Number) entry1.get(key)).doubleValue())) // 내림차순 정렬
+        // 메뉴별로 영양소 및 비용을 합산하여 그룹화
+        Map<String, Map<String, Object>> groupedMenuEntries = new HashMap<>();
+
+        for (Map<String, Object> entry : menuEntries) {
+            String menuName = (String) entry.get("menu_name");
+            double value = ((Number) entry.get(key)).doubleValue();
+
+            if (!groupedMenuEntries.containsKey(menuName)) {
+                // 초기화
+                Map<String, Object> newEntry = new HashMap<>(entry);
+                newEntry.put(key, value); // 필요한 key의 값으로 초기화
+                groupedMenuEntries.put(menuName, newEntry);
+            } else {
+                // 기존 값에 누적
+                Map<String, Object> existingEntry = groupedMenuEntries.get(menuName);
+                existingEntry.put(key, ((Number) existingEntry.get(key)).doubleValue() + value);
+            }
+        }
+
+        // 합산된 결과를 내림차순으로 정렬하고 상위 limit 개수만 선택
+        return groupedMenuEntries.values().stream()
+                .sorted((entry1, entry2) -> Double.compare(((Number) entry2.get(key)).doubleValue(), ((Number) entry1.get(key)).doubleValue()))
                 .limit(limit)
-                .map(entry -> new HashMap<>(entry))  // Map을 복제하여 사용할 수 있도록 함
                 .collect(Collectors.toList());
     }
 
