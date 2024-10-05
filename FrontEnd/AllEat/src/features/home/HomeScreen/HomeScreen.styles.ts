@@ -237,8 +237,9 @@ export const styles = StyleSheet.create({
   alarmTitleBox: {
     flexDirection: 'row',
     alignItems: 'center',
+    padding: 3,
     gap: 5,
-    marginBottom: 10,
+    marginVertical: 10,
   },
   alarmWhiteBox: {
     width: '100%',
@@ -288,4 +289,5 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingBottom: 100,
   },
+  editMartAmountForm: {width: '88%'},
 });
