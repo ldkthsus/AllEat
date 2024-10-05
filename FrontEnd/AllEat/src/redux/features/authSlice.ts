@@ -60,7 +60,7 @@ export const signupUser = createAsyncThunk(
         },
       );
 
-      console.log('가게 추가 성공!', addStoreResponse);
+      console.log('가게 추가 성공!', addStoreResponse.status);
 
       // 헤더에서 JWT 토큰 추출
       return {token, isSocial: signupData.isSocial}; // 토큰 반환
