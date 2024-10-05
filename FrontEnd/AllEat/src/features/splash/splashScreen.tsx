@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Dimensions, StyleSheet } from 'react-native';
+import Splash4 from '../../assets/images/splash4.svg';
+import Splash5 from '../../assets/images/splash5.svg';
 import Splash6 from '../../assets/images/splash6.svg';
 import Splash7 from '../../assets/images/splash7.svg';
 import Splash8 from '../../assets/images/splash8.svg';
@@ -18,6 +20,8 @@ const SplashScreen = () => {
   const { width, height } = Dimensions.get('window');
 
   const imageList = [
+    <Splash4 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
+    <Splash5 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
     <Splash6 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
     <Splash7 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,
     <Splash8 width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />,

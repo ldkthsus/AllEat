@@ -15,14 +15,17 @@ export const styles = StyleSheet.create({
     width: '25%',
     display: 'flex',
     alignItems: 'center',
-    zIndex: 2, // 아이콘이 원형 위에 있도록 zIndex 조정
+    zIndex: 3, // 아이콘이 모든 요소 위에 있도록 조정
+  },
+  appBarContainer: {
+    position: 'relative', // 그림자 원, 흰색 원, 아이콘이 모두 포함된 컨테이너
+    zIndex: 2, // appBarContainer가 다른 요소들보다 뒤에 배치됨
   },
   appBar: {
     zIndex: 2, // appBar를 아이콘들 위에 배치
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#FFFFFF',
-    flex: 1,
     width: '100%',
     position: 'absolute',
     bottom: 0,
@@ -36,12 +39,17 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 100, // 완전한 원형으로 만들기
     bottom: -11,
-    left: -7,
-    zIndex: -1, // 원형이 아이콘과 appBar 뒤에 위치
-    // elevation 제거: 안드로이드에서 원형이 위로 올라오는 문제 해결
-    shadowColor: '#000', // 그림자 색상
-    shadowOffset: {width: 0, height: -4}, // 그림자 위치
-    shadowOpacity: 0.25, // 그림자 불투명도
-    shadowRadius: 10, // 그림자 반경 (흐림 효과)
+    left: -4,
+    zIndex: 1, // 원형이 그림자 원보다 위, 아이콘들보다는 아래에 위치
+  },
+  shadowCircle: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    borderRadius: 100, // 완전한 원형으로 만들기
+    bottom: -10,
+    left: -4,
+    zIndex: 0, // 그림자용 원은 제일 뒤에 위치
+    elevation: 10, // 안드로이드에서 그림자 효과를 위한 elevation
   },
 });
