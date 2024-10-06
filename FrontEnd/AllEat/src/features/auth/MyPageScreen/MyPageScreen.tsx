@@ -3,7 +3,7 @@ import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
-import {images} from '../../../constants';
+// import {images} from '../../../constants';
 import {icons} from '../../../constants';
 import {styles} from './MyPageScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
@@ -14,7 +14,7 @@ import UserInfo from '../components/UserInfo/UserInfo';
 import api from '../../../utils/api';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import FormModal from '../../../components/FormModal/FormModal';
-import AlarmModal from '../components/AlarmModal/AlarmModal';
+// import AlarmModal from '../components/AlarmModal/AlarmModal';
 import MenuCard from '../../../components/MenuCard/MenuCard';
 import {toggleFavorite} from '../../../redux/features/menuSlice';
 type MyPageScreenNavigationProp = NativeStackNavigationProp<
@@ -36,7 +36,7 @@ const MyPageScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [weightModalVisible, setWeightModalVisible] = useState(false);
   const [costModalVisible, setCostModalVisible] = useState(false);
-  const [alarmModalVisible, setAlarmModalVisible] = useState(false);
+  // const [alarmModalVisible, setAlarmModalVisible] = useState(false);
 
   // 리덕스 스토어에서 사용자 정보 가져오기
   const {
@@ -47,9 +47,9 @@ const MyPageScreen: React.FC = () => {
     weights,
     goal_weight,
     goal_cost,
-    breakfast_alarm,
-    lunch_alarm,
-    dinner_alarm,
+    // breakfast_alarm,
+    // lunch_alarm,
+    // dinner_alarm,
   } = useSelector((state: RootState) => state.info);
   const {menus} = useSelector((state: RootState) => state.menu);
   const handleWeightChange = async (
@@ -82,20 +82,20 @@ const MyPageScreen: React.FC = () => {
     dispatch(fetchUserInfo());
     setWeightModalVisible(false); // 모달을 닫음
   };
-  const parseTimeStringToDate = (
-    timeString: string | null,
-  ): Date | undefined => {
-    if (!timeString) return undefined;
+  // const parseTimeStringToDate = (
+  //   timeString: string | null,
+  // ): Date | undefined => {
+  //   if (!timeString) return undefined;
 
-    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+  //   const [hours, minutes, seconds] = timeString.split(':').map(Number);
 
-    const date = new Date();
-    date.setHours(hours);
-    date.setMinutes(minutes);
-    date.setSeconds(seconds || 0); // seconds가 없을 경우 0으로 설정
+  //   const date = new Date();
+  //   date.setHours(hours);
+  //   date.setMinutes(minutes);
+  //   date.setSeconds(seconds || 0); // seconds가 없을 경우 0으로 설정
 
-    return date;
-  };
+  //   return date;
+  // };
   const handleCostChange = async (goalCost: string) => {
     // goal에 대한 POST 요청
 
@@ -108,26 +108,26 @@ const MyPageScreen: React.FC = () => {
     dispatch(fetchUserInfo());
     setCostModalVisible(false); // 모달을 닫음
   };
-  const handleAlarmSave = async (newAlarms: {
-    breakfast: String;
-    lunch: String;
-    dinner: String;
-  }) => {
-    const formattedTimes = {
-      breakfast_alarm: newAlarms.breakfast,
-      lunch_alarm: newAlarms.lunch,
-      dinner_alarm: newAlarms.dinner,
-    };
+  // const handleAlarmSave = async (newAlarms: {
+  //   breakfast: String;
+  //   lunch: String;
+  //   dinner: String;
+  // }) => {
+  //   const formattedTimes = {
+  //     breakfast_alarm: newAlarms.breakfast,
+  //     lunch_alarm: newAlarms.lunch,
+  //     dinner_alarm: newAlarms.dinner,
+  //   };
 
-    try {
-      await api.put('/AllEat/alarm', formattedTimes);
-      console.log('Alarm Response:', formattedTimes);
-      dispatch(fetchUserInfo());
-      setAlarmModalVisible(false); // 모달 닫기
-    } catch (error) {
-      console.error('알람 설정 중 오류 발생:', error);
-    }
-  };
+  //   try {
+  //     await api.put('/AllEat/alarm', formattedTimes);
+  //     console.log('Alarm Response:', formattedTimes);
+  //     dispatch(fetchUserInfo());
+  //     setAlarmModalVisible(false); // 모달 닫기
+  //   } catch (error) {
+  //     console.error('알람 설정 중 오류 발생:', error);
+  //   }
+  // };
   const handleLogout = () => {
     // 로그아웃 액션 디스패치
     dispatch(logout());
@@ -205,7 +205,7 @@ const MyPageScreen: React.FC = () => {
               </View>
             </View>
           </View>
-          <View style={styles.boxContainer}>
+          {/* <View style={styles.boxContainer}>
             <View style={styles.box}>
               <View style={styles.titleBox}>
                 <TouchableOpacity
@@ -248,7 +248,7 @@ const MyPageScreen: React.FC = () => {
                 )}
               </View>
             </View>
-          </View>
+          </View> */}
           <FormModal
             visible={weightModalVisible}
             title="현재 체중 입력"
@@ -271,7 +271,7 @@ const MyPageScreen: React.FC = () => {
             isWeight={false}
             keyboardType="numeric"
           />
-          <AlarmModal
+          {/* <AlarmModal
             visible={alarmModalVisible}
             initialAlarms={{
               ...(breakfast_alarm
@@ -286,7 +286,7 @@ const MyPageScreen: React.FC = () => {
             }}
             onClose={() => setAlarmModalVisible(false)}
             onSave={handleAlarmSave}
-          />
+          /> */}
           <View style={styles.bookmarkContainer}>
             <View style={styles.bookmarkTitleContainer}>
               <Text style={styles.bookmarkTitle}>즐겨찾기</Text>
@@ -322,13 +322,18 @@ const MyPageScreen: React.FC = () => {
               </ScrollView>
             )}
           </View>
-          <CustomButton
+          {/* <CustomButton
             title="로그아웃"
             handlePress={handleLogout}
-            containerStyles="w-[40%] h-[60px] m-3" // Tailwind 스타일 전달
+            containerStyles="w-[40%] h-[60px] ml-3" // Tailwind 스타일 전달
             textStyles="text-white font-pbold" // Tailwind 스타일 전달
             isLoading={false} // 로딩 상태 설정
-          />
+          /> */}
+          <View style={styles.logout}>
+            <TouchableOpacity onPress={handleLogout}>
+              <Text>로그아웃</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </ScrollView>
