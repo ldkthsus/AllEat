@@ -57,6 +57,7 @@ import logIcon from '../assets/icons/logIcon.svg';
 import logMart from '../assets/icons/logMart.svg';
 import recordAlarm from '../assets/icons/recordAlarm.svg';
 import editAmount from '../assets/icons/editAmount.svg';
+import notificationUnChecked from '../assets/icons/notificationUnChecked.svg';
 const icons = {
   settings,
   home,
@@ -117,5 +118,6 @@ const icons = {
   logMart,
   recordAlarm,
   editAmount,
+  notificationUnChecked,
 };
 export default icons;

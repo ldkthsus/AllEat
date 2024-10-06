@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
-import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
+import {
+  useNavigation,
+  RouteProp,
+  useRoute,
+  useFocusEffect,
+} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
 import {icons} from '../../../constants';
@@ -186,39 +191,46 @@ const HomeScreen: React.FC = () => {
     };
   } | null>(null); // 마지막 결제 알림을 저장할 상태
 
-  useEffect(() => {
-    const fetchNotificationData = async () => {
-      try {
-        const response = await api.get('/AllEat/notification');
-        const notifications = response.data || [];
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchNotificationData = async () => {
+        try {
+          const response = await api.get('/AllEat/notification');
+          const notifications = response.data || [];
 
-        // '결제 알림'인 알림 중에서 마지막 알림만 찾기
-        const paymentNotifications = notifications.filter(
-          (notification: {title: string; isChecked: boolean}) =>
-            notification.title === '결제 알림' &&
-            notification.isChecked === false,
-        );
+          // '결제 알림' 중에서 마지막 알림만 찾기
+          const paymentNotifications = notifications.filter(
+            (notification: {title: string; isChecked: boolean}) =>
+              notification.title === '결제 알림' &&
+              notification.isChecked === false,
+          );
 
-        if (paymentNotifications.length > 0) {
-          const lastPaymentNotification =
-            paymentNotifications[paymentNotifications.length - 1];
+          if (paymentNotifications.length > 0) {
+            const lastPaymentNotification =
+              paymentNotifications[paymentNotifications.length - 1];
 
-          // transaction의 amount가 음수일 경우 양수로 변환
-          if (lastPaymentNotification.transaction.amount < 0) {
-            lastPaymentNotification.transaction.amount = Math.abs(
-              lastPaymentNotification.transaction.amount,
-            );
+            // transaction의 amount가 음수일 경우 양수로 변환
+            if (lastPaymentNotification.transaction.amount < 0) {
+              lastPaymentNotification.transaction.amount = Math.abs(
+                lastPaymentNotification.transaction.amount,
+              );
+            }
+
+            setLastNotification(lastPaymentNotification); // 마지막 결제 알림 저장
+          } else {
+            setLastNotification(null); // 더 이상 알림이 없으면 null로 설정
           }
-
-          setLastNotification(lastPaymentNotification); // 마지막 결제 알림 저장
+        } catch (error) {
+          console.error('Failed to fetch notifications:', error);
         }
-      } catch (error) {
-        console.error('Failed to fetch notifications:', error);
-      }
-    };
+      };
 
-    fetchNotificationData();
-  }, []); // 컴포넌트가 마운트될 때만 실행
+      // 홈 화면이 다시 포커스될 때마다 알림 데이터를 가져옴
+      fetchNotificationData();
+
+      // cleanup 함수는 필요 없을 때 사용할 수 있습니다.
+    }, []),
+  );
 
   const handleRecordMealPay = async () => {
     if (lastNotification && lastNotification.transaction) {
