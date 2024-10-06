@@ -44,6 +44,11 @@ const timeTranslations: {
   SNACK: {label: '간식', icon: icons.logSnack},
   MART: {label: '장보기', icon: icons.logMart},
 };
+// 이메일 형식인지 확인하는 함수
+const isEmail = (text: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(text);
+};
 
 const DateSection: React.FC<DateSectionProps> = ({
   date,
@@ -87,7 +92,9 @@ const DateSection: React.FC<DateSectionProps> = ({
                   key={`${menu.menu_name}-${menuIndex}`}>
                   <Text style={styles.menuTitle}>{menu.menu_name}</Text>
                   <Text style={styles.menuRestaurant}>
-                    {menu.restaurant_name}
+                    {isEmail(menu.restaurant_name)
+                      ? '집밥'
+                      : menu.restaurant_name}
                   </Text>
                   <Text style={styles.menuDetail}>
                     {menu.menu_kcal}kcal · ₩{menu.menu_cost.toLocaleString()}

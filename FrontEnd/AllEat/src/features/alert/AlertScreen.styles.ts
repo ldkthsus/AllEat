@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   body: {
@@ -23,11 +23,12 @@ export const styles = StyleSheet.create({
   },
   topIcon: {position: 'absolute', left: 20},
   bodyContainer: {
-    padding: 20
+    padding: 20,
   },
   alertContainer: {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   alertTextConatiner: {
     display: 'flex',
@@ -38,7 +39,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     fontSize: 15,
     letterSpacing: -0.3,
-    color: 'black'
+    color: 'black',
   },
   alertTimeText: {
     paddingStart: 11,
@@ -46,6 +47,66 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     letterSpacing: -0.3,
     color: 'black',
-    opacity: 0.5
-  }
+    opacity: 0.5,
+  },
+  noNotificationText: {
+    paddingStart: 10,
+    paddingBottom: 2,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 15,
+    letterSpacing: -0.3,
+    color: 'black',
+  },
+  alertTextChecked: {
+    paddingStart: 10,
+    paddingBottom: 2,
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 15,
+    letterSpacing: -0.3,
+    color: '#5E6066',
+  },
+  alarmTitleBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 4,
+    width: '100%',
+  },
+  alarmWhiteBox: {
+    width: '88%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 2,
+    padding: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  titleBoxText: {
+    fontSize: 16,
+    color: '#3d3d3d',
+    fontFamily: 'Pretendard-SemiBold',
+  },
+  actionButton: {
+    margin: 4,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '46%',
+    borderRadius: 10,
+  },
+  isRecord: {backgroundColor: '#DB8989'},
+  later: {backgroundColor: '#EBC5C5'},
+  actionText: {
+    fontSize: 12,
+    color: 'white',
+    fontFamily: 'Pretendard-Bold',
+  },
+  editMartAmountForm: {width: '88%'},
+  background: {
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
