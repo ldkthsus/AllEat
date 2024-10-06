@@ -3,14 +3,14 @@ import {ScrollView, View, Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
-import {images} from '../../../constants';
+// import {images} from '../../../constants';
 import {styles} from './InitialScreen.styles'; // 분리된 스타일을 임포트
 import CustomButton from '../../../components/CustomButton';
 import FormField from '../../../components/FormField/FormField';
 import {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
+// import AlarmSetting from '../components/AlarmSetting/AlarmSetting';
 import GenderSelection from '../components/GenderSelection/GenderSelection';
 import ActivityLevelSelection from '../components/ActivityLevelSelection/ActivityLevelSelection';
 import api from '../../../utils/api';
@@ -81,23 +81,23 @@ const InitialScreen: React.FC = () => {
     'breakfast' | 'lunch' | 'dinner' | null
   >(null);
 
-  const [isBreakfastEnabled, setIsBreakfastEnabled] = useState(false);
-  const [isLunchEnabled, setIsLunchEnabled] = useState(false);
-  const [isDinnerEnabled, setIsDinnerEnabled] = useState(false);
+  // const [isBreakfastEnabled, setIsBreakfastEnabled] = useState(false);
+  // const [isLunchEnabled, setIsLunchEnabled] = useState(false);
+  // const [isDinnerEnabled, setIsDinnerEnabled] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const toggleAlarm = (type: 'breakfast' | 'lunch' | 'dinner') => {
-    if (type === 'breakfast') {
-      setIsBreakfastEnabled(!isBreakfastEnabled);
-    } else if (type === 'lunch') {
-      setIsLunchEnabled(!isLunchEnabled);
-    } else if (type === 'dinner') {
-      setIsDinnerEnabled(!isDinnerEnabled);
-    }
-  };
+  // const toggleAlarm = (type: 'breakfast' | 'lunch' | 'dinner') => {
+  //   if (type === 'breakfast') {
+  //     setIsBreakfastEnabled(!isBreakfastEnabled);
+  //   } else if (type === 'lunch') {
+  //     setIsLunchEnabled(!isLunchEnabled);
+  //   } else if (type === 'dinner') {
+  //     setIsDinnerEnabled(!isDinnerEnabled);
+  //   }
+  // };
 
-  const onPressTime = (time: 'breakfast' | 'lunch' | 'dinner') => {
-    setVisiblePicker(time);
-  };
+  // const onPressTime = (time: 'breakfast' | 'lunch' | 'dinner') => {
+  //   setVisiblePicker(time);
+  // };
 
   const onConfirm = (selectedDate: Date) => {
     if (visiblePicker === 'breakfast') {
@@ -114,17 +114,17 @@ const InitialScreen: React.FC = () => {
     setVisiblePicker(null);
   };
   const handleSubmit = async () => {
-    const alarmTime = {
-      breakfast_alarm: isBreakfastEnabled
-        ? alarm.breakfast.toLocaleTimeString('it-IT')
-        : '',
-      lunch_alarm: isLunchEnabled
-        ? alarm.lunch.toLocaleTimeString('it-IT')
-        : '',
-      dinner_alarm: isDinnerEnabled
-        ? alarm.dinner.toLocaleTimeString('it-IT')
-        : '',
-    };
+    // const alarmTime = {
+    //   breakfast_alarm: isBreakfastEnabled
+    //     ? alarm.breakfast.toLocaleTimeString('it-IT')
+    //     : '',
+    //   lunch_alarm: isLunchEnabled
+    //     ? alarm.lunch.toLocaleTimeString('it-IT')
+    //     : '',
+    //   dinner_alarm: isDinnerEnabled
+    //     ? alarm.dinner.toLocaleTimeString('it-IT')
+    //     : '',
+    // };
 
     const formData = new FormData();
     formData.append('data', {
@@ -149,7 +149,7 @@ const InitialScreen: React.FC = () => {
     console.log(formData);
     console.log(weight);
     console.log(goal);
-    console.log(alarmTime);
+    // console.log(alarmTime);
     //여기서 axios요청 보내기
     //goal은 /AllEat/users/goals(POST)
     //weight은 /AllEat/weight(POST)
@@ -176,9 +176,9 @@ const InitialScreen: React.FC = () => {
       });
       console.log('Weight Response:', weightResponse.data);
 
-      // alarm에 대한 POST 요청
-      const alarmResponse = await api.post('/AllEat/alarm', alarmTime);
-      console.log('Weight Response:', alarmResponse.data);
+      // // alarm에 대한 POST 요청
+      // const alarmResponse = await api.post('/AllEat/alarm', alarmTime);
+      // console.log('Weight Response:', alarmResponse.data);
       dispatch(fetchUserInfo());
       // 모든 요청이 성공하면 약관페이지로 이동
       navigation.navigate('Agreement');
@@ -255,7 +255,7 @@ const InitialScreen: React.FC = () => {
           selectedActiveRange={form.activity_amount}
           onSelect={activity_amount => setForm({...form, activity_amount})}
         />
-        <View style={styles.form}>
+        {/* <View style={styles.form}>
           <Text style={styles.formLabel}>알람을 언제 보낼까요?</Text>
           <AlarmSetting
             isEnabled={isBreakfastEnabled}
@@ -281,7 +281,7 @@ const InitialScreen: React.FC = () => {
             onPress={() => onPressTime('dinner')}
             icon={images.dinner}
           />
-        </View>
+        </View> */}
         <CustomButton
           title="계속하기"
           // handlePress={handleSubmit}

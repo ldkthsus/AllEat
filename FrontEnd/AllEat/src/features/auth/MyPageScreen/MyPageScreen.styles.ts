@@ -147,4 +147,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
     width: '100%',
   },
+  logout: {
+    justifyContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    marginTop: 500,
+  },
 });
