@@ -1,6 +1,12 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import {images, icons} from '../../constants';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
+import {icons} from '../../constants';
 
 type RecordBox2Props = {
   title: string; // 예: '아침'
@@ -20,7 +26,7 @@ const RecordBox2: React.FC<RecordBox2Props> = ({
   return (
     <View style={styles.recordContainer}>
       {isRecorded ? (
-        <TouchableOpacity onPress={onPress}>
+        <Pressable onPress={onPress}>
           <View style={styles.recordBox}>
             <View style={styles.recordPriceBox}>
               <Text style={styles.priceText}>{price.toLocaleString()}₩</Text>
@@ -34,7 +40,7 @@ const RecordBox2: React.FC<RecordBox2Props> = ({
               <icons.checkWhite height={24} width={24} />
             </View>
           </View>
-        </TouchableOpacity>
+        </Pressable>
       ) : (
         <View>
           <View style={styles.recordBox}>

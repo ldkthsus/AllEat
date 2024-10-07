@@ -2,9 +2,10 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   modalContent: {
-    width: '80%',
+    width: '100%',
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
     alignItems: 'center',
   },
   modalHeader: {
@@ -55,7 +56,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 10,
     gap: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+
+    // borderBottomLeftRadius: 10,
+    // borderBottomRightRadius: 10,
   },
+  // modalMenuList: {minHeight: 210},
 });

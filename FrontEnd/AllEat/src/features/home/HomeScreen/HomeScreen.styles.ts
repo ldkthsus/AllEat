@@ -202,7 +202,7 @@ export const styles = StyleSheet.create({
   rightRecord: {},
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },

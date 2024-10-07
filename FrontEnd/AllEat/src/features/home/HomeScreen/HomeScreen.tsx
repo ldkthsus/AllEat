@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Modal,
+  Pressable,
+} from 'react-native';
 import {
   useNavigation,
   RouteProp,
@@ -903,7 +910,7 @@ const HomeScreen: React.FC = () => {
           animationType="slide"
           transparent={true}
           onRequestClose={closeModal}>
-          <View style={styles.modalContainer}>
+          <Pressable style={styles.modalContainer} onPress={closeModal}>
             <RecordDetailModal
               id={selectedRecord.id}
               title={selectedRecord.title}
@@ -913,7 +920,7 @@ const HomeScreen: React.FC = () => {
               onClose={closeModal}
               onPress={() => handleRecordBoxPress(false, selectedRecord.title)}
             />
-          </View>
+          </Pressable>
         </Modal>
       )}
 
