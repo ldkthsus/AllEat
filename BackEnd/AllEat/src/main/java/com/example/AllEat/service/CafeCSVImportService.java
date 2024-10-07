@@ -56,10 +56,10 @@ public class CafeCSVImportService {
                     menuEntity.setMenuPrice(menuPrice); // 메뉴 가격 설정
                     menuEntity.setMenuType(0); // 메뉴 타입 (고정값 0)
                     menuEntity.setMenuValue(1.0); // 메뉴 수량 (고정값 1.0)
-                    menuEntity.setMenuCarbohydrate(null); // 기본값 null
-                    menuEntity.setMenuProtein(null); // 기본값 null
-                    menuEntity.setMenuFat(null); // 기본값 null
-                    menuEntity.setMenuCalories(null); // 기본값 null
+                    menuEntity.setMenuCarbohydrate(0.0); // 기본값 null
+                    menuEntity.setMenuProtein(0.0); // 기본값 null
+                    menuEntity.setMenuFat(0.0); // 기본값 null
+                    menuEntity.setMenuCalories(0); // 기본값 null
 
                     menuRepository.save(menuEntity);
                 } catch (NumberFormatException e) {
