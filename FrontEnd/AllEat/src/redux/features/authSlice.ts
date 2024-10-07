@@ -1,6 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction} from '@reduxjs/toolkit';
 import axios from 'axios';
 import {BACK_URL} from '@env';
+import {store} from '../store';
 
 // 회원가입 및 로그인 시 필요한 데이터 타입 정의
 interface AuthData {
@@ -46,6 +47,10 @@ export const signupUser = createAsyncThunk(
 
       console.log('로그인도 성공!');
       const token = loginResponse.headers.authorization.split(' ')[1]; // Bearer 토큰 형식에서 'Bearer '를 제외한 실제 토큰만 추출
+      if (token) {
+        // 만약 토큰이 있으면 로그인 상태 유지
+        store.dispatch({ type: 'auth/rehydrate', payload: token });
+      }
 
       const addStoreResponse = await axios.post(
         `${BACK_URL}/AllEat/record/add-store`,
