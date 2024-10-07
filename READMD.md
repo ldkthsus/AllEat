@@ -60,23 +60,7 @@
   - 동시 기록 및 관리를 통한 효율적인 레포트 제공
 
 ## ✨ 화면 정의서
-
-초기 페이지|로그인 페이지|회원 가입|메인 페이지
------|-----|-----|-----
-![초기페이지](readmeimg/startpage.png)|![로그인페이지](readmeimg/signin.png)|![회원가입](readmeimg/signup.png)|![메인페이지](readmeimg/myhome.jpg)
-
-식단 등록|메뉴 등록|사진 등록|수기 등록
------|-----|-----|-----
-![식단등록](readmeimg/create-oreo.png)|![메뉴등록](readmeimg/add-menu.png)|![카메라](readmeimg/camera.png)|![수기등록](readmeimg/create-menu.png)
-
-일간 레포트|주간 레포트|월간 레포트|식비 내역
------|-----|-----|-----
-![일간](readmeimg/dayreport.png)|![주간](readmeimg/weekreport.png)|![월간](readmeimg/monthreport.png)|![식비내역](readmeimg/logpage.png)
-
-페이 머니|마이 페이지|내 정보 수정|---
------|-----|-----|-----
-![페이머니](readmeimg/paymoney.png)|![마이페이지](readmeimg/mypage.png)|![업데이트](readmeimg/mypageupdate.png)|---
-
+![화면정의서](./readmeimg/화면정의서.png)
 
 ## ✨ 기능 소개
 
@@ -136,6 +120,22 @@
 ![API명세서1](./readmeimg/api1.png)
 ![API명세서2](./readmeimg/api2.png)
 
+### 화면 구성
+초기 페이지|로그인 페이지|회원 가입|메인 페이지
+-----|-----|-----|-----
+![초기페이지](readmeimg/startpage.png)|![로그인페이지](readmeimg/signin.png)|![회원가입](readmeimg/signup.png)|![메인페이지](readmeimg/myhome.jpg)
+
+식단 등록|메뉴 등록|사진 등록|수기 등록
+-----|-----|-----|-----
+![식단등록](readmeimg/create-oreo.png)|![메뉴등록](readmeimg/add-menu.png)|![카메라](readmeimg/camera.png)|![수기등록](readmeimg/create-menu.png)
+
+일간 레포트|주간 레포트|월간 레포트|식비 내역
+-----|-----|-----|-----
+![일간](readmeimg/dayreport.png)|![주간](readmeimg/weekreport.png)|![월간](readmeimg/monthreport.png)|![식비내역](readmeimg/logpage.png)
+
+페이 머니|마이 페이지|내 정보 수정|---
+-----|-----|-----|-----
+![페이머니](readmeimg/paymoney.png)|![마이페이지](readmeimg/mypage.png)|![업데이트](readmeimg/mypageupdate.png)|---
 ## ✨ 팀원 소개 및 소감
 ![팀원소개0](./readmeimg/memberint0.png)
 ![팀원소개1](./readmeimg/memberint1.png)
