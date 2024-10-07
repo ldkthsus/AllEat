@@ -50,6 +50,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   socialButtonText: {
+    color: 'grey',
     fontSize: 16,
     fontFamily: 'Pretendard-Bold',
   },

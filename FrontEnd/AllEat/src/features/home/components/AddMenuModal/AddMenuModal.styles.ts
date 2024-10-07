@@ -14,6 +14,7 @@ export const styles = StyleSheet.create({
     // flexWrap: 'wrap',
     justifyContent: 'space-around',
     position: 'relative',
+    height: 430
   },
   modalTitle: {
     flexDirection: 'row',
@@ -23,14 +24,13 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
   },
   modalTitleText: {
-    fontSize: 18,
-
+    fontSize: 23,
     color: '#3d3d3d',
     fontFamily: 'Pretendard-Bold',
   },
   modalIcon: {},
   searchBox: {
-    height: '420%',
+    height: '500%',
     top: '110%',
     width: '100%',
     position: 'absolute',

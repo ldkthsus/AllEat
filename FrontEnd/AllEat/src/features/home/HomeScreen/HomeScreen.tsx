@@ -705,8 +705,8 @@ const HomeScreen: React.FC = () => {
               />
               <images.Subtract
                 style={styles.overlayImage}
-                height={120}
-                width={120}
+                height={130}
+                width={130}
               />
             </View>
             <View style={styles.progressWrapper}>
@@ -725,8 +725,8 @@ const HomeScreen: React.FC = () => {
               />
               <images.Subtract
                 style={styles.overlayImage}
-                height={120}
-                width={120}
+                height={130}
+                width={130}
               />
             </View>
           </View>

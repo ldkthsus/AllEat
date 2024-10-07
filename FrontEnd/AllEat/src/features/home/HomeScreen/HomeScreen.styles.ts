@@ -60,6 +60,9 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Pretendard-Bold',
   },
+  mainConatiner: {
+    backgroundColor: 'whitesmoke'
+  },
   mainbox: {
     flex: 1,
     width: '100%',

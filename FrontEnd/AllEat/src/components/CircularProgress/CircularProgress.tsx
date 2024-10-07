@@ -16,7 +16,7 @@ interface CircularProgressProps {
 }
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
-  size = 120,
+  size = 130,
   strokeWidth = 10,
   progress = 0.36,
   total,
