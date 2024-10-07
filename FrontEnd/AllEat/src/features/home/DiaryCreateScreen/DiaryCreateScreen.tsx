@@ -352,7 +352,7 @@ const DiaryCreateScreen: React.FC = () => {
       let response;
       let diaryData;
       // POST or PUT 요청 분기
-      console.log(diaryData);
+      console.log('diaryData : ', diaryData);
       if (diaryId[mealKey]) {
         // 요청할 데이터 생성
         diaryData = {
@@ -362,7 +362,7 @@ const DiaryCreateScreen: React.FC = () => {
             person_count: meal.person_count, // 해당 메뉴의 인원 수
           })),
         };
-        console.log(diaryData);
+        console.log('diaryData : ', diaryData);
         response = await api.put('/AllEat/record/menu', diaryData);
       } else {
         // 요청할 데이터 생성
@@ -374,7 +374,7 @@ const DiaryCreateScreen: React.FC = () => {
             person_count: meal.person_count, // 해당 메뉴의 인원 수
           })),
         };
-        console.log(diaryData);
+        console.log('diaryData : ', diaryData);
         response = await api.post('/AllEat/record/menu', diaryData);
       }
       console.log('다이어리 추가 성공:', response.data);
