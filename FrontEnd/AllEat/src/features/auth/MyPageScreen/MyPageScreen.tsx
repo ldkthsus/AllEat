@@ -143,6 +143,11 @@ const MyPageScreen: React.FC = () => {
   const handleToggleFavorite = (menuId: number, favorite: boolean) => {
     dispatch(toggleFavorite({menuId, favorite}));
   };
+  // 이메일 형식인지 확인하는 함수
+  const isEmail = (text: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(text);
+  };
   return (
     <ScrollView>
       <View style={styles.body}>
@@ -292,11 +297,11 @@ const MyPageScreen: React.FC = () => {
               <Text style={styles.bookmarkTitle}>즐겨찾기</Text>
               {toggleBookmark ? (
                 <TouchableOpacity onPress={() => setToggleBookmark(false)}>
-                  <icons.arrowBackTopWhite height={20} width={20} />
+                  <icons.arrowBackTopWhite height={16} width={16} />
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity onPress={() => setToggleBookmark(true)}>
-                  <icons.arrowBackBottomWhite height={20} width={20} />
+                  <icons.arrowBackBottomWhite height={16} width={16} />
                 </TouchableOpacity>
               )}
             </View>
@@ -307,7 +312,11 @@ const MyPageScreen: React.FC = () => {
                     key={favoriteItem.menu_id} // menu_id를 키로 사용
                     isFavorate={favoriteItem.favorite} // favorite 상태
                     menu={favoriteItem.menu_name} // 메뉴 이름
-                    restaurantName={favoriteItem.restaurants_name}
+                    restaurantName={
+                      isEmail(favoriteItem.restaurants_name)
+                        ? '집밥'
+                        : favoriteItem.restaurants_name
+                    }
                     kcal={favoriteItem.menu_calories} // 칼로리
                     price={favoriteItem.menu_price} // 가격
                     onToggleFavorite={() =>

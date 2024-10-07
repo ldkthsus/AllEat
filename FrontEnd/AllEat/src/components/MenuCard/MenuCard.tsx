@@ -26,7 +26,7 @@ const MenuCard: React.FC<MenuCardProps> = ({
   restaurantName,
 }) => {
   return (
-    <View style={[isFavoritePage ? styles.favorite : styles.restaurantMenu]}>
+    <View style={styles.restaurantMenu}>
       <TouchableOpacity style={styles.icons} onPress={onToggleFavorite}>
         {isFavorate ? (
           <icons.bookmark height={24} width={24} />

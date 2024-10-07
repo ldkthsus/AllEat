@@ -46,11 +46,14 @@ export const styles = StyleSheet.create({
   },
   homeDate: {
     position: 'relative',
+    width: '80%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   calanderBtn: {
     position: 'absolute',
     top: 8,
-    left: 67,
+    left: 164,
   },
   day: {
     color: '#3D3D3D',

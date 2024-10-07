@@ -83,7 +83,7 @@ const menuSlice = createSlice({
       action: PayloadAction<{menuId: number; favorite: boolean}>,
     ) {
       const {menuId, favorite} = action.payload;
-      const menu = state.menus.find(menu => menu.menu_id === menuId);
+      const menu = state.menus.find(favmenu => favmenu.menu_id === menuId);
       if (menu) {
         menu.favorite = favorite;
       }
