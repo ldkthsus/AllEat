@@ -230,7 +230,7 @@ const DiaryCreateScreen: React.FC = () => {
     };
 
     fetchRestaurantsData(); // 컴포넌트 마운트 시 API 호출
-    dispatch(fetchMenus());
+    // dispatch(fetchMenus());
   }, [date, dispatch]);
 
   const titleMapping: {[key: string]: string} = {
