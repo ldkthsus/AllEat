@@ -58,9 +58,9 @@ public class CrawlingController {
             if (findUser == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-            // 2. 크롤링 시작 및 CSV 파일 생성
-            restaurantsCrawlingService.startCrawling();
+//
+//            // 2. 크롤링 시작 및 CSV 파일 생성
+//            restaurantsCrawlingService.startCrawling();
 
             // 3. 현재 작업 디렉토리를 기준으로 파일 경로 설정
             String rootPath = System.getProperty("user.dir"); // 현재 프로젝트의 루트 디렉토리
