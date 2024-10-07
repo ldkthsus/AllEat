@@ -27,7 +27,7 @@ public class CsvToDatabaseService {
     public void saveCsvToDatabase(String combinedCsvPath, String foodInfoPath) {
         Map<String, FoodInfo> foodInfoMap = readFoodInfoCsv(foodInfoPath);
 
-        String outputCsvPath = "combined_data.csv";
+        String outputCsvPath = "combinedData.csv";
         try (Reader reader = new FileReader(combinedCsvPath);
              BufferedWriter writer = new BufferedWriter(new FileWriter(outputCsvPath));
              CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
