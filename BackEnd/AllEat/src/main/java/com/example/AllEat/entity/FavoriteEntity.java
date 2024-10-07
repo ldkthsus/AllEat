@@ -18,7 +18,7 @@ public class FavoriteEntity {
     private Integer id;
 
     // MenuEntity와 1대1 관계 설정
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     private MenuEntity menu;
 

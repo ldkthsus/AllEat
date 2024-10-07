@@ -122,7 +122,7 @@ public class UserEntity {
         }
     }
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FavoriteEntity> favorites;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)

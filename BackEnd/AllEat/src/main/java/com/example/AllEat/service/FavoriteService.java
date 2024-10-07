@@ -54,7 +54,8 @@ public class FavoriteService {
         System.out.println("userId : " + requestUser.getId());
         System.out.println("menuId : " + menuId);
         FavoriteEntity findFavorite = favoriteRepository.findByUserIdAndMenuId(requestUser.getId(), menuId);
-        System.out.println(findFavorite.getId());
+        System.out.println(findFavorite);
+
         if (findFavorite != null) {
             favoriteRepository.delete(findFavorite);
         }

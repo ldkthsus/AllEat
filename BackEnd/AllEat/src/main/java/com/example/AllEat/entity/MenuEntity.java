@@ -48,9 +48,9 @@ public class MenuEntity {
     private double menuValue;
 
     // 즐겨찾기와 1:1 관계 추가할 예정
-    @OneToOne(mappedBy = "menu", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
-    private FavoriteEntity favorite;
+    private List<FavoriteEntity> favorite;
 
     @OneToMany(mappedBy = "menu", orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonIgnore
