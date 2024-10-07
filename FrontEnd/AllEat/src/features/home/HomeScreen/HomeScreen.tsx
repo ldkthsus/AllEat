@@ -190,16 +190,26 @@ const HomeScreen: React.FC = () => {
       transaction_date: string;
     };
   } | null>(null); // 마지막 결제 알림을 저장할 상태
-
+  const [notifications, setNotifications] = useState<
+    {
+      id: number;
+      isChecked: boolean;
+      title: string;
+      transaction: {
+        restaurantsName: string;
+        restaurantsType: string;
+      };
+    }[]
+  >([]);
   useFocusEffect(
     React.useCallback(() => {
       const fetchNotificationData = async () => {
         try {
           const response = await api.get('/AllEat/notification');
-          const notifications = response.data || [];
-
+          const responsenotifications = response.data || [];
+          setNotifications(responsenotifications);
           // '결제 알림' 중에서 마지막 알림만 찾기
-          const paymentNotifications = notifications.filter(
+          const paymentNotifications = responsenotifications.filter(
             (notification: {title: string; isChecked: boolean}) =>
               notification.title === '결제 알림' &&
               notification.isChecked === false,
@@ -231,7 +241,10 @@ const HomeScreen: React.FC = () => {
       // cleanup 함수는 필요 없을 때 사용할 수 있습니다.
     }, []),
   );
-
+  // `isChecked`가 false인 알림이 하나라도 있는지 확인
+  const hasUncheckedNotifications = notifications.some(
+    notification => !notification.isChecked,
+  );
   const handleRecordMealPay = async () => {
     if (lastNotification && lastNotification.transaction) {
       const {amount, id} = lastNotification.transaction;
@@ -357,11 +370,19 @@ const HomeScreen: React.FC = () => {
           onPress={() => setIsCalanderModalVisible(true)} // 캘린더 모달을 띄우는 onPress 이벤트 추가
         >
           <Text style={styles.day}>{formatDate(currentDate)}</Text>
-          <icons.arrowDropDown
-            style={styles.calanderBtn}
-            height={15}
-            width={15}
-          />
+          {isCalanderModalVisible ? (
+            <icons.arrowDropDownTop
+              style={styles.calanderBtn}
+              height={15}
+              width={15}
+            />
+          ) : (
+            <icons.arrowDropDown
+              style={styles.calanderBtn}
+              height={15}
+              width={15}
+            />
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity onPress={handleNextDay}>
@@ -378,7 +399,7 @@ const HomeScreen: React.FC = () => {
           height={20}
           width={20}
         />
-        {lastNotification && (
+        {hasUncheckedNotifications && (
           <icons.notiBadge style={styles.notiBadge} height={10} width={10} />
         )}
       </View>

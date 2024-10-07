@@ -59,10 +59,10 @@ export const styles = StyleSheet.create({
   },
   bookmarkContainer: {
     margin: 4,
-    padding: 12,
+    // padding: 12,
     // paddingTop: 20,
     borderRadius: 10,
-    backgroundColor: '#B7CAFF',
+    backgroundColor: '#F3F4F7',
     maxHeight: 200,
     width: '100%',
   },
@@ -70,11 +70,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    margin: 10,
   },
   bookmarkTitle: {
-    color: 'white',
+    color: '#3d3d3d',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
-    marginBottom: 2,
+    // marginBottom: 2,
+    paddingHorizontal: 16,
   },
 });

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation, RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootStackParamList} from '../../../types/navigation';
@@ -14,7 +14,8 @@ import api from '../../../utils/api';
 import CustomMenuModal from '../components/CustomMenuModal/CustomMenuModal';
 import AddMenuModal from '../components/AddMenuModal/AddMenuModal';
 import {RootState} from '../../../redux/store';
-
+import {AppDispatch} from '../../../redux/store';
+import {fetchMenus} from '../../../redux/features/menuSlice';
 type DiaryCreateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'DiaryCreate'
@@ -54,7 +55,7 @@ const DiaryCreateScreen: React.FC = () => {
       (currentIndex - 1 + mealTimes.length) % mealTimes.length;
     setMeals(mealTimes[previousIndex]); // 이전 식사 시간 설정
   };
-
+  const dispatch = useDispatch<AppDispatch>();
   const goToNextMealTime = () => {
     const currentIndex = mealTimes.indexOf(meals);
     const nextIndex = (currentIndex + 1) % mealTimes.length;
@@ -229,7 +230,8 @@ const DiaryCreateScreen: React.FC = () => {
     };
 
     fetchRestaurantsData(); // 컴포넌트 마운트 시 API 호출
-  }, [date]);
+    dispatch(fetchMenus());
+  }, [date, dispatch]);
 
   const titleMapping: {[key: string]: string} = {
     BREAKFAST: '아침',

@@ -114,10 +114,10 @@ export const styles = StyleSheet.create({
   },
   bookmarkContainer: {
     margin: 10,
-    padding: 10,
-    paddingTop: 20,
+    // padding: 10,
+    // paddingTop: 20,
     borderRadius: 10,
-    backgroundColor: '#B7CAFF',
+    backgroundColor: '#F3F4F7',
     maxHeight: 500,
     shadowColor: '#000', // 그림자 색상
     shadowOffset: {
@@ -131,12 +131,13 @@ export const styles = StyleSheet.create({
   bookmarkTitleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    padding: 16,
   },
   bookmarkTitle: {
-    color: 'white',
+    color: '#3d3d3d',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
-    marginBottom: 10,
+    // marginBottom: 10,
   },
 
   input: {

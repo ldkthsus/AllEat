@@ -281,7 +281,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       menu_price: 0, // 가격은 0으로 설정 (추가 가능)
     };
   };
-
+  // 이메일 형식인지 확인하는 함수
+  const isEmail = (text: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(text);
+  };
   const kikiImages = [images.kikiRunning1, images.kikiRunning2];
   if (isUploading === true) {
     return (
@@ -317,7 +321,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                 <MenuCard
                   key={menu.menu_id}
                   menu={menu.menu_name}
-                  restaurantName={menu.restaurants_name}
+                  restaurantName={
+                    isEmail(menu.restaurants_name)
+                      ? '집밥'
+                      : menu.restaurants_name
+                  }
                   isFavorate={menu.favorite}
                   kcal={menu.menu_calories}
                   price={menu.menu_price}
@@ -372,6 +380,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
                 menu={favoriteItem.menu_name} // 메뉴 이름
                 kcal={favoriteItem.menu_calories} // 칼로리
                 price={favoriteItem.menu_price} // 가격
+                restaurantName={
+                  isEmail(favoriteItem.restaurants_name)
+                    ? '집밥'
+                    : favoriteItem.restaurants_name
+                }
                 onToggleFavorite={() =>
                   dispatch(
                     toggleFavorite({
