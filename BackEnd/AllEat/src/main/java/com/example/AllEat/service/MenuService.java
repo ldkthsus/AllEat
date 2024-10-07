@@ -161,6 +161,9 @@ public class MenuService {
         List<MenuPossibleDTO> possibleMenu = new ArrayList<>();
         for (PayTransactionEntity payTransactionEntity : findPayTransaction) {
             RestaurantsEntity findRestaurants = restaurantsRepository.findById(payTransactionEntity.getRestaurant().getId()).orElseThrow(()-> new IllegalArgumentException("restaurant not found"));
+            if(findRestaurants.getId() == 1) {
+                continue;
+            }
             List<MenuEntity> findMenus = menuRepository.findByRestaurants_idAndMenuPriceLessThanEqualOrderByMenuPriceDesc(findRestaurants.getId(), Math.abs(payTransactionEntity.getAmount()));
 
             List<MenuEntity> favoriteMenus = new ArrayList<>();
