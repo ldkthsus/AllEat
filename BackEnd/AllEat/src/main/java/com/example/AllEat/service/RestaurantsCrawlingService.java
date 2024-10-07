@@ -191,7 +191,7 @@ public class RestaurantsCrawlingService {
 
             // 새 파일일 경우 헤더 추가
             if (isNewFile) {
-                writer.println("음식점 이름, 메뉴 이름, 메뉴 가격, 에너지, 탄수화물, 단백질, 지방");
+                writer.println("음식점 이름,메뉴 이름,메뉴 가격,에너지,탄수화물,단백질,지방");
             }
 
             for (String menu : menuList) {
@@ -201,7 +201,7 @@ public class RestaurantsCrawlingService {
                     int menuPrice = menuPriceStr.isEmpty() ? 0 : Integer.parseInt(menuPriceStr);
 
                     // CSV 파일에 빈 영양 성분 항목 추가
-                    writer.printf("%s, %s, %d, , , , \n", cafeName, menuParts[0], menuPrice);
+                    writer.printf("%s,%s,%d, , , , \n", cafeName, menuParts[0], menuPrice);
                 }
             }
             System.out.printf("음식점 '%s' 정보와 메뉴를 CSV에 저장 완료\n", cafeName);
