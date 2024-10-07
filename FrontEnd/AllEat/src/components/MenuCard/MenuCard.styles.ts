@@ -21,7 +21,7 @@ export const styles = StyleSheet.create({
   //   borderRadius: 10,
   //   marginBottom: 10,
   // },
-  restaurantMenuBox: {width: '42%'},
+  restaurantMenuBox: {width: '80%'},
   restaurantMenuTitle: {
     color: '#3d3d3d',
     fontSize: 18,
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     color: '#3d3d3d',
     fontSize: 12,
     fontFamily: 'Pretendard-Regular',
-    width: '40%',
+    width: '50%',
     textAlign: 'right',
     paddingRight: 8,
   },

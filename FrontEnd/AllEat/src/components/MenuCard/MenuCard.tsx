@@ -39,10 +39,10 @@ const MenuCard: React.FC<MenuCardProps> = ({
         {restaurantName && (
           <Text style={styles.restaurantName}>{restaurantName}</Text>
         )}
+        <Text style={styles.restaurantMenuDetail}>
+          {kcal?.toLocaleString() || 0}kcal · {price.toLocaleString()}원
+        </Text>
       </View>
-      <Text style={styles.restaurantMenuDetail}>
-        {kcal.toLocaleString()}kcal · {price.toLocaleString()}원
-      </Text>
       {onAddMeal && (
         <TouchableOpacity style={styles.icons} onPress={onAddMeal}>
           <icons.plusWhite height={20} width={20} />

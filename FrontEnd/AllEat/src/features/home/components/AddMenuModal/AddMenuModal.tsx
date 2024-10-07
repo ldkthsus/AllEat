@@ -77,6 +77,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
   const {menus, searchQuery, loading, error} = useSelector(
     (state: RootState) => state.menu,
   );
+  const [visibleMenus, setVisibleMenus] = useState(20); // 처음에 20개만 보여줌
   const token = useSelector((state: RootState) => state.auth.token);
   const [toggleBookmark, setToggleBookmark] = useState(false);
   const [isUploading, setIsUploading] = useState(false); // 로딩 상태 추가
@@ -88,6 +89,9 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
 
   // 검색어에 따른 메뉴 필터링 (useMemo로 메모이제이션)
   const filteredMenus = useMemo(() => {
+    if (searchQuery.trim().length < 2) {
+      return []; // 검색어가 2자 미만일 때 빈 배열을 반환
+    }
     return menus.filter(
       menu =>
         menu.menu_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -96,6 +100,17 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
           .includes(searchQuery.toLowerCase()),
     );
   }, [menus, searchQuery]);
+
+  // 스크롤 끝에 도달했을 때 더 많은 메뉴를 불러오는 함수
+  const handleLoadMore = () => {
+    setVisibleMenus(prevVisibleMenus => prevVisibleMenus + 20); // 20개씩 더 로드
+  };
+
+  // 필터링된 메뉴 중 현재 visibleMenus만큼만 보여줌
+  const paginatedMenus = useMemo(() => {
+    return filteredMenus.slice(0, visibleMenus);
+  }, [filteredMenus, visibleMenus]);
+
   // 이미지 변경 로직
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -316,16 +331,23 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
         />
         {isSearchBoxVisible && (
           <View style={styles.searchBox}>
-            <ScrollView>
-              {filteredMenus.map(menu => (
+            <ScrollView
+              onScroll={({nativeEvent}) => {
+                const isCloseToBottom =
+                  nativeEvent.layoutMeasurement.height +
+                    nativeEvent.contentOffset.y >=
+                  nativeEvent.contentSize.height - 20;
+                if (isCloseToBottom) {
+                  handleLoadMore(); // 스크롤이 끝에 도달했을 때 더 많은 메뉴를 불러옴
+                }
+              }}
+              scrollEventThrottle={400} // 스크롤 이벤트 속도 조절
+            >
+              {paginatedMenus.map(menu => (
                 <MenuCard
                   key={menu.menu_id}
                   menu={menu.menu_name}
-                  restaurantName={
-                    isEmail(menu.restaurants_name)
-                      ? '집밥'
-                      : menu.restaurants_name
-                  }
+                  restaurantName={menu.restaurants_name}
                   isFavorate={menu.favorite}
                   kcal={menu.menu_calories}
                   price={menu.menu_price}
