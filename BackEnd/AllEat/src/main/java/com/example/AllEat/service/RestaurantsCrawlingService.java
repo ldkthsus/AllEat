@@ -183,7 +183,7 @@ public class RestaurantsCrawlingService {
     }
 
     private void saveCafeAndMenuData(String cafeName, List<String> menuList) {
-        File csvFile = new File("crawled_data.csv");
+        File csvFile = new File("crawledData.csv");
         boolean isNewFile = !csvFile.exists();
 
         try (FileWriter fileWriter = new FileWriter(csvFile, true);
