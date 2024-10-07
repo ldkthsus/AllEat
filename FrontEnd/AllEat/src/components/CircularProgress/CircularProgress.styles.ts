@@ -10,13 +10,13 @@ export const styles = StyleSheet.create({
     position: 'absolute',
   },
   currentText: {
-    fontSize: 20,
+    fontSize: 19,
     color: '#769BFF',
     fontFamily: 'Pretendard-SemiBold',
     zIndex: 1000,
   },
   totalText: {
-    fontSize: 14,
+    fontSize: 15,
     color: 'black',
     fontFamily: 'Pretendard-Light',
     zIndex: 1000,

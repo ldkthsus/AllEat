@@ -269,7 +269,7 @@ const MyPageScreen: React.FC = () => {
           />
           <FormModal
             visible={costModalVisible}
-            title="목표식비입력"
+            title="목표 식비 입력"
             initialValue={String(goal_cost)}
             onClose={() => setCostModalVisible(false)}
             onSave={handleCostChange}

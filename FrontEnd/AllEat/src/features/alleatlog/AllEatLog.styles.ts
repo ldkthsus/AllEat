@@ -9,8 +9,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    elevation: 5,
+    shadowColor: 'rgba(0, 0, 0, 0.5)',
   },
   day: {
     fontSize: 18,

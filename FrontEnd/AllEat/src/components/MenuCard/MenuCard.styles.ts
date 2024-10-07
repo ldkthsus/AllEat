@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   restaurantMenu: {
     backgroundColor: '#F3F4F7',
     flexDirection: 'row',
-    height: 56,
+    // height: 56,
     padding: 10,
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -27,6 +27,20 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Pretendard-SemiBold',
   },
+  menuInfoContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    // paddingLeft: 3,
+    // paddingRight: 0,
+    justifyContent: 'space-between'
+  },
+  menuNameBox: {
+    justifyContent: 'center',
+  },
+  menuInfoBox: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   restaurantName: {
     color: '#3d3d3d',
     fontSize: 12,
@@ -36,9 +50,9 @@ export const styles = StyleSheet.create({
     color: '#3d3d3d',
     fontSize: 12,
     fontFamily: 'Pretendard-Regular',
-    width: '50%',
+    // width: '50%',
     textAlign: 'right',
-    paddingRight: 8,
+    // paddingRight: 8,
   },
   icons: {width: '12%'},
 });

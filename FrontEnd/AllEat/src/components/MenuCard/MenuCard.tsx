@@ -35,13 +35,22 @@ const MenuCard: React.FC<MenuCardProps> = ({
         )}
       </TouchableOpacity>
       <View style={styles.restaurantMenuBox}>
-        <Text style={styles.restaurantMenuTitle}>{menu}</Text>
-        {restaurantName && (
-          <Text style={styles.restaurantName}>{restaurantName}</Text>
-        )}
-        <Text style={styles.restaurantMenuDetail}>
-          {kcal?.toLocaleString() || 0}kcal · {price.toLocaleString()}원
-        </Text>
+        <Text style={styles.restaurantMenuTitle}>{menu.trim()}</Text>
+          <View style={styles.menuInfoContainer}>
+            <View style={styles.menuNameBox}>
+            {restaurantName && (
+              <Text style={styles.restaurantName}>{restaurantName}</Text>
+            )}
+            </View>
+          <View style={styles.menuInfoBox}>
+            <Text style={styles.restaurantName}>
+              {kcal?.toLocaleString() || 0}kcal
+            </Text>
+            <Text style={styles.restaurantName}>
+              {price.toLocaleString()}원
+            </Text>
+          </View>
+        </View>
       </View>
       {onAddMeal && (
         <TouchableOpacity style={styles.icons} onPress={onAddMeal}>

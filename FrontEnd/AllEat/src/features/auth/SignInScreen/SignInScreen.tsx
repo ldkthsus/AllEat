@@ -166,14 +166,14 @@ const SignIn: React.FC = () => {
             <Text style={styles.socialButtonText}>구글로 계속하기</Text>
           </View>
         </TouchableOpacity>
-        <View style={styles.socialButtonKakao}>
+        {/* <View style={styles.socialButtonKakao}>
           <icons.socialKakao
             style={styles.socialButton}
             width={24}
             height={24}
           />
           <Text style={styles.socialButtonText}>카카오로 계속하기</Text>
-        </View>
+        </View> */}
       </View>
 
       <View style={styles.orContainer}>
