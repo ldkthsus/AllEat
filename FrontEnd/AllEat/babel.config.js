@@ -6,5 +6,6 @@ module.exports = {
     ['@babel/plugin-transform-private-property-in-object', {loose: true}],
     'nativewind/babel',
     ['module:react-native-dotenv', {moduleName: '@env', path: '.env'}],
+    'react-native-reanimated/plugin', // Reanimated 플러그인 추가
   ],
 };
