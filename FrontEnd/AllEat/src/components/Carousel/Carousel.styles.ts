@@ -7,6 +7,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  contentContainer: {
+    paddingRight: 290,
+    paddingLeft: 16,
+  },
   indicator: {
     marginHorizontal: 4,
     backgroundColor: '#93AAE7',

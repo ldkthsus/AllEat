@@ -572,11 +572,11 @@ const HomeScreen: React.FC = () => {
 
           <View style={styles.kikiBox}>
             <View style={styles.charInfo}>
-              <images.kikiShadow
+              {/* <images.kikiShadow
                 style={styles.kikiShadow}
                 height={90}
                 width={90}
-              />
+              /> */}
               {dayData?.day_diaries.length === 0 ? (
                 // day_diaries가 빈 배열일 때
                 <images.kikiNoRecord
