@@ -164,6 +164,9 @@ public class MenuService {
             if(findRestaurants.getId() == 1) {
                 continue;
             }
+            if(findRestaurants.getRestaurantsType() == RestaurantsEntity.RestaurantsType.MART){
+                continue;
+            }
             List<MenuEntity> findMenus = menuRepository.findByRestaurants_idAndMenuPriceLessThanEqualOrderByMenuPriceDesc(findRestaurants.getId(), Math.abs(payTransactionEntity.getAmount()));
 
             List<MenuEntity> favoriteMenus = new ArrayList<>();
