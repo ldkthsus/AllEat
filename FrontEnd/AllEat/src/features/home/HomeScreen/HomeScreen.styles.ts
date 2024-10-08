@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
   },
   kikiShadow: {
     position: 'absolute',
-    marginTop: 90,
+    marginTop: 75,
     marginLeft: 18,
   },
   kikiBox: {
