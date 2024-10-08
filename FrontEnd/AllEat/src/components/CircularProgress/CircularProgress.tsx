@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Text} from 'react-native';
 import Svg, {Path, Circle} from 'react-native-svg';
+import {useSharedValue, useAnimatedProps, withTiming} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import {styles} from './CircularProgress.styles';
 
 interface CircularProgressProps {
@@ -14,6 +16,8 @@ interface CircularProgressProps {
   totalTextColor?: string; // 총 텍스트 색상
   unit?: string; // 단위 (₩, kcal 등)
 }
+
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 const CircularProgress: React.FC<CircularProgressProps> = ({
   size = 130,
@@ -29,31 +33,41 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
   const radius = (size - strokeWidth) / 2;
   const center = size / 2;
 
-  // progress 값이 1 이상일 때는 1로 제한
-  const normalizedProgress = Math.min(progress, 1);
+  // 애니메이션을 위한 sharedValue
+  const animatedProgress = useSharedValue(0); // 초기 값 0
 
-  const angle = normalizedProgress * 2 * Math.PI;
+  useEffect(() => {
+    // 목표 progress 값까지 애니메이션을 실행
+    animatedProgress.value = withTiming(progress, {duration: 1000});
+  }, [progress]);
 
-  const x = center + radius * Math.sin(angle);
-  const y = center - radius * Math.cos(angle);
+  // 애니메이션된 속성을 업데이트
+  const animatedProps = useAnimatedProps(() => {
+    const normalizedProgress = Math.min(animatedProgress.value, 1); // 애니메이션된 프로그레스 값
+    const angle = normalizedProgress * 2 * Math.PI;
 
-  const largeArcFlag = normalizedProgress > 0.5 ? 1 : 0;
+    const x = center + radius * Math.sin(angle);
+    const y = center - radius * Math.cos(angle);
 
-  // 비율이 1일 때는 완전한 원을 그리도록 처리
-  const pathData =
-    normalizedProgress < 1
-      ? `
-      M ${center} ${center - radius}
-      A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x} ${y}
-      L ${center} ${center}
-      Z
-    `
-      : `
-      M ${center} ${center - radius}
-      A ${radius} ${radius} 0 1 1 ${center} ${center + radius}
-      A ${radius} ${radius} 0 1 1 ${center} ${center - radius}
-      Z
-    `;
+    const largeArcFlag = normalizedProgress > 0.5 ? 1 : 0;
+
+    const pathData =
+      normalizedProgress < 1
+        ? `
+        M ${center} ${center - radius}
+        A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x} ${y}
+        L ${center} ${center}
+        Z
+      `
+        : `
+        M ${center} ${center - radius}
+        A ${radius} ${radius} 0 1 1 ${center} ${center + radius}
+        A ${radius} ${radius} 0 1 1 ${center} ${center - radius}
+        Z
+      `;
+
+    return {d: pathData};
+  });
 
   return (
     <View style={styles.circleContainer}>
@@ -65,8 +79,8 @@ const CircularProgress: React.FC<CircularProgressProps> = ({
           r={radius}
           fill="#E0E0E0" // 채워진 배경 색
         />
-        {/* 진행된 부분 (피자 형태) */}
-        <Path d={pathData} fill={progressColor} />
+        {/* 애니메이션이 적용된 진행된 부분 */}
+        <AnimatedPath animatedProps={animatedProps} fill={progressColor} />
       </Svg>
       <Text style={[styles.currentText, {color: currentTextColor}]}>
         {current.toLocaleString()}
