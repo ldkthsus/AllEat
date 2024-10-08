@@ -53,7 +53,7 @@ public class MenuPossibleDTO {
             this.price = menu.getMenuPrice();
             this.menuType = menu.getMenuType();
             this.menuCalories = menu.getMenuCalories();
-            if(menu.getFavorite() == null){
+            if(menu.getFavorite().isEmpty()){
                 this.favorite = false;
             }
             else{
