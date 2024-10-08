@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.List;
 
@@ -180,9 +181,10 @@ public class MenuService {
             }
 
             // Step 3: 즐겨찾기 메뉴 + 일반 메뉴 순서로 병합
-            List<MenuEntity> finalMenuList = new ArrayList<>();
-            finalMenuList.addAll(favoriteMenus);  // 즐겨찾기 메뉴 먼저 추가
-            finalMenuList.addAll(nonFavoriteMenus);
+            HashMap<Boolean,List<MenuEntity>> finalMenuList = new HashMap<>();
+
+            finalMenuList.put(true, favoriteMenus);  // 즐겨찾기 메뉴 먼저 추가
+            finalMenuList.put(false, nonFavoriteMenus);
 
             MenuPossibleDTO menuPossibleDTO = new MenuPossibleDTO(findRestaurants, finalMenuList, payTransactionEntity.getId());
             possibleMenu.add(menuPossibleDTO);

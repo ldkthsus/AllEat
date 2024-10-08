@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Getter
@@ -27,13 +28,17 @@ public class MenuPossibleDTO {
     @JsonProperty("pay_transaction_id")
     private Integer payTransactionId;
 
-    public MenuPossibleDTO(RestaurantsEntity restaurants, List<MenuEntity> menuList, Integer payTransactionId) {
+    public MenuPossibleDTO(RestaurantsEntity restaurants, HashMap<Boolean,List<MenuEntity>> menuList, Integer payTransactionId) {
         this.restaurantsId = restaurants.getId();
         this.restaurantsName = restaurants.getRestaurantsName();
         this.menus = new ArrayList<>();
-        for(MenuEntity menu : menuList){
-            this.menus.add(new MenuConvertDTO(menu));
+        for(MenuEntity menu : menuList.get(true)){
+            this.menus.add(new MenuConvertDTO(menu, true));
         }
+        for(MenuEntity menu : menuList.get(false)){
+            this.menus.add(new MenuConvertDTO(menu, false));
+        }
+
         this.payTransactionId = payTransactionId;
     }
 
@@ -45,20 +50,14 @@ public class MenuPossibleDTO {
         private Integer menuType;
         private Integer menuCalories;
         private boolean favorite;
-        private Integer payTransactionId;
 
-        public MenuConvertDTO(MenuEntity menu) {
+        public MenuConvertDTO(MenuEntity menu, boolean favorite) {
             this.menuId = menu.getId();
             this.menuName = menu.getMenuName();
             this.price = menu.getMenuPrice();
             this.menuType = menu.getMenuType();
             this.menuCalories = menu.getMenuCalories();
-            if(menu.getFavorite().isEmpty()){
-                this.favorite = false;
-            }
-            else{
-                this.favorite = true;
-            }
+            this.favorite = favorite;
         }
     }
 }
