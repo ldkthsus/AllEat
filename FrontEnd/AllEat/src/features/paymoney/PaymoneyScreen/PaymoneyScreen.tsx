@@ -23,6 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import Carousel from '../../../components/Carousel/Carousel';
+import api from '../../../utils/api';
 const {MyFirebaseMessagingService} = NativeModules;
 const eventEmitter = new NativeEventEmitter(MyFirebaseMessagingService);
 type PaymoneyScreenNavigationProp = NativeStackNavigationProp<
@@ -129,11 +130,38 @@ const PaymoneyScreen: React.FC = () => {
     navigation.replace('PaymoneyDetail');
   };
   const [scannerOpened, setScannerOpened] = useState(false);
-  const onSuccess = e => {
+  // QR 코드 읽은 후 실행되는 함수
+  const onSuccess = async e => {
     console.log('QR code scanned', e.data);
-    Alert.alert('QR code scanned: ' + e.data);
-    setScannerOpened(false);
+    const qrData = JSON.parse(e.data);
+
+    try {
+      // QR 데이터 서버로 PUT 요청 보내기
+      const response = await api.put('/AllEat/paymoney', {
+        restaurant_id: qrData.restaurant_id,
+        transaction_type: qrData.transaction_type,
+        amount: qrData.amount,
+      });
+
+      if (response.status === 200) {
+        const result = response.data;
+        console.log('결제 성공:', result);
+        // Alert.alert('결제 성공', '결제가 완료되었습니다.');
+      } else {
+        console.error('결제 실패:', response.data);
+        Alert.alert(
+          '결제 실패',
+          response.data.message || '오류가 발생했습니다.',
+        );
+      }
+    } catch (error) {
+      console.error('네트워크 오류:', error);
+      Alert.alert('결제 오류', '네트워크 오류가 발생했습니다.');
+    }
+
+    setScannerOpened(false); // QR 스캐너 닫기
   };
+
   const carouselItems = [
     {
       isScanner: true,
