@@ -37,17 +37,17 @@ public class LogPayService {
         // 특정 월에 대한 트랜잭션을 가져옴
         List<PayTransactionEntity> transactions = logPayRepository.findTransactionsByUserAndMonth(user, yearMonth);
 
-        // "restaurantsType"이 "MART"인 데이터만 필터링하여 LogPayResponseDTO로 변환
+        // "restaurantsType"이 "mart"인 데이터만 필터링하여 LogPayResponseDTO로 변환
         return transactions.stream()
-                .filter(transaction -> "mart".equals(transaction.getRestaurant().getRestaurantsType().getType()))  // 레스토랑 타입이 MART인 경우만 필터링
+                .filter(transaction -> "mart".equals(transaction.getRestaurant().getRestaurantsType().getType()))  // 레스토랑 타입이 mart인 경우만 필터링
                 .map(transaction -> {
                     LogPayResponseDTO response = new LogPayResponseDTO();
                     response.setDate(transaction.getTransactionDate().toString());
                     response.setRestaurantsName(transaction.getRestaurant().getRestaurantsName()); // 레스토랑 이름
                     response.setRestaurantsType(transaction.getRestaurant().getRestaurantsType().getType()); // 레스토랑 타입
 
-                    // MealPayEntity의 amount 필드에서 금액을 가져옴
-                    response.setAmount(transaction.getMealpay().getAmount());  // 결제 금액
+                    // PayTransactionEntity의 amount 필드에서 금액을 가져옴
+                    response.setAmount(transaction.getAmount());  // 결제 금액
                     return response;
                 })
                 .collect(Collectors.toList());
