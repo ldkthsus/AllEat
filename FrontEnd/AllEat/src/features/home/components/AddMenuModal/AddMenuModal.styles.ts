@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     // flexWrap: 'wrap',
     justifyContent: 'space-around',
     position: 'relative',
-    height: 430
+    minHeight: 430,
   },
   modalTitle: {
     flexDirection: 'row',
