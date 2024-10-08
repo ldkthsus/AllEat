@@ -58,7 +58,7 @@ public class CrawlingController {
             if (findUser == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
+//
 //            // 2. 크롤링 시작 및 CSV 파일 생성
 //            restaurantsCrawlingService.startCrawling();
 
