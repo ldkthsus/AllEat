@@ -10,7 +10,7 @@ interface ICarousel {
   pageWidth: number;
 }
 
-export default function Carousel({pages, pageWidth, gap, offset}: ICarousel) {
+export default function Carousel({pages, pageWidth, gap}: ICarousel) {
   const [page, setPage] = useState(0);
   //   console.log('page : ', page);
   // 각 페이지를 렌더링하는 함수
@@ -33,10 +33,7 @@ export default function Carousel({pages, pageWidth, gap, offset}: ICarousel) {
     <View style={styles.container}>
       <FlatList
         automaticallyAdjustContentInsets={false}
-        contentContainerStyle={{
-          paddingRight: 290,
-          paddingLeft: 16,
-        }}
+        contentContainerStyle={styles.contentContainer}
         data={pages}
         decelerationRate="fast"
         horizontal
