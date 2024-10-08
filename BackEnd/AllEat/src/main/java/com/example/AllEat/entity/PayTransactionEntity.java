@@ -28,7 +28,7 @@ public class PayTransactionEntity {
     @JsonProperty("transaction_type")
     private Integer transactionType;
 
-    @Column(name = "transaction_date", nullable = false, updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "transaction_date", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     @JsonProperty("transaction_date")
     private Timestamp transactionDate;
 
