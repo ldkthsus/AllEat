@@ -61,12 +61,12 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
   },
   mainConatiner: {
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'whitesmoke',
   },
   mainbox: {
     flex: 1,
     width: '100%',
-    height: 335,
+    height: 350,
     backgroundColor: '#EAF0FF',
     alignItems: 'center',
     paddingBottom: 48,
@@ -94,7 +94,7 @@ export const styles = StyleSheet.create({
   },
   kikiShadow: {
     position: 'absolute',
-    marginTop: 75,
+    marginTop: 90,
     marginLeft: 18,
   },
   kikiBox: {
