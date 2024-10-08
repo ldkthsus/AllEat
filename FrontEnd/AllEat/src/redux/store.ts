@@ -5,6 +5,8 @@ import authReducer from './features/authSlice';
 import paymoneyReducer from './features/paymoneySlice';
 import infoReducer from './features/infoSlice';
 import menuReducer from './features/menuSlice';
+import notificationReducer from './features/notificationSlice';
+
 
 // Redux Persist 설정
 const persistAuthConfig = {
@@ -29,6 +31,7 @@ export const store = configureStore({
     paymoney: paymoneyReducer, // paymony 리듀서 등록
     info: persistedInfoReducer,
     menu: menuReducer,
+    notification: notificationReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
