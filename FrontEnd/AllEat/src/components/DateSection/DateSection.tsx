@@ -97,7 +97,7 @@ const DateSection: React.FC<DateSectionProps> = ({
                       : menu.restaurant_name}
                   </Text>
                   <Text style={styles.menuDetail}>
-                    {menu.menu_kcal}kcal · ₩{menu.menu_cost.toLocaleString()}
+                    ㅡ {menu.menu_kcal}kcal · ₩{menu.menu_cost.toLocaleString()}
                   </Text>
                 </View>
               ))}
