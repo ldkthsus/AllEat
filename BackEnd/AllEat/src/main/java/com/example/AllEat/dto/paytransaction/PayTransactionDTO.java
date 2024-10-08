@@ -1,7 +1,6 @@
 package com.example.AllEat.dto.paytransaction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,4 +14,7 @@ public class PayTransactionDTO {
 
     @JsonProperty("restaurant_id")
     private Integer restaurantId;
+
+    @JsonProperty("transaction_date")
+    private String transactionDate;
 }
