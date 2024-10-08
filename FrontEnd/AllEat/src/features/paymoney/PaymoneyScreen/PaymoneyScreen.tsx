@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Text, View, Pressable, Alert} from 'react-native';
+import {Text, View, Pressable, Alert, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppDispatch, RootState} from '../../../redux/store';
@@ -22,6 +22,7 @@ import {NativeEventEmitter, NativeModules} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
+import Carousel from '../../../components/Carousel/Carousel';
 const {MyFirebaseMessagingService} = NativeModules;
 const eventEmitter = new NativeEventEmitter(MyFirebaseMessagingService);
 type PaymoneyScreenNavigationProp = NativeStackNavigationProp<
@@ -133,7 +134,16 @@ const PaymoneyScreen: React.FC = () => {
     Alert.alert('QR code scanned: ' + e.data);
     setScannerOpened(false);
   };
-
+  const carouselItems = [
+    {
+      isScanner: true,
+      setScannerOpen: () => setScannerOpened(true),
+    },
+    {
+      isQRcode: true,
+    },
+  ];
+  const {width: screenWidth} = Dimensions.get('window'); // 화면 크기
   return (
     <LinearGradient
       style={[styles.gradientBackground]}
@@ -177,16 +187,12 @@ const PaymoneyScreen: React.FC = () => {
             <Text style={styles.inoutText}>송금</Text>
           </Pressable>
         </View>
-
-        <View style={styles.QRcodeContainer}>
-          <images.QRCode height={90} width={90} />
-          <Pressable onPress={() => setScannerOpened(true)}>
-            <View style={styles.QRButton}>
-              <Text>QR 스캔으로 결제하기</Text>
-            </View>
-          </Pressable>
-        </View>
-
+        <Carousel
+          gap={16}
+          offset={36}
+          pages={carouselItems}
+          pageWidth={screenWidth}
+        />
         <View style={styles.payCardContainer}>
           <View style={styles.greyCookieWrapper}>
             <images.greyCookie height={100} width={100} />
