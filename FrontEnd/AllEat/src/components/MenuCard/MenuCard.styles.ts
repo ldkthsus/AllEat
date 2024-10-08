@@ -45,6 +45,7 @@ export const styles = StyleSheet.create({
     color: '#3d3d3d',
     fontSize: 12,
     fontFamily: 'Pretendard-Regular',
+    paddingRight: 5,
   },
   restaurantMenuDetail: {
     color: '#3d3d3d',

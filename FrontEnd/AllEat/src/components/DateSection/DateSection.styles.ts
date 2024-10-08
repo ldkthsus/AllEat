@@ -32,8 +32,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
     gap: 8,
+    flexWrap: 'wrap',
   },
-  menuTitle: {color: '#3d3d3d', fontSize: 18, fontFamily: 'Pretendard-Bold'},
+  menuTitle: {color: '#3d3d3d', fontSize: 17, fontFamily: 'Pretendard-Bold'},
   menuRestaurant: {
     color: '#3d3d3d',
     fontSize: 15,
@@ -43,5 +44,6 @@ export const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 15,
     fontFamily: 'Pretendard-Regular',
+    paddingBottom: 5
   },
 });
