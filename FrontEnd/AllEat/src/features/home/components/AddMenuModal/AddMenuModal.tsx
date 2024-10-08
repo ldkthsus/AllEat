@@ -285,7 +285,6 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       totalProtein += foodData.menu_protein;
       totalWeight += foodData.menu_weight;
     });
-
     return {
       menu_name: foods.join(', '), // 모든 음식 이름을 결합
       menu_calories: totalCalories,
@@ -295,6 +294,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
       menu_weight: totalWeight,
       menu_price: 0, // 가격은 0으로 설정 (추가 가능)
     };
+  };
+  // 창을 닫을 때 searchQuery를 빈 값으로 초기화
+  const handleClose = () => {
+    dispatch(setSearchQuery('')); // searchQuery를 빈 값으로 설정
+    onClose(); // 모달 닫기
   };
   // 이메일 형식인지 확인하는 함수
   const isEmail = (text: string) => {
@@ -317,7 +321,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({
     <View style={styles.modalContent}>
       <View style={styles.modalTitle}>
         <Text style={styles.modalTitleText}>메뉴 추가</Text>
-        <TouchableOpacity style={styles.modalIcon} onPress={onClose}>
+        <TouchableOpacity style={styles.modalIcon} onPress={handleClose}>
           <icons.exit height={24} width={24} />
         </TouchableOpacity>
       </View>

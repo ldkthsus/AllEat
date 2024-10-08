@@ -61,12 +61,12 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
   },
   mainConatiner: {
-    backgroundColor: 'whitesmoke'
+    backgroundColor: 'whitesmoke',
   },
   mainbox: {
     flex: 1,
     width: '100%',
-    height: 335,
+    height: 350,
     backgroundColor: '#EAF0FF',
     alignItems: 'center',
     paddingBottom: 48,
