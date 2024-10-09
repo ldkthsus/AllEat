@@ -72,12 +72,12 @@ const AllEatLog: React.FC = () => {
           menu_name: '마트 장보기',
           restaurant_name: restaurants_name,
           menu_kcal: 0,
-          menu_cost: amount,
+          menu_cost: Math.abs(amount),
         };
 
         const martDiary = {
           diary_kcal: 0, // 마트에서 섭취한 칼로리가 없으므로 0
-          diary_cost: amount,
+          diary_cost: Math.abs(amount),
           diary_time: 'MART',
           menus: [martMenu],
         };
@@ -91,7 +91,7 @@ const AllEatLog: React.FC = () => {
           if (existingMartDiary) {
             // MART 항목이 이미 존재하면 그 안에 새로운 메뉴 추가
             existingMartDiary.menus.push(martMenu);
-            existingMartDiary.diary_cost += amount; // 기존 비용에 추가된 금액 더하기
+            existingMartDiary.diary_cost += Math.abs(amount); // 기존 비용에 추가된 금액 더하기
           } else {
             // MART 항목이 없으면 새로 추가
             existingDayLog.diaries.push(martDiary);
