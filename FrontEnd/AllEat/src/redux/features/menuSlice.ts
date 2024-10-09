@@ -49,9 +49,9 @@ interface Menu {
   menu_type: number;
   menu_value: number;
   favorite: boolean;
-  auto: boolean | null;
   restaurants_name: string;
   restaurants_type: string;
+  restaurants_id: number;
 }
 
 // MenuState 타입 정의

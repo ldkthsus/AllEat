@@ -31,9 +31,8 @@ import FormModal from '../../../components/FormModal/FormModal';
 import CalanderModal from '../components/CalanderModal/CalanderModel';
 import RecordBox2 from '../../../components/RecordBox/RecordBox2';
 import FormField from '../../../components/FormField/FormField';
-import { AppState } from 'react-native';
-import { setNotification } from '../../../redux/features/notificationSlice';
-
+import {AppState} from 'react-native';
+import {setNotification} from '../../../redux/features/notificationSlice';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -45,8 +44,6 @@ const HomeScreen: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<HomeRouteProp>();
   const {isUpdated = false} = route.params || {};
-
-
 
   // 움직이는 키키 이미지
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -163,45 +160,128 @@ const HomeScreen: React.FC = () => {
   ////////////////////////////////////////////////////////////////////////////////////////////////
   // notification Modal관련 처리 함수
   const notification = useSelector((state: RootState) => state.notification);
-  
+
   const [showDeliveryModal, setShowDeliveryModal] = useState(false);
   const clearNotify = {
-    text: "",
-    subText: "",
-    app: "",
-    bigText: "",
-    title: "",
-    titleBig: ""
+    text: '',
+    subText: '',
+    app: '',
+    bigText: '',
+    title: '',
+    titleBig: '',
+  };
+  const extractMenuName = (text: string) => {
+    const singleMenuPattern =
+      /주문하신\s(.*?)이\(가\) \d+분.*도착할 예정입니다/;
+    const multipleMenuPattern =
+      /주문하신\s(.*?) 외 \d+개이\(가\) \d+분.*도착할 예정입니다/;
+    const restaurantNameMatch = text.match(/^(.*?)에서/);
+
+    const singleMenuMatch = text.match(singleMenuPattern);
+    const multipleMenuMatch = text.match(multipleMenuPattern);
+
+    const restaurantName = restaurantNameMatch ? restaurantNameMatch[1] : '';
+
+    if (multipleMenuMatch) {
+      return {
+        restaurant: restaurantName,
+        menu: multipleMenuMatch[1] || '', // 메뉴 이름이 없으면 빈 문자열 반환
+      };
+    } else if (singleMenuMatch) {
+      return {
+        restaurant: restaurantName,
+        menu: singleMenuMatch[1] || '', // 메뉴 이름이 없으면 빈 문자열 반환
+      };
+    } else {
+      return null;
+    }
   };
 
+  const {menus} = useSelector((state: RootState) => state.menu);
 
-  // notification 이 빈값이면 modal을 안 띄우고 빈 값이 아니면 modal을 띄움
-  useEffect(() => {
-    if (notification.title == ""){
-      setShowDeliveryModal(false);
-    } else{
-      setShowDeliveryModal(true);
+  // Redux store에서 restaurant_id와 menu_id 검색
+  const findDeliveryMenu = (restaurants_name: string, menu_name: string) => {
+    // store.menu에서 restaurants_name과 menu_name을 이용해 해당 데이터 검색
+    const delivery_menu = menus.find(
+      (menu: any) =>
+        menu.restaurants_name === restaurants_name &&
+        menu.menu_name === menu_name,
+    );
+
+    if (!delivery_menu) {
+      console.log('해당 메뉴를 찾을 수 없습니다.');
+      return null;
     }
+
+    // restaurant_id와 menu_id 반환
+    return delivery_menu;
+  };
+  const [deliveryMenuId, setDeliveryMenuId] = useState(0);
+
+  // notification이 빈값이면 modal을 안 띄우고 빈 값이 아니면 modal을 띄움
+  useEffect(() => {
+    const processNotification = async () => {
+      console.log('notification', notification);
+      if (notification.title === '') {
+        setShowDeliveryModal(false);
+      } else {
+        const result = extractMenuName(notification.bigText || '');
+        console.log(notification.bigText);
+        console.log('result', result);
+        if (result) {
+          const {restaurant, menu} = result;
+          console.log('Restaurant Name:', restaurant);
+          console.log('Menu Name:', menu);
+
+          const deliveryMenu = findDeliveryMenu(restaurant || '', menu || '');
+
+          if (deliveryMenu) {
+            console.log('Delivery Menu:', deliveryMenu);
+            setDeliveryMenuId(deliveryMenu.menu_id);
+            console.log(deliveryMenu);
+            const deliveryPay = {
+              amount: -59000,
+              transaction_type: 1,
+              restaurant_id: deliveryMenu.restaurants_id,
+            };
+
+            try {
+              // 비동기 API 호출
+              await api.put('/AllEat/paymoney', deliveryPay);
+              // 메뉴가 있으면 모달을 띄움
+              setShowDeliveryModal(true);
+            } catch (error) {
+              console.log('결제 요청 중 에러가 발생했습니다:', error);
+              // 결제 실패 시 처리
+              setShowDeliveryModal(false);
+            }
+          } else {
+            setShowDeliveryModal(false);
+          }
+        } else {
+          setShowDeliveryModal(false);
+        }
+      }
+    };
+
+    processNotification();
   }, [notification]);
-
-
   useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
-      // 앱상태 확인용 함수 지금은 안쓰지만 혹시몰라 남겨둠 
+      // 앱상태 확인용 함수 지금은 안쓰지만 혹시몰라 남겨둠
       if (AppState.currentState == 'active') {
         // 앱이 포그라운드로 돌아왔을 때 실행할 함수
-        
         // 여기서 원하는 함수 실행
-      } else if (AppState.currentState == 'background'){
+      } else if (AppState.currentState == 'background') {
         // setShowDeliveryModal(false);
         // dispatch(setNotification(clearNotify));
-        
-
       }
-
     };
     // AppState 변경을 감지하는 리스너 등록
-    const subscrition = AppState.addEventListener('change', handleAppStateChange);
+    const subscrition = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
 
     // 컴포넌트 언마운트 시 리스너 제거
     return () => {
@@ -213,7 +293,6 @@ const HomeScreen: React.FC = () => {
   ////////////////////////////////////////////////////////////////////////////////////////////////
 
   useEffect(() => {
-
     const fetchData = async () => {
       try {
         const formattedDate = format(currentDate, 'yyyy-MM-dd'); // 날짜를 'yyyy-MM-dd' 형식으로 포맷
@@ -471,73 +550,72 @@ const HomeScreen: React.FC = () => {
         )}
       </View>
 
-
-      
       {/* 스크롤 가능한 콘텐츠 */}
       <ScrollView style={styles.scrollContainer}>
         {/* notification Modal */}
-        {showDeliveryModal && 
+        {showDeliveryModal && (
           <View style={styles.alarmWhiteBox}>
-          <View style={styles.alarmTitleBox}>
-            <icons.recordAlarm height={24} width={24} />
-            <Text style={styles.titleBoxText}>
-              배달 주문을 하셨군요! 식단으로 기록할까요?
-            </Text>
-          </View>
-          {/* 기록할래요 버튼 */}
-          <TouchableOpacity
-            style={[styles.actionButton, styles.isRecord]}
-            onPress={async () => {
-              try {
-                // day_diaries 배열의 길이에 따라 title을 결정
-                let title = 'BREAKFAST'; // 기본값을 아침으로 설정
-                if (dayData?.day_diaries) {
-                  const diariesLength = dayData.day_diaries.length;
-                  switch (diariesLength) {
-                    case 0:
-                      title = 'BREAKFAST';
-                      break;
-                    case 1:
-                      title = 'LUNCH'; // 점심
-                      break;
-                    case 2:
-                      title = 'DINNER'; // 저녁
-                      break;
-                    case 3:
-                    default:
-                      title = 'SNACK'; // 간식
-                      break;
+            <View style={styles.alarmTitleBox}>
+              <icons.recordAlarm height={24} width={24} />
+              <Text style={styles.titleBoxText}>
+                배달 주문을 하셨군요! 식단으로 기록할까요?
+              </Text>
+            </View>
+            {/* 기록할래요 버튼 */}
+            <TouchableOpacity
+              style={[styles.actionButton, styles.isRecord]}
+              onPress={async () => {
+                try {
+                  // day_diaries 배열의 길이에 따라 title을 결정
+                  let title = 'BREAKFAST'; // 기본값을 아침으로 설정
+                  if (dayData?.day_diaries) {
+                    const diariesLength = dayData.day_diaries.length;
+                    switch (diariesLength) {
+                      case 0:
+                        title = 'BREAKFAST';
+                        break;
+                      case 1:
+                        title = 'LUNCH'; // 점심
+                        break;
+                      case 2:
+                        title = 'DINNER'; // 저녁
+                        break;
+                      case 3:
+                      default:
+                        title = 'SNACK'; // 간식
+                        break;
+                    }
                   }
+
+                  // DiaryCreate 페이지로 이동하며, 결정된 title 값을 전달
+                  navigation.navigate('DiaryCreate', {
+                    diaryId: DiaryIds,
+                    date: format(currentDate, 'yyyy-MM-dd'),
+                    meals: title, // 결정된 title을 전달
+                    menuId: deliveryMenuId,
+                  });
+                } catch (error) {
+                  console.error('Notification 처리 중 오류:', error);
                 }
+              }}>
+              <Text style={styles.actionText}>기록할래요!</Text>
+            </TouchableOpacity>
 
-                // DiaryCreate 페이지로 이동하며, 결정된 title 값을 전달
-                navigation.navigate('DiaryCreate', {
-                  diaryId: DiaryIds,
-                  date: format(currentDate, 'yyyy-MM-dd'),
-                  meals: title, // 결정된 title을 전달
-                });
-              } catch (error) {
-                console.error('Notification 처리 중 오류:', error);
-              }
-            }}>
-            <Text style={styles.actionText}>기록할래요!</Text>
-          </TouchableOpacity>
-
-          {/* 나중에 버튼 */}
-          <TouchableOpacity
-            style={[styles.actionButton, styles.later]}
-            onPress={async () => {
-              try {
-                setShowDeliveryModal(false);
-                dispatch(setNotification(clearNotify));
-              } catch (error) {
-                console.error('Notification 처리 중 오류:', error);
-              }
-            }}>
-            <Text style={styles.actionText}>나중에</Text>
-          </TouchableOpacity>
-        </View>
-        }
+            {/* 나중에 버튼 */}
+            <TouchableOpacity
+              style={[styles.actionButton, styles.later]}
+              onPress={async () => {
+                try {
+                  setShowDeliveryModal(false);
+                  dispatch(setNotification(clearNotify));
+                } catch (error) {
+                  console.error('Notification 처리 중 오류:', error);
+                }
+              }}>
+              <Text style={styles.actionText}>나중에</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {lastNotification &&
           (lastNotification.transaction.restaurant.restaurantsType ===
@@ -571,6 +649,7 @@ const HomeScreen: React.FC = () => {
                     unit="원"
                     handleChangeText={text =>
                       setLastNotification(prevState => {
+                        console.log('text: ', text);
                         if (!prevState) {
                           // prevState가 null일 경우 기본값을 설정합니다.
                           return {
@@ -633,6 +712,9 @@ const HomeScreen: React.FC = () => {
                     if (dayData?.day_diaries) {
                       const diariesLength = dayData.day_diaries.length;
                       switch (diariesLength) {
+                        case 0:
+                          title = 'BREAKFAST';
+                          break;
                         case 1:
                           title = 'LUNCH'; // 점심
                           break;

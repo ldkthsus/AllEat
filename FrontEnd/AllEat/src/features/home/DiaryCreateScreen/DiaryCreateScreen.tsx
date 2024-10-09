@@ -43,10 +43,40 @@ const mealTimes = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK']; // 가능한 식사
 const DiaryCreateScreen: React.FC = () => {
   const navigation = useNavigation<DiaryCreateScreenNavigationProp>();
   const route = useRoute<DiaryCreateRouteProp>();
-  const {date, meals: initialMealTime, diaryId} = route.params; // 처음 전달된 meal 값을 저장
+  const {date, meals: initialMealTime, diaryId, menuId} = route.params; // 처음 전달된 meal 값을 저장
   const [isModalVisible, setModalVisible] = useState(false); // 모달 상태
   const [modalType, setModalType] = useState('main'); // 기본 모달 상태
   const [meals, setMeals] = useState(initialMealTime); // meals를 상태로 관리
+  const {menus} = useSelector((state: RootState) => state.menu);
+  const delivery_menu = menus.find((menu: any) => menu.menu_id === menuId);
+  // delivery_menu가 있을 때 mealList에 추가
+  useEffect(() => {
+    // restaurants에서 delivery_menu의 restaurants_id와 같은 restaurant_id를 찾음
+    const matchedRestaurant = restaurants.find(
+      (restaurant: any) =>
+        restaurant.restaurants_id === delivery_menu.restaurants_id,
+    );
+
+    // 찾은 레스토랑의 pay_transaction_id 추출
+    const payTransactionId = matchedRestaurant
+      ? matchedRestaurant.pay_transaction_id
+      : 0;
+
+    if (menuId && delivery_menu) {
+      const initialMeal: Meal = {
+        menu_id: delivery_menu.menu_id,
+        restaurants_name: delivery_menu.restaurants_name,
+        menu_name: delivery_menu.menu_name,
+        menu_price: delivery_menu.menu_price,
+        menu_calories: delivery_menu.menu_calories,
+        person_count: 1, // 초기 인원 설정
+        pay_transaction_id: payTransactionId,
+      };
+
+      setMealList([initialMeal]); // mealList를 초기화하고 delivery_menu 추가
+    }
+  }, [menuId, delivery_menu]); // menuId와 delivery_menu가 변경될 때마다 실행
+
   type MealType = keyof DiaryIds;
   // meals 값이 변경될 때 호출되는 함수
   const goToPreviousMealTime = () => {
@@ -108,7 +138,6 @@ const DiaryCreateScreen: React.FC = () => {
       setFatPercentage(Math.round((form.menu_fat / newTotalNutrients) * 100));
     }
   }, [form.menu_carbohydrate, form.menu_protein, form.menu_fat]);
-
   const [mealList, setMealList] = useState<Meal[]>([]);
   const mealKey = meals as MealType;
   useEffect(() => {
@@ -363,7 +392,11 @@ const DiaryCreateScreen: React.FC = () => {
           })),
         };
         console.log('diaryData : ', diaryData);
-        response = await api.put('/AllEat/record/menu', diaryData);
+        if (diaryData.menus.length === 0) {
+          response = await api.delete(`AllEat/record/menu/${diaryId[mealKey]}`);
+        } else {
+          response = await api.put('/AllEat/record/menu', diaryData);
+        }
       } else {
         // 요청할 데이터 생성
         diaryData = {

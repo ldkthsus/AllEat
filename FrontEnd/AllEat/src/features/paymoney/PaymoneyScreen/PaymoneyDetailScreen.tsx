@@ -115,13 +115,15 @@ const PaymoneyDetailScreen: React.FC = () => {
       </View>
 
       <ScrollView>
-        {Object.keys(transactions).map(date => (
-          <DateSection
-            key={date}
-            date={date}
-            transactions={transactions[date]}
-          />
-        ))}
+        {Object.keys(transactions)
+          .sort((a, b) => new Date(b).getTime() - new Date(a).getTime()) // 날짜 역순으로 정렬
+          .map(date => (
+            <DateSection
+              key={date}
+              date={date}
+              transactions={transactions[date]}
+            />
+          ))}
       </ScrollView>
     </View>
   );

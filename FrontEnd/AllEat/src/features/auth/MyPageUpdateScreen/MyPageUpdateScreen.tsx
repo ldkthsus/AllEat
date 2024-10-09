@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, View, Text, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -16,11 +16,31 @@ import {AppDispatch} from '../../../redux/store';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchUserInfo} from '../../../redux/features/infoSlice';
 import {RootState} from '../../../redux/store';
+import messaging from '@react-native-firebase/messaging';
+
 type MyPageUpdateScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'MyPageUpdate'
 >;
 const MyPageUpdateScreen: React.FC = () => {
+  const getExistingFcmToken = async () => {
+    // Get the existing FCM token
+    const token = await messaging().getToken();
+    console.log('token', token);
+    if (token) {
+      console.log('FCM Token:', token);
+      setFcmToken(token);
+      // Send the token to your Spring server
+      // sendFcmTokenToServer(token);
+    } else {
+      console.log('No token available');
+    }
+  };
+
+  useEffect(() => {
+    getExistingFcmToken();
+  }, []);
+  const [fcmToken, setFcmToken] = useState('');
   const navigation = useNavigation<MyPageUpdateScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
   const info = useSelector((state: RootState) => state.info);
@@ -32,6 +52,7 @@ const MyPageUpdateScreen: React.FC = () => {
     activity_amount: info.activity_amount as 0 | 1 | 2, // 0, 1, 2만 허용
     password1: '',
     password2: '',
+    fcm_token: fcmToken,
   });
   const handleSubmit = async () => {
     const formData = new FormData();
@@ -44,6 +65,7 @@ const MyPageUpdateScreen: React.FC = () => {
         user_name: form.user_name,
         password1: form.password1,
         password2: form.password2,
+        fcm_token: fcmToken,
       }),
       type: 'application/json',
     });

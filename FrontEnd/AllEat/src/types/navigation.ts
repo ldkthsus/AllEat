@@ -7,7 +7,12 @@ interface DiaryIds {
 }
 export type RootStackParamList = {
   Home: {isUpdated?: boolean};
-  DiaryCreate: {date: string; meals: string; diaryId: DiaryIds};
+  DiaryCreate: {
+    date: string;
+    meals: string;
+    diaryId: DiaryIds;
+    menuId?: number;
+  };
   SignIn: undefined;
   SignUp: undefined;
   Intro: undefined;

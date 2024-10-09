@@ -137,11 +137,16 @@ const PaymoneyScreen: React.FC = () => {
 
     try {
       // QR 데이터 서버로 PUT 요청 보내기
-      const response = await api.put('/AllEat/paymoney', {
+      const requestData = {
         restaurant_id: qrData.restaurant_id,
         transaction_type: qrData.transaction_type,
         amount: qrData.amount,
-      });
+        ...(qrData.transaction_date && {
+          transaction_date: qrData.transaction_date,
+        }), // transaction_date가 존재할 때만 추가
+      };
+
+      const response = await api.put('/AllEat/paymoney', requestData);
 
       if (response.status === 200) {
         const result = response.data;
