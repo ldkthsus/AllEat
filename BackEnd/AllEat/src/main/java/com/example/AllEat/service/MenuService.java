@@ -134,13 +134,28 @@ public class MenuService {
     public List<MenuResponseDTO> getAllMenus(UserEntity requestUser) {
         List<MenuEntity> findMenus = menuRepository.findAll();
         List<MenuResponseDTO> menuResponseDTOList = new ArrayList<>();
+
         for (MenuEntity menuEntity : findMenus) {
             FavoriteEntity findFavorite = favoriteRepository.findByUserIdAndMenuId(requestUser.getId(), menuEntity.getId());
-            boolean isFavorite = false;
-            if(findFavorite != null) {
-                isFavorite = true;
-            }
-            MenuResponseDTO menuResponseDTO = new MenuResponseDTO(menuEntity,isFavorite);
+            boolean isFavorite = findFavorite != null;
+
+            // 새로운 restaurantId와 restaurantType 정보를 추가하여 MenuResponseDTO 생성
+            MenuResponseDTO menuResponseDTO = MenuResponseDTO.builder()
+                    .restaurantName(menuEntity.getRestaurants().getRestaurantsName())
+                    .restaurantId(menuEntity.getRestaurants().getId().toString())  // restaurantId 추가
+                    .restaurantType(menuEntity.getRestaurants().getRestaurantsType().toString())  // restaurantType 추가
+                    .menuId(menuEntity.getId())
+                    .menuName(menuEntity.getMenuName())
+                    .menuPrice(menuEntity.getMenuPrice())
+                    .menuCalories(menuEntity.getMenuCalories())
+                    .menuCarbohydrate(menuEntity.getMenuCarbohydrate())
+                    .menuProtein(menuEntity.getMenuProtein())
+                    .menuFat(menuEntity.getMenuFat())
+                    .menuType(menuEntity.getMenuType())
+                    .menuValue(menuEntity.getMenuValue())
+                    .favorite(isFavorite)
+                    .build();
+
             menuResponseDTOList.add(menuResponseDTO);
         }
         return menuResponseDTOList;

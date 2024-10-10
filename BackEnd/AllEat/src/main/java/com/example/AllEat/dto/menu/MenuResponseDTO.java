@@ -15,6 +15,12 @@ public class MenuResponseDTO {
 
     @JsonProperty("restaurants_name")
     private String restaurantName;
+    //레스토랑 아이디 레스토랑 타입
+    @JsonProperty("restaurants_id")
+    private String restaurantId;
+
+    @JsonProperty("restaurants_type")
+    private String restaurantType;
 
     @JsonProperty("menu_id")
     private Integer menuId;

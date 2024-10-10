@@ -47,7 +47,7 @@ public class LogPayService {
                     response.setRestaurantsType(transaction.getRestaurant().getRestaurantsType().getType()); // 레스토랑 타입
 
                     // PayTransactionEntity의 amount 필드에서 금액을 가져옴
-                    response.setAmount(transaction.getAmount());  // 결제 금액
+                    response.setAmount(transaction.getMealpay().getAmount());  // 결제 금액
                     return response;
                 })
                 .collect(Collectors.toList());
