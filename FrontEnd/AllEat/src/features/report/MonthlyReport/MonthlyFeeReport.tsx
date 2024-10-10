@@ -19,7 +19,7 @@ interface menuDetails {
 interface costWhere {
   RESTAURANTS: number;
   HOME: number;
-  DELIEVERY: number;
+  DELIVERY: number;
 }
 
 interface MonthlyFeeReportProps {
@@ -42,7 +42,7 @@ const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, c
   // 각 타입의 count 값 가져오기 (없으면 0)
   const restaurantCount = costWhere.RESTAURANTS || 0;
   const homeCount = costWhere.HOME || 0;
-  const deliveryCount = costWhere.DELIEVERY || 0;
+  const deliveryCount = costWhere.DELIVERY || 0;
 
   // 총 count 계산
   const totalCount = restaurantCount + homeCount + deliveryCount;
@@ -53,8 +53,6 @@ const MonthlyFeeReport: React.FC<MonthlyFeeReportProps> = ({ goalFee, costAvg, c
   const restaurantPercentage = totalCount > 0 ? (restaurantCount / totalCount) * 100 : 0;
   const homePercentage = totalCount > 0 ? (homeCount / totalCount) * 100 : 0;
   const deliveryPercentage = totalCount > 0 ? (deliveryCount / totalCount) * 100 : 0;
-
-  // console.log(costRanking)
   
   return (
     <View style={styles.dailyFeeReportContainer}>
