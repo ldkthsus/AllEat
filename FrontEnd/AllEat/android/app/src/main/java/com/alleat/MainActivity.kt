@@ -41,7 +41,7 @@ private val requestPermissionLauncher = registerForActivityResult(
                     Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     // FCM SDK (and your app) can post notifications.
-                    Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT)
                 }
 
                 shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
