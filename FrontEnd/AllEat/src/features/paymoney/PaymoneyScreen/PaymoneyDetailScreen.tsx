@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {
-  ScrollView,
+  FlatList,
   View,
   Text,
   TouchableOpacity,
@@ -19,6 +19,7 @@ type PaymoneyDetailScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'PaymoneyDetail'
 >;
+
 interface Transaction {
   id: number;
   amount: number;
@@ -32,49 +33,55 @@ interface Transaction {
   transaction_type: number;
   transaction_date: string;
 }
+
 const PaymoneyDetailScreen: React.FC = () => {
   const navigation = useNavigation<PaymoneyDetailScreenNavigationProp>();
   const [loading, setLoading] = useState(true);
-  const today = new Date(); // 오늘 날짜
-  const oneWeekAgo = new Date(today); // 일주일 전 날짜
-  oneWeekAgo.setDate(today.getDate() - 6); // 일주일 전 날짜 계산
-  const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
   const [transactions, setTransactions] = useState<{
     [date: string]: Transaction[];
   }>({});
+  const [page, setPage] = useState(1); // 현재 페이지 번호
+  const [isFetchingMore, setIsFetchingMore] = useState(false); // 추가 데이터를 로드하는 중인지 여부
+
+  const fetchTransactionData = async (pageNumber: number) => {
+    try {
+      const today = new Date(); // 오늘 날짜
+      const startDate = new Date(today);
+      startDate.setDate(today.getDate() - (pageNumber - 1) * 7 - 6); // 현재 페이지 기준 시작 날짜 계산
+      const formattedStartDate = startDate.toISOString().split('T')[0];
+
+      const response = await api.get('/AllEat/paymoney/balance', {
+        params: {
+          startDate: formattedStartDate,
+          period: 7,
+        },
+      });
+      const rawTransactions = response.data.reverse(); // 데이터를 역순으로
+
+      // 날짜별로 그룹화
+      const grouped = groupByDate(rawTransactions);
+      setTransactions(prevTransactions => ({
+        ...prevTransactions,
+        ...grouped,
+      }));
+      setLoading(false);
+      setIsFetchingMore(false); // 추가 데이터 로딩 완료
+    } catch (error) {
+      let errorMessage = '데이터 가져오는 데에 실패했습니다.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      console.error('데이터 가져오기 실패', errorMessage);
+      setLoading(false);
+      setIsFetchingMore(false); // 추가 데이터 로딩 실패 처리
+    }
+  };
 
   useEffect(() => {
-    const fetchTransactionData = async () => {
-      try {
-        const response = await api.get('/AllEat/paymoney/balance', {
-          params: {
-            startDate: formattedOneWeekAgo,
-            period: 7,
-          },
-        });
-        const rawTransactions = response.data.reverse(); // 데이터를 역순으로
-
-        // 날짜별로 그룹화
-        const grouped = groupByDate(rawTransactions);
-        setTransactions(grouped);
-
-        setLoading(false);
-      } catch (error) {
-        // error가 unknown 타입일 때 처리
-        let errorMessage = '데이터 가져오는 데에 실패했습니다.';
-
-        if (error instanceof Error) {
-          errorMessage = error.message; // 에러가 Error 타입일 경우 message를 가져옴
-        } else if (typeof error === 'string') {
-          errorMessage = error; // 에러가 string일 경우
-        }
-
-        console.error('데이터 가져오기 실패', errorMessage);
-      }
-    };
-
-    fetchTransactionData();
-  }, [formattedOneWeekAgo]);
+    fetchTransactionData(page);
+  }, [page]);
 
   // 날짜별로 데이터를 그룹화하는 함수
   const groupByDate = (transactionList: Transaction[]) => {
@@ -86,7 +93,6 @@ const PaymoneyDetailScreen: React.FC = () => {
           locale: ko,
         },
       );
-
       if (!grouped[date]) {
         grouped[date] = [];
       }
@@ -95,11 +101,15 @@ const PaymoneyDetailScreen: React.FC = () => {
     }, {} as {[date: string]: Transaction[]});
   };
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+  // 스크롤 끝에 도달할 때 호출되는 함수
+  const fetchMoreTransactions = () => {
+    if (!isFetchingMore) {
+      setIsFetchingMore(true);
+      setPage(prevPage => prevPage + 1); // 페이지 번호 증가
+    }
+  };
 
-  if (loading) {
+  if (loading && page === 1) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
@@ -114,17 +124,26 @@ const PaymoneyDetailScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
-        {Object.keys(transactions)
-          .sort((a, b) => new Date(b).getTime() - new Date(a).getTime()) // 날짜 역순으로 정렬
-          .map(date => (
-            <DateSection
-              key={date}
-              date={date}
-              transactions={transactions[date]}
-            />
-          ))}
-      </ScrollView>
+      <FlatList
+        data={Object.keys(transactions).sort(
+          (a, b) => new Date(b).getTime() - new Date(a).getTime(),
+        )} // 날짜 역순으로 정렬
+        renderItem={({item: date}) => (
+          <DateSection
+            key={date}
+            date={date}
+            transactions={transactions[date]}
+          />
+        )}
+        keyExtractor={date => date}
+        onEndReached={fetchMoreTransactions} // 스크롤 끝에 도달했을 때 호출
+        onEndReachedThreshold={0.5} // 50% 정도 스크롤하면 호출
+        ListFooterComponent={
+          isFetchingMore ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : null
+        } // 추가 데이터를 로딩 중일 때 표시
+      />
     </View>
   );
 };
