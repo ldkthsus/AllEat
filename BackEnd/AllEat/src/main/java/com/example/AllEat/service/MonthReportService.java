@@ -56,7 +56,6 @@ public class MonthReportService {
             List<WeightResponseDTO> dailyWeights = weightRepository.findByUserEntityAndExactDate(user, java.sql.Date.valueOf(date));
             weightRecords.addAll(dailyWeights);
         }
-
         // 기록된 몸무게 데이터의 날짜 변환 및 저장
         List<Map<String, Object>> processedWeightRecords = new ArrayList<>();
         Double startWeight = null, endWeight = null;
@@ -121,7 +120,6 @@ public class MonthReportService {
         double averageFats = totalFats / dayCount;
         double averageCalories = (double) totalCalories / dayCount;
         double costAvg = (double) totalCost / dayCount;
-
         // 수집된 데이터를 모두 포함한 Map 반환
         Map<String, Object> collectedData = new HashMap<>();
         collectedData.put("user", user);
@@ -182,16 +180,19 @@ public class MonthReportService {
         LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
         List<Integer> dailyCosts = new ArrayList<>(Collections.nCopies(endDate.getDayOfMonth(), 0));
 
-        // 일별 비용 계산 (일별로 `daily_price`를 합산)
+        // 일별 비용 계산
         List<DailyDiaryEntity> monthlyDiaries = dailyDiaryRepository.findByUserAndDateBetween((UserEntity) collectedData.get("user"), startDate, endDate);
         for (DailyDiaryEntity diary : monthlyDiaries) {
             int day = diary.getDate().getDayOfMonth() - 1;
             int dailyTotalCost = 0;
 
             for (DiaryEntity diaryEntity : diary.getDiaryEntities()) {
-                dailyTotalCost += diaryEntity.getDailyPrice() != null ? diaryEntity.getDailyPrice() : 0; // daily_price 합산
+                for (DiaryMappingEntity diaryMapping : diaryEntity.getDiaryMapping()) {
+                    MenuEntity menu = diaryMapping.getMenu();
+                    dailyTotalCost += menu.getMenuPrice() != null ? menu.getMenuPrice() : 0;
+                }
             }
-            dailyCosts.set(day, dailyTotalCost); // 일별 비용 기록
+            dailyCosts.set(day, dailyCosts.get(day) + dailyTotalCost);
         }
 
         // 프론트엔드에 반환할 데이터 구성
