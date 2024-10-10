@@ -49,6 +49,24 @@ const HomeScreen: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   // const [realIsUpdated, setRealIsUpdated] = useState(false); // 초기값으로 isUpdated 설정
 
+  // 키키 말풍선
+  const [bubbleText, setBubbleText] = useState('');
+  const [showBubble, setShowBubble] = useState(false);
+  const messages = ['쿠키가 되고 싶어...', '내가 쿠키가 될 수 있을까?', '나는 먼지가 아니야!',
+'내 이름은 키키! 나는 쿠키가 될 거야',
+  ];
+
+  const handlePress = () => {
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    setBubbleText(randomMessage);
+    setShowBubble(true);
+
+    // 3초 후 말풍선을 사라지게 함
+    setTimeout(() => {
+      setShowBubble(false);
+    }, 3000);
+  };
+
   // useEffect(() => {
   //   console.log(isUpdated);
   //   setRealIsUpdated(isUpdated);
@@ -786,6 +804,7 @@ const HomeScreen: React.FC = () => {
           </View>
 
           <View style={styles.kikiBox}>
+            <TouchableOpacity onPress={handlePress}>
             <View style={styles.charInfo}>
               <images.kikiShadow
                 style={styles.kikiShadow}
@@ -815,7 +834,13 @@ const HomeScreen: React.FC = () => {
                   height: 120,
                 })
               )}
+              {showBubble && (
+                <View style={styles.bubble}>
+                  <Text style={styles.bubbleText}>{bubbleText}</Text>
+                </View>
+              )}
             </View>
+            </TouchableOpacity>
 
             <View style={styles.nutrientInfo}>
               <View style={styles.allText}>

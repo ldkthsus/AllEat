@@ -116,6 +116,26 @@ export const styles = StyleSheet.create({
     left: 0, // 왼쪽에 고정
     top: 0, // 필요한 경우 상단에 위치
     marginLeft: 30,
+    position: 'relative', // 말풍선을 캐릭터 위에 배치하기 위해 relative 사용
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bubble: {
+    position: 'absolute',
+    bottom: 110, // 캐릭터 이미지 위에 위치하도록 조정
+    backgroundColor: '#fff',
+    padding: 5,
+    borderRadius: 10,
+    borderColor: '#ddd',
+    opacity: 0.7,
+    width: 165,
+    zIndex: 2,
+  },
+  bubbleText: {
+    fontSize: 15,
+    color: 'black',
+    textAlign: 'center',
+    fontFamily: 'Pretendard-Regular'
   },
   // 게이지 새로 추가
   nutrientInfo: {
