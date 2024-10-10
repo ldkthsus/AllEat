@@ -323,9 +323,7 @@ const HomeScreen: React.FC = () => {
       clearInterval(intervalId); // 인터벌 클리어
     };
   }, [currentDate, Kcal, kikiImages.length]); // 의존성 배열에 currentDate, isUpdated, kikiImages.length 추가
-  useEffect(() => {
-    console.log('ㅏㅏㅏㅏ');
-  }, []);
+
   const [lastNotification, setLastNotification] = useState<{
     id: number;
     body: string;
