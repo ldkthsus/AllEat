@@ -43,11 +43,16 @@ const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const dispatch = useDispatch<AppDispatch>();
   const route = useRoute<HomeRouteProp>();
-  const {isUpdated = false} = route.params || {};
+  const {Kcal = 0} = route.params || {};
 
   // 움직이는 키키 이미지
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  // const [realIsUpdated, setRealIsUpdated] = useState(false); // 초기값으로 isUpdated 설정
 
+  // useEffect(() => {
+  //   console.log(isUpdated);
+  //   setRealIsUpdated(isUpdated);
+  // }, [isUpdated, realIsUpdated]);
   const kikiImages = [images.happyKiki1, images.happyKiki2, images.happyKiki3];
 
   // 캘린더 모달
@@ -306,6 +311,7 @@ const HomeScreen: React.FC = () => {
 
     // 데이터 가져오기
     fetchData();
+    // setRealIsUpdated(false);
 
     // 일정 시간마다 이미지를 변경하는 인터벌 설정
     const intervalId = setInterval(() => {
@@ -316,7 +322,10 @@ const HomeScreen: React.FC = () => {
     return () => {
       clearInterval(intervalId); // 인터벌 클리어
     };
-  }, [currentDate, isUpdated, kikiImages.length]); // 의존성 배열에 currentDate, isUpdated, kikiImages.length 추가
+  }, [currentDate, Kcal, kikiImages.length]); // 의존성 배열에 currentDate, isUpdated, kikiImages.length 추가
+  useEffect(() => {
+    console.log('ㅏㅏㅏㅏ');
+  }, []);
   const [lastNotification, setLastNotification] = useState<{
     id: number;
     body: string;
