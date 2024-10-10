@@ -8,36 +8,43 @@ import AIReport from '../components/AIReport';
 import MonthlyMealReport from './MonthlyMealReport';
 import MonthlyFeeReport from './MonthlyFeeReport';
 import MonthlyWeightReport from './MonthlyWeightReport';
-import api from '../../../utils/api';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'; // Redux 관련 추가
 import { RootState } from '../../../redux/store';
+import { fetchMonthlyUsedAmount } from '../../../redux/features/paymoneySlice';
 import { FAST_API_URL } from '@env';
+import api from '../../../utils/api';
+
 
 const MonthlyReport: React.FC = () => {
+  const dispatch = useDispatch();
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [reportData, setReportData] = useState<any>(null);
   const [imageIndex, setImageIndex] = useState(0);
   const [aiResponse, setAiResponse] = useState<string | null>(null);
 
+  // YYYY. MM 형식으로 날짜 포맷 (UI에 표시되는 날짜)
   const formattedDate = format(currentDate, 'yyyy. MM');
-  const postDate = format(currentDate, 'yyyy-MM');
-  
+  const postDate = format(currentDate, 'yyyy-MM'); // 기존 월간 레포트에 사용되는 포맷
+  const paymoneyStartDate = format(currentDate, 'yyyy-MM-01');
+
+  // Redux에서 상태 가져오기
   const goalKcal = useSelector((state: RootState) => state.info.goal_kcal);
   const goalFee = useSelector((state: RootState) => state.info.goal_cost);
   const monthGoalCost = goalFee ? (goalFee / 30).toFixed(0) : '0';
-  const monthUsedAmount = useSelector((state: RootState) => state.paymoney.monthlyUsedAmount);
-  const paymoneyCost = monthUsedAmount ?? 0; 
   const token = useSelector((state: RootState) => state.auth.token);
+  const monthUsedAmount = useSelector((state: RootState) => state.paymoney.monthlyUsedAmount); // Redux에서 월별 사용 금액 가져오기
+  const paymoneyCost = monthUsedAmount ?? 0; // 월별 사용 금액 기본값 설정
 
   // API 요청 useEffect
   useEffect(() => {
     console.log('MonthlyReport useEffect 실행됨');
+    
     const fetchData = async () => {
       try {
+        // 월간 레포트 데이터 가져오기
         const response = await api.post('/AllEat/month-report', {
           year_month: postDate,
         });
-        
         const data = response.data;
         console.log('체중 추이', data.monthly_weight_records);
         setReportData(data);
@@ -63,20 +70,24 @@ const MonthlyReport: React.FC = () => {
         console.error('데이터 가져오기 오류:', error);
       }
     };
+
+    // Redux로 월별 사용 금액 요청
+    dispatch(fetchMonthlyUsedAmount({ startDate: paymoneyStartDate, period: 30 }));
+
     fetchData();
   }, [currentDate]);
 
-// 날짜 변경 핸들러
-const handlePreviousDate = () => setCurrentDate(prevDate => subMonths(prevDate, 1));
-const handleNextDate = () => {
-  const today = new Date(); // 오늘 날짜
-  const nextDate = addMonths(currentDate, 1); // 다음 달 날짜
-  
-  // 다음 달 날짜가 오늘 날짜 이후인지 확인
-  if (nextDate <= today) {
-    setCurrentDate(nextDate); // 다음 달 날짜가 오늘 날짜 이하면 변경
-  }
-};
+  // 날짜 변경 핸들러
+  const handlePreviousDate = () => setCurrentDate(prevDate => subMonths(prevDate, 1));
+  const handleNextDate = () => {
+    const today = new Date(); // 오늘 날짜
+    const nextDate = addMonths(currentDate, 1); // 다음 달 날짜
+    
+    // 다음 달 날짜가 오늘 날짜 이후인지 확인
+    if (nextDate <= today) {
+      setCurrentDate(nextDate); // 다음 달 날짜가 오늘 날짜 이하면 변경
+    }
+  };
 
   useEffect(() => {
     setReportData(null);
@@ -145,7 +156,7 @@ const handleNextDate = () => {
               costRanking={reportData.cost_ranking}
               costWhere={reportData.restaurant_type_count}
               totalCost={reportData.total_cost}
-              paymoneyCost={paymoneyCost}
+              paymoneyCost={paymoneyCost} // Redux에서 가져온 월별 사용 금액 전달
             />
           </View>
         </>
