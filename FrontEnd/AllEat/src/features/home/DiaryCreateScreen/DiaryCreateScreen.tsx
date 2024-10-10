@@ -450,7 +450,12 @@ const DiaryCreateScreen: React.FC = () => {
       );
 
       // 성공 시 홈 화면으로 돌아가기
-      navigation.navigate('Home', {isUpdated: true});
+
+      navigation.navigate('Home', {
+        Kcal: mealList.reduce((acc, curr) => {
+          return acc + curr.menu_calories;
+        }, 0),
+      });
     } catch (error) {
       console.error('다이어리 추가 실패:', error);
     }

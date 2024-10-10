@@ -6,7 +6,7 @@ interface DiaryIds {
   SNACK: number | null;
 }
 export type RootStackParamList = {
-  Home: {isUpdated?: boolean};
+  Home: {Kcal?: number};
   DiaryCreate: {
     date: string;
     meals: string;
