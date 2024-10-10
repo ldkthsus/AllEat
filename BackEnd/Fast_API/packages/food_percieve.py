@@ -40,8 +40,8 @@ def percieve(filename) :
             cropped_img = img[y1:y2, x1:x2]
 
             # 신뢰도가 0.6 이상일 때 크롭된 이미지 저장
-            print(conf, cls)
-            if conf>0 :
+            print(conf,cls)
+            if conf>0.6 :
                 cropped_img_path = f'{output_folder}/{r.names.get(cls)}.jpg'
                 cv2.imwrite(cropped_img_path, cropped_img)
                 cnt+=1
