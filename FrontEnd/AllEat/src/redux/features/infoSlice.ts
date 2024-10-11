@@ -3,14 +3,16 @@ import api from '../../utils/api';
 
 interface InfoState {
   email: string;
+  email: string;
   user_name: string;
   user_age: string;
   user_height: string;
   user_gender: 0 | 1;
   activity_amount: 0 | 1 | 2;
-  weight: number | null; // 첫 weight만 저장
+  weights: Array<{id: number; createdAt: string; weight: number}> | null;
   goal_weight: number | null; // goalWeight
   goal_cost: number | null; // goalCost
+  goal_kcal: number | null;
   breakfast_alarm: string | null; // 아침 알람
   lunch_alarm: string | null; // 점심 알람
   dinner_alarm: string | null; // 저녁 알람
@@ -20,14 +22,16 @@ interface InfoState {
 
 const initialState: InfoState = {
   email: '',
+  email: '',
   user_name: '',
   user_age: '',
   user_height: '',
   user_gender: 0,
   activity_amount: 1,
-  weight: null, // weight 초기값
+  weights: null, // weight 초기값
   goal_weight: null, // goalWeight 초기값
   goal_cost: null, // goalCost 초기값
+  goal_kcal: null,
   breakfast_alarm: null, // 아침 알람 초기값
   lunch_alarm: null, // 점심 알람 초기값
   dinner_alarm: null, // 저녁 알람 초기값
@@ -39,15 +43,55 @@ const initialState: InfoState = {
 export const fetchUserInfo = createAsyncThunk(
   'info/fetchUserInfo',
   async () => {
+  async () => {
     try {
       const response = await api.get('/AllEat/users/info');
       console.log(response.data);
       return response.data;
     } catch (error: any) {
       return error.response.data;
+      return error.response.data;
     }
   },
 );
+
+const calculateGoalKcal = (
+  user_gender: 0 | 1,
+  user_weight: number,
+  user_height: number,
+  user_age: number,
+  activity_amount: 0 | 1 | 2,
+  goal_weight: number,
+) => {
+  // BMR 계산 (0: 여성, 1: 남성)
+  let BMR = 0;
+  if (user_gender === 1) {
+    // 남성 BMR 계산
+    BMR = 66.5 + 13.75 * user_weight + 5.003 * user_height - 6.75 * user_age;
+  } else {
+    // 여성 BMR 계산
+    BMR = 655.1 + 9.563 * user_weight + 1.85 * user_height - 4.676 * user_age;
+  }
+
+  // 활동량에 따른 BMR 계산
+  let activityMultiplier = 1.2; // 기본값
+  if (activity_amount === 1) {
+    activityMultiplier = 1.375;
+  } else if (activity_amount === 2) {
+    activityMultiplier = 1.55;
+  }
+
+  BMR *= activityMultiplier;
+
+  // 목표 체중에 따른 추가 조정
+  if (goal_weight < user_weight) {
+    BMR *= 0.9; // 체중 감량 목표
+  } else if (goal_weight > user_weight) {
+    BMR *= 1.1; // 체중 증가 목표
+  }
+
+  return Math.round(BMR); // 결과는 반올림
+};
 
 const infoSlice = createSlice({
   name: 'info',
@@ -78,12 +122,24 @@ const infoSlice = createSlice({
         } = action.payload;
 
         // 첫 번째 weight만 가져옴
-        const weight = weights && weights.length > 0 ? weights[0].weight : null;
-
+        const storedWeights =
+          weights && weights.length > 0 ? weights.reverse() : null;
+        console.log(storedWeights);
         // goals에서 goal_weight와 goal_cost 추출
         const goal_weight = goals?.goalWeight || null;
         const goal_cost = goals?.goalCost || null;
-
+        let goal_kcal = null;
+        if (storedWeights && storedWeights.length > 0 && goal_weight) {
+          const weight = storedWeights[0].weight; // 첫 번째 weight를 사용하여 계산
+          goal_kcal = calculateGoalKcal(
+            user_gender,
+            weight,
+            user_height,
+            user_age,
+            activity_amount,
+            goal_weight,
+          );
+        }
         // alarms에서 각 알람 시간을 추출
         const breakfast_alarm = alarms?.breakfastAlarm || null;
         const lunch_alarm = alarms?.lunchAlarm || null;
@@ -98,9 +154,10 @@ const infoSlice = createSlice({
           user_height: String(user_height), // string으로 변환
           user_gender,
           activity_amount,
-          weight,
+          weights: storedWeights, // weights 배열 저장
           goal_weight,
           goal_cost,
+          goal_kcal,
           breakfast_alarm,
           lunch_alarm,
           dinner_alarm,

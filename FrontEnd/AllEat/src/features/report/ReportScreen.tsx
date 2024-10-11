@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import DailyReport from './DailyReport/DailyReport';
 import WeeklyReport from './WeeklyReport/WeeklyReport';
@@ -6,21 +6,11 @@ import MonthlyReport from './MonthlyReport/MonthlyReport';
 import { styles } from './ReportScreen.styles';
 
 const ReportScreen: React.FC = () => {
-  const [selectedTab, setSelectedTab] = useState<'daily' | 'weekly' | 'monthly'>('daily'); // 현재 선택된 탭 상태 관리
-
-  // 렌더링할 컴포넌트 결정
-  const renderReport = () => {
-    switch (selectedTab) {
-      case 'daily':
-        return <DailyReport />;
-      case 'weekly':
-        return <WeeklyReport />;
-      case 'monthly':
-        return <MonthlyReport />;
-      default:
-        return null;
-    }
-  };
+  const [selectedTab, setSelectedTab] = useState<'daily' | 'weekly' | 'monthly'>('daily'); 
+  
+  useEffect(() => {
+    console.log(`현재 선택된 탭: ${selectedTab}`);
+  }, [selectedTab]);
 
   return (
     <View>
@@ -46,7 +36,9 @@ const ReportScreen: React.FC = () => {
       
       <View style={styles.container}>
         <ScrollView>
-          {renderReport()}
+          {selectedTab === 'daily' && <DailyReport />}
+          {selectedTab === 'weekly' && <WeeklyReport />}
+          {selectedTab === 'monthly' && <MonthlyReport />}
         </ScrollView>
       </View>
     </View>

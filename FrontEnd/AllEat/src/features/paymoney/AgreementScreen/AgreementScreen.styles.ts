@@ -41,6 +41,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   checkboxText: {
+    color: 'black',
     fontFamily: 'Pretendard-Medium',
     fontSize: 16,
   },

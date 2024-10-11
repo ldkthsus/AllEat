@@ -2,26 +2,26 @@ import {StyleSheet} from 'react-native';
 
 export const styles = StyleSheet.create({
   gradientBackground: {
-      paddingHorizontal: 0,
-      height: '100%',
-      alignItems: "center"
+    paddingHorizontal: 0,
+    height: '100%',
+    alignItems: 'center',
   },
   bodyContainer: {
     paddingVertical: 40,
     paddingHorizontal: 30,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   payTitle: {
     fontSize: 37,
     letterSpacing: -1,
-    fontFamily: "Pretendard-SemiBold",
-    color: "#fff",
+    fontFamily: 'Pretendard-SemiBold',
+    color: '#fff',
     textAlign: 'center',
-    },
+  },
   amountText: {
     fontSize: 25,
-    fontFamily: "Pretendard-SemiBold",
-    color: "#fff",
+    fontFamily: 'Pretendard-SemiBold',
+    color: '#fff',
     textAlign: 'center',
     marginTop: '5%',
   },
@@ -30,17 +30,17 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 100,
-    backgroundColor: "rgba(71, 110, 212, 0.21)",
+    backgroundColor: 'rgba(71, 110, 212, 0.21)',
     paddingHorizontal: 15,
     paddingVertical: 7,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginTop: '5%',
   },
   usedAmonutText: {
     fontSize: 16,
-    fontFamily: "Pretendard-Medium",
-    color: "rgba(255, 255, 255, 0.9)",
-    textAlign: "center",
+    fontFamily: 'Pretendard-Medium',
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
     paddingRight: 7,
   },
   inoutContainer: {
@@ -51,35 +51,37 @@ export const styles = StyleSheet.create({
   },
   inBox: {
     borderRadius: 9,
-    backgroundColor: "rgba(71, 110, 212, 0.21)",
+    backgroundColor: 'rgba(71, 110, 212, 0.21)',
     paddingHorizontal: 55,
     paddingVertical: 7,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginHorizontal: 3,
   },
   outBox: {
     borderRadius: 9,
-    backgroundColor: "rgba(71, 110, 212, 0.21)",
+    backgroundColor: 'rgba(71, 110, 212, 0.21)',
     paddingHorizontal: 55,
     paddingVertical: 7,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginHorizontal: 3,
   },
   inoutText: {
     fontSize: 16,
-    fontFamily: "Pretendard-SemiBold",
-    color: "rgba(255, 255, 255, 0.9)",
-    textAlign: "center",
+    fontFamily: 'Pretendard-SemiBold',
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
   },
   QRcodeContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: '10%',
+    flexDirection: 'row',
   },
+  QRcode: {width: '100%'},
   payCardContainer: {
-    alignItems: 'center', 
-    marginTop: '10%', 
-    position: 'relative', 
+    alignItems: 'center',
+    marginTop: '10%',
+    position: 'relative',
   },
   greyCookieWrapper: {
     position: 'absolute',
@@ -93,7 +95,26 @@ export const styles = StyleSheet.create({
     paddingLeft: 12,
   },
   linkButtonContainer: {
-    marginTop: 180,        // payCard 밑에 충분한 공간을 확보
-    alignItems: 'center',  // 중앙 정렬
+    marginTop: 180, // payCard 밑에 충분한 공간을 확보
+    alignItems: 'center', // 중앙 정렬
+  },
+  QRmarker: {
+    borderColor: '#769BFF',
+    borderWidth: 2,
+    width: 250, // 마커의 가로 길이
+    height: 250,
+    borderRadius: 10,
+  },
+  QRCodeScanner: {
+    height: '100%',
+    position: 'absolute',
+    zIndex: 5,
+    backgroundColor: 'white',
+  },
+  QRButton: {
+    backgroundColor: 'white',
+    margin: 10,
+    padding: 10,
+    borderRadius: 10,
   },
 });
