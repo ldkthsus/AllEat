@@ -115,10 +115,11 @@
 
 ### API 명세서
 - url : https://ring-barracuda-ca0.notion.site/API-fb4d9e04b25e4ef3a6ddb387e7ef43be
-![API명세서0](./readmeimg/api0.png)
-![API명세서1](./readmeimg/api1.png)
-![API명세서2](./readmeimg/api2.png)
-
+![API명세서0](./readmeimg/image(5).png)
+![API명세서1](./readmeimg/image(6).png)
+![API명세서2](./readmeimg/image(7).png)
+![API명세서3](./readmeimg/image(8).png)
+![API명세서4](./readmeimg/image(9).png)
 ### 화면 구성
 초기 페이지|로그인 페이지|회원 가입|메인 페이지
 -----|-----|-----|-----
