@@ -17,8 +17,9 @@ const IntroScreen: React.FC = () => {
     <View style={styles.body}>
       <View style={styles.main}>
         <images.intro height={300} width={300} />
-        <Text style={styles.title}>{'All\nEat!'}</Text>
-        <Text style={styles.discription}>식단 식비 통합 관리 서비스</Text>
+        <Text style={styles.title1}>All</Text>
+        <Text style={styles.title2}>Eat!</Text>
+        <Text style={styles.discription}>나의 식단 식비 관리, 올잇으로 한번에!</Text>
       </View>
       <CustomButton
         title="계속하기"

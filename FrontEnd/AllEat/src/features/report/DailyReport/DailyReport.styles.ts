@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   date: {
     color: 'black',
     fontFamily: 'Pretendard-Bold',
-    fontSize: 20
+    fontSize: 19
   },
   ReportContainer: {
     backgroundColor: 'white',
@@ -27,5 +27,33 @@ export const styles = StyleSheet.create({
   },
   costContainer: {
 
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  AIContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    marginTop: 10,
+    position: 'relative',
+    padding: 20,
+  },
+  AIIcon: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  AITitleText: {
+    textAlign: 'center',
+    fontFamily: 'Pretendard-Bold',
+    fontSize: 17,
+    color: 'black',
+  },
+  lodingText: {
+    fontFamily: 'Pretendard-Light',
+    fontSize: 14,
+    color: 'black',
   }
 });
