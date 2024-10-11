@@ -3,10 +3,10 @@ import {persistReducer, persistStore} from 'redux-persist';
 import {configureStore} from '@reduxjs/toolkit';
 import authReducer from './features/authSlice';
 import paymoneyReducer from './features/paymoneySlice';
+import paymoneyReducer from './features/paymoneySlice';
 import infoReducer from './features/infoSlice';
 import menuReducer from './features/menuSlice';
 import notificationReducer from './features/notificationSlice';
-
 
 // Redux Persist 설정
 const persistAuthConfig = {
@@ -23,7 +23,6 @@ const persistInfoConfig = {
 const persistedAuthReducer = persistReducer(persistAuthConfig, authReducer);
 const persistedInfoReducer = persistReducer(persistInfoConfig, infoReducer);
 
-
 // Redux 스토어 생성
 export const store = configureStore({
   reducer: {
@@ -38,7 +37,6 @@ export const store = configureStore({
       serializableCheck: false, // redux-persist 관련 경고 무시
     }),
 });
-
 
 // Persistor 생성
 export const persistor = persistStore(store);

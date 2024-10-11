@@ -52,8 +52,11 @@ const HomeScreen: React.FC = () => {
   // 키키 말풍선
   const [bubbleText, setBubbleText] = useState('');
   const [showBubble, setShowBubble] = useState(false);
-  const messages = ['쿠키가 되고 싶어...', '내가 쿠키가 될 수 있을까?', '나는 먼지가 아니야!',
-'내 이름은 키키! 나는 쿠키가 될 거야',
+  const messages = [
+    '쿠키가 되고 싶어...',
+    '내가 쿠키가 될 수 있을까?',
+    '나는 먼지가 아니야!',
+    '내 이름은 키키! 나는 쿠키가 될 거야',
   ];
 
   const handlePress = () => {
@@ -805,41 +808,41 @@ const HomeScreen: React.FC = () => {
 
           <View style={styles.kikiBox}>
             <TouchableOpacity onPress={handlePress}>
-            <View style={styles.charInfo}>
-              <images.kikiShadow
-                style={styles.kikiShadow}
-                height={90}
-                width={90}
-              />
-              {dayData?.day_diaries.length === 0 ? (
-                // day_diaries가 빈 배열일 때
-                <images.kikiNoRecord
-                  style={styles.kiki}
-                  height={120}
-                  width={120}
+              <View style={styles.charInfo}>
+                <images.kikiShadow
+                  style={styles.kikiShadow}
+                  height={90}
+                  width={90}
                 />
-              ) : dayData?.day_kcal &&
-                goal_kcal &&
-                dayData.day_kcal > goal_kcal ? (
-                // day_kcal가 goal_kcal보다 클 때
-                <images.kikiOverCal
-                  style={styles.kiki}
-                  height={120}
-                  width={120}
-                />
-              ) : (
-                // 그 외의 경우 기본 kiki 이미지
-                React.createElement(kikiImages[currentImageIndex], {
-                  width: 120,
-                  height: 120,
-                })
-              )}
-              {showBubble && (
-                <View style={styles.bubble}>
-                  <Text style={styles.bubbleText}>{bubbleText}</Text>
-                </View>
-              )}
-            </View>
+                {dayData?.day_diaries.length === 0 ? (
+                  // day_diaries가 빈 배열일 때
+                  <images.kikiNoRecord
+                    style={styles.kiki}
+                    height={120}
+                    width={120}
+                  />
+                ) : dayData?.day_kcal &&
+                  goal_kcal &&
+                  dayData.day_kcal > goal_kcal ? (
+                  // day_kcal가 goal_kcal보다 클 때
+                  <images.kikiOverCal
+                    style={styles.kiki}
+                    height={120}
+                    width={120}
+                  />
+                ) : (
+                  // 그 외의 경우 기본 kiki 이미지
+                  React.createElement(kikiImages[currentImageIndex], {
+                    width: 120,
+                    height: 120,
+                  })
+                )}
+                {showBubble && (
+                  <View style={styles.bubble}>
+                    <Text style={styles.bubbleText}>{bubbleText}</Text>
+                  </View>
+                )}
+              </View>
             </TouchableOpacity>
 
             <View style={styles.nutrientInfo}>

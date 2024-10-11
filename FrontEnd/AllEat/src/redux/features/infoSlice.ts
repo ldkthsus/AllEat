@@ -3,6 +3,7 @@ import api from '../../utils/api';
 
 interface InfoState {
   email: string;
+  email: string;
   user_name: string;
   user_age: string;
   user_height: string;
@@ -20,6 +21,7 @@ interface InfoState {
 }
 
 const initialState: InfoState = {
+  email: '',
   email: '',
   user_name: '',
   user_age: '',
@@ -41,11 +43,13 @@ const initialState: InfoState = {
 export const fetchUserInfo = createAsyncThunk(
   'info/fetchUserInfo',
   async () => {
+  async () => {
     try {
       const response = await api.get('/AllEat/users/info');
       console.log(response.data);
       return response.data;
     } catch (error: any) {
+      return error.response.data;
       return error.response.data;
     }
   },

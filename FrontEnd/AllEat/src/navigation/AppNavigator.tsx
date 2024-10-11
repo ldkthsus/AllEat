@@ -12,6 +12,8 @@ import Agreement from '../features/paymoney/AgreementScreen/AgreementScreen';
 import Paymoney from '../features/paymoney/PaymoneyScreen/PaymoneyScreen';
 import PaymoneyDetail from '../features/paymoney/PaymoneyScreen/PaymoneyDetailScreen';
 import Report from '../features/report/ReportScreen';
+import PaymoneyDetail from '../features/paymoney/PaymoneyScreen/PaymoneyDetailScreen';
+import Report from '../features/report/ReportScreen';
 import AppBar from '../components/AppBar/AppBar';
 import {useNavigationState} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
@@ -85,6 +87,11 @@ const AppNavigator = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DiaryCreate"
+          component={DiaryCreateScreen}
           options={{headerShown: false}}
         />
         <Stack.Screen

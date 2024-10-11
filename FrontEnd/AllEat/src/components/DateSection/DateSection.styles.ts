@@ -44,6 +44,6 @@ export const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 15,
     fontFamily: 'Pretendard-Regular',
-    paddingBottom: 5
+    paddingBottom: 5,
   },
 });

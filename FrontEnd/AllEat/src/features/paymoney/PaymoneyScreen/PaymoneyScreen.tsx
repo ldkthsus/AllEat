@@ -66,7 +66,6 @@ const PaymoneyScreen: React.FC = () => {
 
   useEffect(() => {
     // 화면이 처음 렌더링될 때 잔액과 현재 월의 사용 금액을 가져옴
-
     dispatch(fetchPaymoneyBalance());
     fetchCurrentMonthUsedAmount();
   }, [dispatch]);

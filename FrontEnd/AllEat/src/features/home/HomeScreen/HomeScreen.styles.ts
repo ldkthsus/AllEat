@@ -135,7 +135,7 @@ export const styles = StyleSheet.create({
     fontSize: 15,
     color: 'black',
     textAlign: 'center',
-    fontFamily: 'Pretendard-Regular'
+    fontFamily: 'Pretendard-Regular',
   },
   // 게이지 새로 추가
   nutrientInfo: {

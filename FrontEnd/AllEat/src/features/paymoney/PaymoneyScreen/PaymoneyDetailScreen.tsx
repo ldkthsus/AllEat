@@ -19,7 +19,6 @@ type PaymoneyDetailScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'PaymoneyDetail'
 >;
-
 interface Transaction {
   id: number;
   amount: number;
