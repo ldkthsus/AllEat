@@ -1,5 +1,6 @@
 # AllEat Porting Manual
 이 매뉴얼은 linux 환경에서 AllEat을 clone하여 빌드 및 배포하는 방법에 대한 가이드입니다.
+
 # 0. 요구사항
 - Ubuntu 20.04.6 LTS
 	- Docker version 27.1.1, build 6312585
@@ -48,7 +49,6 @@ TEST_LOCAL=
 
 #FireBase environments variables
 FIREBASE_CONFIG=
-
 
 # 3. Deploy
 git root 에서 실행
