@@ -8,15 +8,35 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Bold',
     fontSize: 19,
     color: 'black',
-},
-kcalBarContainer: {
-  position: 'relative'
-},
-warningIcon: {
-  position: 'absolute',
-  zIndex: 1,
-  right: 10
-},
+  },
+  kcalGraphConatiner: {
+    marginTop: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  kcalGrpahDetailContainer: {
+    paddingVertical: 40,
+    justifyContent: 'space-between'
+  },
+  kcalGraphDetailBox: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  kcalGraphDetailText: {
+    fontFamily: 'Pretendard-Regular',
+    fontSize: 14,
+    paddingLeft: 5,
+    color: 'black'
+  },
+  kcalBarContainer: {
+    position: 'relative'
+  },
+  warningIcon: {
+    position: 'absolute',
+    zIndex: 1,
+    right: 10
+  },
   container: {
     padding: 16,
     backgroundColor: '#f8f8f8',
@@ -112,5 +132,5 @@ warningIcon: {
     fontFamily: 'Pretendard-Light',
     color: 'black',
     marginBottom: 2,
-  }
+  },
 });

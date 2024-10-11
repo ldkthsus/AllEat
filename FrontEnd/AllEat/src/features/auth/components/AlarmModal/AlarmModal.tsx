@@ -1,11 +1,16 @@
-import React, {useState} from 'react';
-import {Modal, View, Text, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Modal, View, Text, TouchableOpacity } from 'react-native';
 import CustomButton from '../../../../components/CustomButton';
 import AlarmSetting from '../AlarmSetting/AlarmSetting';
 import {styles} from './AlarmModal.styles'; // 스타일 파일은 따로 분리
 import {images} from '../../../../constants';
 import {icons} from '../../../../constants';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+interface NotificationData {
+  title: string | null;
+  body: string | null;
+}
 
 interface AlarmModalProps {
   visible: boolean;
@@ -23,6 +28,8 @@ interface AlarmModalProps {
 }
 
 const AlarmModal: React.FC<AlarmModalProps> = ({
+
+  
   visible,
   initialAlarms = {
     breakfast: new Date(new Date().setHours(8, 0, 0, 0)),

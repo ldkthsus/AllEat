@@ -71,6 +71,23 @@ export const styles = StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
   },
   restaurantMenuContainer: {marginHorizontal: 10, gap: 10, marginVertical: 24},
+  pickerContainer: {marginTop: 4, width: '44%'},
+  pickerLabel: {
+    fontSize: 14,
+    color: '#3D3D3D', // 회색 텍스트 색상
+    fontFamily: 'Pretendard-SemiBold',
+    marginBottom: 3,
+  },
+  picker: {
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+  },
+  pickerText: {
+    fontSize: 12,
+    fontFamily: 'Pretendard-SemiBold',
+    color: '#3d3d3d',
+  },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -82,7 +99,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 10,
-    width: '60%',
+    width: '70%',
   },
   buttonTitle: {color: '#3d3d3d', fontSize: 24, fontFamily: 'Pretendard-Bold'},
   buttonCost: {color: '#3d3d3d', fontSize: 20, fontFamily: 'Pretendard-Bold'},
@@ -91,12 +108,5 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
   },
 });

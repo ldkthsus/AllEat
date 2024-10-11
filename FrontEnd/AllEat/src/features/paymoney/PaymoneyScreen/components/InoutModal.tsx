@@ -94,7 +94,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 10,
     paddingRight: 25, // TextInput 안쪽에 여유 공간 확보
-    fontFamily: 'Pretendard-Light'
+    fontFamily: 'Pretendard-Light',
+    color: '#000000'
   },
   wonSymbol: {
     position: 'absolute',
