@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    height: 70,
+    height: 60,
   },
   myPageTitleText: {
     fontSize: 20,
@@ -43,24 +43,11 @@ export const styles = StyleSheet.create({
     paddingTop: 10,
   },
   box: {
-    backgroundColor: '#F3F4F7',
+    backgroundColor: '#769BFF',
     borderRadius: 10,
     padding: 5,
-    shadowColor: '#000', // 그림자 색상
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    }, // 그림자 위치 (x, y)
-    shadowOpacity: 0.25, // 그림자 불투명도
-    shadowRadius: 3.84, // 그림자 반경
-    elevation: 1, // 안드로이드 그림자 높이
   },
-  boxText: {
-    color: '#3D3D3D',
-    fontSize: 18,
-    fontFamily: 'Pretendard-Regular',
-    letterSpacing: -0.3,
-  },
+  boxText: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
   boxIcon: {position: 'absolute', right: 20},
   titleBox: {
     gap: 10,
@@ -81,17 +68,16 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   noAlarm: {
-    color: '#3D3D3D',
+    color: 'white',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
     textAlign: 'left',
-    letterSpacing: -0.3,
   },
   text: {flexDirection: 'row', width: '50%', gap: 5},
   alarm: {flexDirection: 'row', width: '33%', gap: 5},
-  textTitle: {color: '#3D3D3D', fontSize: 18, fontFamily: 'Pretendard-Regular'},
+  textTitle: {color: 'white', fontSize: 18, fontFamily: 'Pretendard-Regular'},
   textDiscription: {
-    color: '#3D3D3D',
+    color: 'white',
     fontSize: 18,
     fontFamily: 'Pretendard-Bold',
   },
@@ -112,34 +98,6 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 20,
   },
-  bookmarkContainer: {
-    margin: 10,
-    // padding: 10,
-    // paddingTop: 20,
-    borderRadius: 10,
-    backgroundColor: '#F3F4F7',
-    maxHeight: 500,
-    shadowColor: '#000', // 그림자 색상
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    }, // 그림자 위치 (x, y)
-    shadowOpacity: 0.25, // 그림자 불투명도
-    shadowRadius: 3.84, // 그림자 반경
-    elevation: 1, // 안드로이드 그림자 높이
-  },
-  bookmarkTitleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 16,
-  },
-  bookmarkTitle: {
-    color: '#3d3d3d',
-    fontSize: 18,
-    fontFamily: 'Pretendard-Bold',
-    // marginBottom: 10,
-  },
-
   input: {
     width: '100%',
   },
@@ -147,11 +105,5 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-  },
-  logout: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignItems: 'center',
-    marginTop: 500,
   },
 });
