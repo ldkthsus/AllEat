@@ -59,3 +59,13 @@ docker compose -f ./docker-compose.yml up down
 ```bash
 docker compose -f ./docker-compose.yml up -d
 ```
+
+#4. App Build
+FrontEnd/AllEat directory에서 실행
+```bash
+npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
+```
+```bash
+npx react-native run-android
+```
+
