@@ -136,6 +136,6 @@
 페이 머니|마이 페이지|내 정보 수정|---
 -----|-----|-----|-----
 ![페이머니](readmeimg/paymoney.png)|![마이페이지](readmeimg/mypage.png)|![업데이트](readmeimg/mypageupdate.png)|---
-## ✨ 팀원 소개 및 소감
+<!--## ✨ 팀원 소개 및 소감
 ![팀원소개0](./readmeimg/memberint0.png)
-![팀원소개1](./readmeimg/memberint1.png)
+![팀원소개1](./readmeimg/memberint1.png) -->
